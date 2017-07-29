@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="256" height="256" tilewidth="16" tileheight="16" backgroundcolor="#140c1c">
+ <properties>
+  <property name="SurfaceLevel" value="21"/>
+  <property name="Title" value="Level 1"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16">
+  <image source="../images/tiles.png" trans="ff00ff" width="512" height="1024"/>
+ </tileset>
+ <layer name="back" width="256" height="256">
+  <data encoding="base64" compression="zlib">
+   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
+  </data>
+ </layer>
+ <layer name="main" width="256" height="256">
+  <data encoding="base64" compression="zlib">
+   eJzt3F1qE1EYBuBJ5tqViBsRBOs6tHeuwRW4D71wAf6BqEhdgj+9dA9OoCHDMIXJZM58Zz6eB15aUkjOIeelJx+lTUN2T9umueryTKoOlHKd6Hz920evYHkZ90Q9MvX/QaK9HGXcE/XI1P+MHnl/KEj/6/bE+0NBl/T/9z2fTe97nPPpPyX1+/+2nZe+uc+xRH4EvvaS6XP/p6RM9/+Ms/KMe6IemfqfcVaecU/UI1P/M96VM+6JemTqf8ZZWcY9UY9L+z+c9UfO/jN2JeOeqMf1wvPqtWfkw/l/xFpKRv8pyf2/bub/lJSp/xln5Vvc05dd03zt8q3L97vvD1+zeBm9gIVctbn6n3FWnnFPW/c6egGMynj/z7inrXsXvQBGvUjYlZr6f9vd4ff7U/4WvNMPX2tqSq7paOv9f1PBXFumJ8JY/9our3an/JrZtSndHr7W1BzW9HAj2Xdpe1+j1yNyzJT+7Wb8fr6k21P7/3gj6d9VbitYj8gxz6VI3nf5cJdPu1P/P/ce/zjjefvO+dlNd7/8eWbIL7onWTPlM9OflfsPQ9E9yRr9Zwuie5I1+s8WRPcka6bMTA/zUf0nUnRPZJ3oP2Oiz6XoP3Giz6XoP3Giz6XoP3Giz6Ws139//8NQ9LmUdQJjos+l6D8AAAAAAAAAAAAAAAAAAAAAAAAsofV/twAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACABf0HgpQITA==
+  </data>
+ </layer>
+ <objectgroup name="objects" width="256" height="256">
+  <object name="zombie" type="zombie1" x="521" y="254" width="28" height="32"/>
+  <object name="bat" type="bat" x="899" y="174" width="28" height="28"/>
+  <object type="item" x="2019" y="65" width="16" height="16">
+   <properties>
+    <property name="frame" value="1"/>
+    <property name="id" value="ammo"/>
+   </properties>
+  </object>
+  <object name="LIFE" type="item" x="1318" y="209" width="16" height="16">
+   <properties>
+    <property name="frame" value="3"/>
+    <property name="id" value="life"/>
+   </properties>
+  </object>
+  <object name="Blob" type="blob" x="1446" y="365" width="20" height="32"/>
+  <object type="item" x="272" y="199" width="16" height="16">
+   <properties>
+    <property name="frame" value="1"/>
+    <property name="id" value="ammo"/>
+   </properties>
+  </object>
+  <object type="item" x="555" y="153" width="16" height="16">
+   <properties>
+    <property name="frame" value="1"/>
+    <property name="id" value="ammo"/>
+   </properties>
+  </object>
+  <object type="item" x="1709" y="264" width="16" height="16">
+   <properties>
+    <property name="frame" value="1"/>
+    <property name="id" value="ammo"/>
+   </properties>
+  </object>
+  <object name="LIFE" type="item" x="251" y="285" width="16" height="16">
+   <properties>
+    <property name="frame" value="3"/>
+    <property name="id" value="life"/>
+   </properties>
+  </object>
+  <object name="Health" type="item" x="889" y="273" width="16" height="16">
+   <properties>
+    <property name="frame" value="4"/>
+    <property name="id" value="health"/>
+   </properties>
+  </object>
+  <object name="bat" type="bat" x="1134" y="171" width="28" height="28"/>
+  <object name="bat" type="bat" x="1382" y="182" width="28" height="28"/>
+  <object name="zombie" type="zombie1" x="2908" y="258" width="28" height="32"/>
+  <object name="zombie" type="zombie1" x="186" y="285" width="28" height="32"/>
+  <object name="zombie" type="zombie1" x="811" y="266" width="28" height="32"/>
+  <object name="zombie" type="zombie1" x="1409" y="262" width="28" height="32"/>
+  <object name="zombie" type="zombie1" x="2194" y="253" width="28" height="32"/>
+  <object name="zombie" type="zombie1" x="2534" y="253" width="28" height="32"/>
+  <object name="zombie" type="zombie1" x="2084" y="155" width="28" height="32"/>
+  <object name="zombie" type="zombie1" x="2492" y="157" width="28" height="32"/>
+  <object name="zombie" type="zombie1" x="2555" y="59" width="28" height="32"/>
+  <object type="jump_through" x="512" y="208" width="96" height="8"/>
+  <object name="Player" type="player" x="1860" y="253" width="24" height="32"/>
+  <object type="jump_through" x="2688" y="240" width="32" height="8"/>
+  <object type="jump_through" x="2656" y="264" width="88" height="8"/>
+  <object type="jump_through" x="2688" y="216" width="32" height="8"/>
+  <object type="jump_through" x="2688" y="192" width="32" height="8"/>
+  <object type="jump_through" x="1968" y="144" width="32" height="8"/>
+  <object type="jump_through" x="1968" y="120" width="32" height="8"/>
+  <object type="jump_through" x="1968" y="96" width="32" height="8"/>
+  <object type="jump_through" x="1968" y="168" width="32" height="8"/>
+  <object name="Dark" type="dark_mask" x="1968" y="16" width="800" height="272"/>
+  <object name="Phantom" type="phantom" x="2885" y="200" width="16" height="32"/>
+  <object name="Phantom" type="phantom" x="2934" y="202" width="16" height="32"/>
+  <object name="Dark" type="dark_mask" x="2784" y="16" width="832" height="272"/>
+  <object name="crush" type="crush" x="1424" y="304" width="64" height="16"/>
+ </objectgroup>
+ <layer name="fore" width="256" height="256">
+  <data encoding="base64" compression="zlib">
+   eJzt2UeL3HUcx/GZQ2ZuqZLeHkEqpLdHYDSB9PYIUiG9HT2IFVQQ1KMH3TSwl1tE0E0De7t6yJYkphc/y+6ScTKbZWYHFndfL3jzn/1l/j/m8v1eUigAMNSdH+wfAAAAAMCQ0zKiUDiVTqcz6Ww6N+LJ793M2a10O91Jd9O9dD89SA/To673SvXfDQyO1szjhXQxXUqX05UaMzo+cz0hTUyT0uQ0JU1N09L0NCPNLNV3dyN7BWiOtsxWe+pInelaup5upH8qZnVB5m9hWpQWpyVpaVqWlqcVaWVaVarv7kb2CtAcIzNXo9LoNCaNTePSM1Xzti5/r08b0sa0KW1OW9LWtC1tTztK9d3dyF4BmmNW5mp2mpPmpnlpfo1Z25+zA+lgOpQOpyMV3zuezyfSyVJ9dzeyV4Dm2Jm52pV2pz1pb9pXY9beyNmb6a2Kf3u74vM7+fxueq/q3f7urtwrvbr2ytF0rFR7rwDN8VLm6uX0Sno1vZZe72PWPs75J+nT9Fn6PH3R892v8vy6xnv93d3oXgEGriVzdSqdTmfS2XSuYtbW5vPq9GX6Ma0pdZ/9kn5Nv6Xf0x/pz/RX1Zw+7e4uH5Ua2ytD0fnB/gEMO62ZrQvpYrqULqcrPfN2tdj9bM/zZs5updvpTrqb7qX76UF6mB51vVf+7/193d3rh5698lP6uY69AgxcW+aqPXWkznQtXa8xa+Mz1xPSxDQpTU5T0tQ0LU1PM9LMqvnv7+5G9wowcCMzV6PS6DQmjU3jaszagpwtTIvS4rQkLU3L0vK0Iq1Mq6re7e/uRvcKDGcvNOmeWZmr2WlOmpvmpfk1Zm1dztanDWlj+jZnm/Pckl7M5215bk87qt7t7+5G9woMZ+836Z5nM1er03Pp+bQmra0xa/tzdiAdTIfS3zk7kufR9EE+H8/zRDrZ8+6HxUKhpdj33b37q3qvbCo/3itby33vFWDgdmaudqXdaU/am/bVOWvf1Tj7PrPfWuz77t79Vb1XDpcf75Vj5Sf3CvD/0Fbs/r+DjtRZHOxfAwDwdN8M9g8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAIeRfPhHvHw==
+  </data>
+ </layer>
+</map>
