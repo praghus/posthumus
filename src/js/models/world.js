@@ -54,10 +54,6 @@ export class World {
         return this.objectsData
     }
 
-    createEntity (obj) {
-
-    }
-
     inRange (x, y) {
         return x >= 0 && y >= 0 && x < this.width && y < this.height
     }
@@ -110,9 +106,5 @@ export class World {
                 this.data.mask[_x][_y] = 1
             }
         }
-    }
-
-    getPlayerObject () {
-
     }
 }

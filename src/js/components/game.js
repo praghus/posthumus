@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Canvas from './canvas'
-import { Camera, Elements, Player, World, Renderer } from '../models'
+import { Camera, Player, Elements, World, Renderer } from '../models'
 import {
     select as d3Select,
     mouse as d3Mouse,

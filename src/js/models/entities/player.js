@@ -1,5 +1,5 @@
-import { Entity } from './entity'
-import { DIRECTIONS, ENTITIES_FAMILY } from '../lib/const'
+import { Entity } from '../entity'
+import { DIRECTIONS, ENTITIES_FAMILY } from '../../lib/const'
 
 export class Player extends Entity {
     constructor (obj, game) {
@@ -7,6 +7,7 @@ export class Player extends Entity {
         this.godMode = true
         this.canShoot = true
         this.canHurt = true
+        this.direction = DIRECTIONS.RIGHT
         this.inDark = 0
         this.energy = 30
         this.maxEnergy = 30

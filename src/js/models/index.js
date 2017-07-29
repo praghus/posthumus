@@ -1,6 +1,6 @@
 export { Camera } from './camera'
 export { Elements } from './elements'
 export { Entity } from './entity'
-export { Player } from './player'
 export { Renderer } from './renderer'
 export { World } from './world'
+export * from './entities'
