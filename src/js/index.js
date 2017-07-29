@@ -3,18 +3,21 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { select as d3Select } from 'd3'
-import thunk from 'redux-thunk'
+import { soundsData } from './lib/sounds'
 import { resizeScreen } from './actions'
+import thunk from 'redux-thunk'
+import soundsMiddleware from 'redux-sounds'
 import rootReducer from './reducers'
 import App from './views'
-import 'babel-polyfill'
 
+import 'babel-polyfill'
 import '../scss/index.scss'
 
 let store = null
 
 const isProduction = process.env.NODE_ENV === 'production'
-const middleware = applyMiddleware(thunk)
+const loadedSoundsMiddleware = soundsMiddleware(soundsData)
+const middleware = applyMiddleware(...[thunk, loadedSoundsMiddleware])
 
 if (isProduction) {
     store = createStore(

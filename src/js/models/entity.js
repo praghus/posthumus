@@ -1,6 +1,6 @@
 import SAT from 'sat'
 import { overlap, normalize } from '../lib/utils'
-import { JUMP_THROUGH } from '../lib/const'
+import { JUMP_THROUGH } from '../lib/utils'
 
 export class Entity {
     constructor (obj, game) {

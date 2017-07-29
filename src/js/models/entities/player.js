@@ -1,5 +1,5 @@
 import { Entity } from '../entity'
-import { DIRECTIONS, ENTITIES_FAMILY } from '../../lib/const'
+import { DIRECTIONS, ENTITIES_FAMILY } from '../../lib/utils'
 
 export class Player extends Entity {
     constructor (obj, game) {

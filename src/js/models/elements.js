@@ -1,4 +1,4 @@
-import { ENTITIES } from '../lib/const'
+import { ENTITIES } from '../lib/utils'
 import { Zombie } from './entities'
 
 export class Elements {
@@ -44,8 +44,5 @@ export class Elements {
             this.all.push(new Zombie(obj, this._game))
             break
         }
-        // if (this._game.entities[type]) {
-        //     this.all.push(new this._game.entities[type](obj, this._game))
-        // }
     }
 }

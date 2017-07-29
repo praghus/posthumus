@@ -1,15 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Canvas from './canvas'
-import { Camera, Player, Elements, World, Renderer } from '../models'
-import {
-    select as d3Select,
-    mouse as d3Mouse,
-    touches as d3Touches,
-    event as d3Event
-} from 'd3'
-import { requireAll } from '../lib/utils'
 import levelData from '../../assets/levels/map.json'
+import { select as d3Select, mouse as d3Mouse, touches as d3Touches, event as d3Event } from 'd3'
+import { requireAll } from '../lib/utils'
+import { Camera, Player, Elements, World, Renderer } from '../models'
 
 const allImages = require.context('../../assets/images', true, /.*\.png/)
 const images = requireAll(allImages).reduce(
@@ -25,7 +20,8 @@ const propTypes = {
     updateMousePos: PropTypes.func.isRequired,
     multiplier: PropTypes.number,
     mousePos: PropTypes.array,
-    viewport: PropTypes.object
+    viewport: PropTypes.object,
+    dispatch: PropTypes.func
 }
 
 export default class Game extends Component {
@@ -45,6 +41,7 @@ export default class Game extends Component {
         this.assets = {}
         this.wrapper = null
         this.viewport = props.viewport
+        this.playSound = this.playSound.bind(this)
     }
 
     componentDidMount () {
@@ -101,6 +98,11 @@ export default class Game extends Component {
         case 'ArrowUp': this.input.up = pressed
             break
         }
+    }
+
+    playSound (sound) {
+        const { dispatch } = this.props
+        dispatch(sound())
     }
 
     updateMousePos () {

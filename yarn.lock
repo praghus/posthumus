@@ -3330,6 +3330,10 @@ hosted-git-info@^2.1.4:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.5.0.tgz#6d60e34b3abbc8313062c3b798ef8d901a07af3c"
 
+howler@^1.1.28:
+  version "1.1.29"
+  resolved "https://registry.yarnpkg.com/howler/-/howler-1.1.29.tgz#9a3a7fa69e9b9d805c65ad98f66e35893a597b63"
+
 hpack.js@^2.1.6:
   version "2.1.6"
   resolved "https://registry.yarnpkg.com/hpack.js/-/hpack.js-2.1.6.tgz#87774c0949e513f42e84575b3c45681fade2a0b2"
@@ -5552,6 +5556,12 @@ redux-logger@^3.0.6:
   resolved "https://registry.yarnpkg.com/redux-logger/-/redux-logger-3.0.6.tgz#f7555966f3098f3c88604c449cf0baf5778274bf"
   dependencies:
     deep-diff "^0.3.5"
+
+redux-sounds@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/redux-sounds/-/redux-sounds-1.1.1.tgz#7a31052dbc617d419c53056215865762f44adb7e"
+  dependencies:
+    howler "^1.1.28"
 
 redux-thunk@^2.2.0:
   version "2.2.0"

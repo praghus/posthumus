@@ -1,5 +1,7 @@
 import { Entity } from '../entity'
-import { DIRECTIONS, ENTITIES, ENTITIES_FAMILY } from '../../lib/const'
+import { DIRECTIONS, ENTITIES, ENTITIES_FAMILY } from '../../lib/utils'
+import { zombieGroan } from '../../actions/sounds'
+
 import { random, randomChoice } from '../../lib/utils'
 
 export class Zombie extends Entity {
@@ -56,11 +58,11 @@ export class Zombie extends Entity {
     }
 
     update () {
-        const { world } = this._game
+        const { world, playSound } = this._game
 
         if (this.onScreen() && !this.awake) {
             this.awake = true
-            // Game.sound('zombie1');
+            playSound(zombieGroan)
         }
         if (this.awake && !this.dead) {
             this.force.y += world.gravity

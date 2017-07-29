@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import Game from '../components/game'
+import { Game } from '../components'
 import { tickTime, startTicker, updateMousePos } from '../actions'
 
 const propTypes = {
@@ -34,23 +34,10 @@ class AppContainer extends Component {
 
     startTicker () {
         const { tickerStarted, dispatch } = this.props
-        // const interval = 1000 / 60
-        // const first = performance.now()
-        // let then = first
-        // let counter = 0
-
         const ticker = () => {
-            // const ts = performance.now()
-            // const delta = ts - then
-            // if (delta > interval) {
-            //     then = ts - (delta % interval)
-            //     ++counter
-            //     console.info(parseInt(counter / ((then - first) / 1000)) + 'fps')
-            // }
             dispatch(tickTime())
             window.requestAnimationFrame(ticker)
         }
-
         if (!tickerStarted) {
             /*eslint no-console: ["error", { allow: ["info"] }] */
             console.info('Starting ticker')

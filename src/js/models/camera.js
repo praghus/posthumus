@@ -7,7 +7,7 @@ export class Camera {
         this.rector = 2
         this.a = 1
     }
-    /* todo: attatch entity */
+    /* todo: attatch entity to follow */
     update () {
         const { player, world, viewport } = this._game
         const { resolutionX, resolutionY } = viewport
