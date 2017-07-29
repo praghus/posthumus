@@ -1,2 +1,2 @@
-# POSTHUMUS 2 🧟
+# POSTHUMUS 2 :skull:
 Canvas zombie shooter made with React and Redux
