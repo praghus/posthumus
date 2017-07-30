@@ -17,8 +17,9 @@ export default class Renderer {
         this.renderBackground()
         this.renderGround()
         this.renderPlayer()
-        this.renterElements()
+        this.renterObjects()
         this.renderForeGround()
+        this.renderDarks()
 
         ctx.restore()
     }
@@ -93,10 +94,10 @@ export default class Renderer {
         player.draw(ctx)
     }
 
-    renterElements () {
+    renterObjects () {
         const { ctx, elements } = this._game
-        const { all } = elements
-        all.forEach((elem) => {
+        const { objects } = elements
+        objects.forEach((elem) => {
             elem.draw(ctx)
         })
     }
@@ -133,5 +134,13 @@ export default class Renderer {
             y += spriteSize
             _y++
         }
+    }
+
+    renderDarks () {
+        const { ctx, elements } = this._game
+        const { darks } = elements
+        darks.forEach((elem) => {
+            elem.draw(ctx)
+        })
     }
 }

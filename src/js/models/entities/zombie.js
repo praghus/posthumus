@@ -35,15 +35,17 @@ export default class Zombie extends Entity {
         this.energy -= damage
         if (this.energy <= 0) {
             this.dead = true
-            this._game.explosion(this.x, this.y)
-            this._game.elements.add('coin', {x: this.x + 8, y: this.y})
+            // this._game.explosion(this.x, this.y)
+            // this._game.elements.add('coin', {x: this.x + 8, y: this.y})
         }
     }
 
     collide (element) {
-        const { player } = this._game
+        const { player, particlesExplosion } = this._game
         if (element.type === ENTITIES.PLAYER && player.canHurt) {
             this.attack = true
+            this.dead = true
+            particlesExplosion(this.x, this.y)
         }
         if (element.type === ENTITIES.SLOPE && !this.canFall) {
             this.canFall = true
@@ -57,7 +59,7 @@ export default class Zombie extends Entity {
     }
 
     update () {
-        const { world, player, playSound } = this._game
+        const { world, playSound } = this._game
 
         if (this.onScreen() && !this.awake) {
             this.awake = true
@@ -82,17 +84,17 @@ export default class Zombie extends Entity {
 
             if (this.onFloor) {
                 if (this.expectedX !== this.x) {
-                    if (this.seesPlayer() && this.y + this.height >= player.y + player.height) {
+                    if (this.seesPlayer()) {
                         this.force.y -= 4
                     }
                     else {
                         if (this.expectedX < this.x) {
                             this.direction = DIRECTIONS.RIGHT
-                            this.force.x *= -0.6
+                            // this.force.x *= -0.6
                         }
                         if (this.expectedX > this.x) {
                             this.direction = DIRECTIONS.LEFT
-                            this.force.x *= -0.6
+                            // this.force.x *= -0.6
                         }
                     }
                 }

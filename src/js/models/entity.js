@@ -1,6 +1,6 @@
 import SAT from 'sat'
 import { overlap, normalize } from '../lib/utils'
-import { DIRECTIONS, JUMP_THROUGH } from '../lib/utils'
+import { DIRECTIONS } from '../lib/utils'
 
 export default class Entity {
     constructor (obj, game) {
@@ -117,7 +117,7 @@ export default class Entity {
             return false
         }
 
-        if (this.PlayerM > -0.15 && this.PlayerM < 0.15) {
+        if (this.PlayerM > -0.9 && this.PlayerM < 0.9) {
             const steps = Math.abs(Math.floor(player.x / spriteSize) - Math.floor(this.x / spriteSize))
             const from = player.x < this.x ? Math.floor(player.x / spriteSize) : Math.floor(this.x / spriteSize)
             for (let X = from; X < from + steps; X++) {
@@ -193,7 +193,7 @@ export default class Entity {
         for (let j = 0; j < nearMatrix.length; j++) {
             const c2 = {x: this.x, y: this.y + this.force.y, width: this.width, height: this.height}
             if (nearMatrix[j].solid && overlap(c2, nearMatrix[j])) {
-                if (this.force.y < 0 && JUMP_THROUGH.indexOf(nearMatrix[j].type) === -1) {
+                if (this.force.y < 0) {
                     this.force.y = nearMatrix[j].y + nearMatrix[j].height - this.y
                 }
                 else if (this.force.y > 0) {
@@ -208,5 +208,16 @@ export default class Entity {
         this.onFloor = this.expectedY > this.y
         this.onLeftEdge = !world.isSolid(PX, PH)
         this.onRightEdge = !world.isSolid(PW, PH)
+
+        if (this.onFloor) {
+            this.force.y *= -0.2
+            this.doJump = false
+            this.fall = false
+        }
+
+        if (this.expectedY < this.y) {
+            this.doJump = false
+            this.fall = true
+        }
     }
 }

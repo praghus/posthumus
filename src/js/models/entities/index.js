@@ -1,2 +1,5 @@
+export { default as DarkMask } from './dark-mask'
+export { default as JumpThrough } from './jump-through'
+export { default as Particle } from './particle'
 export { default as Player } from './player'
 export { default as Zombie } from './zombie'

@@ -41,6 +41,7 @@ export default class Game extends Component {
         this.assets = {}
         this.wrapper = null
         this.viewport = props.viewport
+        this.particlesExplosion = this.particlesExplosion.bind(this)
         this.playSound = this.playSound.bind(this)
     }
 
@@ -105,13 +106,39 @@ export default class Game extends Component {
         dispatch(sound())
     }
 
+    particlesExplosion (x, y) {
+        const particle_count = 10 + parseInt(Math.random() * 5)
+        this.camera.shake()
+        for (let i = 0; i < particle_count; i++) {
+            const r = (1 + Math.random())
+            this.elements.add({
+                x: x,
+                y: y,
+                width: r,
+                height: r,
+                type: 'particle',
+                properties: {color: `rgb(${parseInt(128 + ((Math.random() * 32) * 4))}, 0, 0)`}
+            })
+        }
+    }
+
+    getRelativePointerPosition (pos) {
+        const [x, y] = pos
+        const { scale } = this.props.viewport
+        return [
+            (x / scale) - this.camera.x,
+            (y / scale) - this.camera.y
+        ]
+    }
+
     updateMousePos () {
-        const [x, y] = d3Mouse(this.wrapper)
+        const [x, y] = this.getRelativePointerPosition(d3Mouse(this.wrapper))
+        this.particlesExplosion(x, y)
         this.props.updateMousePos(x, y)
     }
 
     updateTouchPos () {
-        const [x, y] = d3Touches(this.wrapper)[0]
+        const [x, y] = this.getRelativePointerPosition(d3Touches(this.wrapper)[0])
         this.props.updateMousePos(x, y)
     }
 }

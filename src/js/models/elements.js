@@ -1,47 +1,60 @@
 import { ENTITIES } from '../lib/utils'
-import { Zombie } from './entities'
+import { DarkMask, JumpThrough, Particle, Zombie } from './entities'
 
 export default class Elements {
     constructor (entities, game) {
         this._game = game
-        this.all = []
-        this.lights = []
+        this.objects = []
+        this.darks = []
         for (let i = 0; i < entities.length; i++) {
             this.add(entities[i])
         }
     }
 
     update () {
-        const { all } = this
-        all.forEach((elem, i) => {
-            if (elem.dead) {
-                this._game.elements.all[i] = this._game.elements.all[this._game.elements.all.length - 1]
-                this._game.elements.all.length--
+        const { player } = this._game
+        this.objects.forEach((obj, i) => {
+            if (obj.dead) {
+                this.objects[i] = this.objects[this.objects.length - 1]
+                this.objects.length--
             }
             else {
-                elem.update()
+                obj.update()
+                obj.overlapTest(player)
+                for (let k = i + 1; k < this.objects.length; k++) {
+                    this.objects[i].overlapTest(this.objects[k])
+                }
             }
         })
-        for (let j = 0; j < all.length; j++) {
-            all[j].overlapTest(this._game.player)
-            for (let k = j + 1; k < all.length; k++) {
-                all[j].overlapTest(all[k])
-            }
-        }
+        this.darks.forEach((dark) => {
+            dark.update()
+            dark.overlapTest(player)
+        })
     }
 
     getById (id) {
-        return this.all.find((x) => x.id === id)
+        return this.objects.find((x) => x.id === id)
     }
 
     getByProperties (k, v) {
-        return this.all.find((x) => x.properties && x.properties[k] === v)
+        return this.objects.find((x) => x.properties && x.properties[k] === v)
     }
 
     add (obj) {
+        const { world } = this._game
         switch (obj.type) {
+        case ENTITIES.DARK_MASK:
+            this.darks.push(new DarkMask(obj, this._game))
+            world.addMask(obj)
+            break
+        case ENTITIES.JUMP_THROUGH:
+            this.objects.push(new JumpThrough(obj, this._game))
+            break
+        case ENTITIES.PARTICLE:
+            this.objects.push(new Particle(obj, this._game))
+            break
         case ENTITIES.ZOMBIE:
-            this.all.push(new Zombie(obj, this._game))
+            this.objects.push(new Zombie(obj, this._game))
             break
         }
     }

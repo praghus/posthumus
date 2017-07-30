@@ -85,17 +85,6 @@ export default class Player extends Entity {
         }
         this.move()
 
-        if (this.onFloor) {
-            this.force.y *= -0.2
-            this.doJump = false
-            this.fall = false
-        }
-
-        if (this.expectedY < this.y) {
-            this.doJump = false
-            this.fall = true
-        }
-
         if (this.doJump || this.fall) {
             if (this.force.y < -2) {
                 this.animate(this.direction === DIRECTIONS.RIGHT

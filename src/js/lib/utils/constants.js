@@ -1,8 +1,6 @@
 /**
  * Consts
  */
-export const JUMP_THROUGH = [269] // id of jump through tile
-
 export const DIRECTIONS = { UP: 0, RIGHT: 1, BOTTOM: 2, LEFT: 3}
 
 export const ENTITIES = {
@@ -13,11 +11,15 @@ export const ENTITIES = {
     TANK: 'tank',
     EVIL_EYE: 'evil_eye',
     JUMP_THROUGH: 'jump_through',
-    SLOPE: 'slope_left',
+    PARTICLE: 'particle',
+    SLOPE_LEFT: 'slope_left',
+    SLOPE_RIGHT: 'slope_right',
     DARK_MASK: 'dark_mask'
 }
 
 export const ENTITIES_FAMILY = {
     ENEMIES: 'enemies',
+    PARTICLES: 'particles',
+    MODIFIERS: 'modifiers',
     TRAPS: 'traps'
 }
