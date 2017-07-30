@@ -3,7 +3,7 @@ export function requireAll (requireContext) {
 }
 
 export function calculateViewportSize (width, height) {
-    const pixelScale = height / 160
+    const pixelScale = height / 170
     const x = Math.round(width / pixelScale)
     const y = Math.round(height / pixelScale)
 

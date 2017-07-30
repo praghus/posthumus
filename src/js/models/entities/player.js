@@ -1,7 +1,7 @@
-import { Entity } from '../entity'
+import Entity from '../entity'
 import { DIRECTIONS, ENTITIES_FAMILY } from '../../lib/utils'
 
-export class Player extends Entity {
+export default class Player extends Entity {
     constructor (obj, game) {
         super(obj, game)
         this.godMode = true

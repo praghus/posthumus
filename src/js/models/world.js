@@ -1,4 +1,4 @@
-export class World {
+export default class World {
     constructor (data) {
         const backgroundLayer = data.layers[0].data
         const mainLayer = data.layers[1].data

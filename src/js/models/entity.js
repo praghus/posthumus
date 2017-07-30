@@ -1,8 +1,8 @@
 import SAT from 'sat'
 import { overlap, normalize } from '../lib/utils'
-import { JUMP_THROUGH } from '../lib/utils'
+import { DIRECTIONS, JUMP_THROUGH } from '../lib/utils'
 
-export class Entity {
+export default class Entity {
     constructor (obj, game) {
         this._game = game
         this.PlayerM = 0
@@ -13,7 +13,7 @@ export class Entity {
         this.height = obj.height
         this.type = obj.type
         this.properties = obj.properties
-        this.direction = obj.direction
+        this.direction = DIRECTIONS.LEFT
         this.family = 'elements'
         this.force = {x: 0, y: 0}
         this.speed = 0
@@ -55,10 +55,16 @@ export class Entity {
             }
             else {
                 ctx.drawImage(assets[this.type],
-                    this.animFrame * this.width, 0, this.width, this.height,
+                    0, 0, this.width, this.height,
                     Math.floor(this.x + camera.x), Math.floor(this.y + camera.y),
                     this.width, this.height
                 )
+            }
+            if (this.seesPlayer()) {
+                ctx.save()
+                ctx.fillStyle = 'green'
+                ctx.fillRect(Math.floor(this.x + camera.x), Math.floor(this.y + camera.y - 5), this.width, 2)
+                ctx.restore()
             }
         }
     }
@@ -106,7 +112,8 @@ export class Entity {
 
         this.PlayerM = ((player.y + player.height) - (this.y + this.height)) / (player.x - this.x)
 
-        if (!player.canHurt) {
+        if ((this.x < player.x && this.direction !== DIRECTIONS.RIGHT) ||
+            (this.x > player.x && this.direction !== DIRECTIONS.LEFT) || !player.canHurt) {
             return false
         }
 

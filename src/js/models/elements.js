@@ -1,7 +1,7 @@
 import { ENTITIES } from '../lib/utils'
 import { Zombie } from './entities'
 
-export class Elements {
+export default class Elements {
     constructor (entities, game) {
         this._game = game
         this.all = []

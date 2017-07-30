@@ -1,4 +1,4 @@
-export class Renderer {
+export default class Renderer {
     constructor (game) {
         this._game = game
     }

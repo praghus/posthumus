@@ -1,10 +1,9 @@
-import { Entity } from '../entity'
+import Entity from '../entity'
 import { DIRECTIONS, ENTITIES, ENTITIES_FAMILY } from '../../lib/utils'
+import { randomChoice } from '../../lib/utils'
 import { zombieGroan } from '../../actions/sounds'
 
-import { random, randomChoice } from '../../lib/utils'
-
-export class Zombie extends Entity {
+export default class Zombie extends Entity {
     constructor (obj, game) {
         super(obj, game)
         this.family = ENTITIES_FAMILY.ENEMIES
@@ -19,7 +18,6 @@ export class Zombie extends Entity {
         this.canFall = false
         this.fallTimeout = null
         this.type = randomChoice(['zombie1', 'zombie2'])
-        this.animFrame = random(0, 12)
         this.animations = {
             RIGHT: {x: 0, y: 0, w: 28, h: 32, frames: 12, fps: 10, loop: true},
             RUN_RIGHT: {x: 0, y: 0, w: 28, h: 32, frames: 12, fps: 20, loop: true},
@@ -28,6 +26,7 @@ export class Zombie extends Entity {
             RUN_LEFT: {x: 0, y: 32, w: 28, h: 32, frames: 12, fps: 20, loop: true},
             ATTACK_LEFT: {x: 336, y: 32, w: 28, h: 32, frames: 3, fps: 10, loop: true}
         }
+        this.animation = this.animations.LEFT
     }
 
     hit (damage) {
@@ -58,64 +57,65 @@ export class Zombie extends Entity {
     }
 
     update () {
-        const { world, playSound } = this._game
+        const { world, player, playSound } = this._game
 
         if (this.onScreen() && !this.awake) {
             this.awake = true
             playSound(zombieGroan)
         }
+
         if (this.awake && !this.dead) {
             this.force.y += world.gravity
-            this.force.x += this.direction > 0 ? this.speed : -this.speed
+            this.force.x += this.direction === DIRECTIONS.RIGHT ? this.speed : -this.speed
 
             if (this.attack) {
                 this.force.x = 0
             }
-            else {
-                if (this.seesPlayer()) {
-                    if (this.maxSpeed <= 1.5) this.maxSpeed += 0.1
-                }
-                else if (this.maxSpeed > 0.5) this.maxSpeed -= 0.1
+            else if (this.seesPlayer() && this.maxSpeed <= 1.5) {
+                this.maxSpeed += 0.1
+            }
+            else if (this.maxSpeed > 0.5) {
+                this.maxSpeed -= 0.1
             }
 
             this.move()
 
             if (this.onFloor) {
-                if (this.onLeftEdge) {
-                    this.direction = DIRECTIONS.RIGHT
-                    this.force.x *= -0.6
+                if (this.expectedX !== this.x) {
+                    if (this.seesPlayer() && this.y + this.height >= player.y + player.height) {
+                        this.force.y -= 4
+                    }
+                    else {
+                        if (this.expectedX < this.x) {
+                            this.direction = DIRECTIONS.RIGHT
+                            this.force.x *= -0.6
+                        }
+                        if (this.expectedX > this.x) {
+                            this.direction = DIRECTIONS.LEFT
+                            this.force.x *= -0.6
+                        }
+                    }
                 }
-                if (this.onRightEdge) {
-                    this.direction = DIRECTIONS.LEFT
-                    this.force.x *= -0.6
-                }
-                if (this.expectedX < this.x) {
-                    this.direction = DIRECTIONS.RIGHT
-                    this.force.x *= -0.6
-                }
-                if (this.expectedX > this.x) {
-                    this.direction = DIRECTIONS.LEFT
-                    this.force.x *= -0.6
-                }
-            }
 
-            if (this.attack) {
-                this.animate(this.direction === DIRECTIONS.RIGHT
-                    ? this.animations.ATTACK_RIGHT
-                    : this.animations.ATTACK_LEFT)
-                if (this.animFrame === 2) {
-                    this.attack = false
+                if (this.attack) {
+                    this.animate(this.direction === DIRECTIONS.RIGHT
+                        ? this.animations.ATTACK_RIGHT
+                        : this.animations.ATTACK_LEFT)
+                    if (this.animFrame === 2) {
+                        this.attack = false
+                    }
+                }
+                else {
+                    this.maxSpeed > 0.5
+                        ? this.animate(this.direction === DIRECTIONS.RIGHT
+                            ? this.animations.RUN_RIGHT
+                            : this.animations.RUN_LEFT)
+                        : this.animate(this.direction === DIRECTIONS.RIGHT
+                            ? this.animations.RIGHT
+                            : this.animations.LEFT)
                 }
             }
-            else {
-                this.maxSpeed > 0.5
-                    ? this.animate(this.direction === DIRECTIONS.RIGHT
-                        ? this.animations.RUN_RIGHT
-                        : this.animations.RUN_LEFT)
-                    : this.animate(this.direction === DIRECTIONS.RIGHT
-                        ? this.animations.RIGHT
-                        : this.animations.LEFT)
-            }
+            this.animate()
         }
     }
 }
