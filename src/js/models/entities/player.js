@@ -45,7 +45,7 @@ export default class Player extends Entity {
     }
 
     update () {
-        const {input} = this._game
+        const { input, world } = this._game
         // if (this.godMode) this.kill = false;
         if (!this.dead) {
             if (input.action) {
@@ -81,7 +81,7 @@ export default class Player extends Entity {
             }
         }
         else {
-            this.force.y += this._game.world.gravity
+            this.force.y += world.gravity
         }
         this.move()
 

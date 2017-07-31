@@ -86,14 +86,14 @@ export default class World {
         if (!this.inRange(x, y)) {
             return true
         }
-        return this.data.ground[x][y] > 32 * 8
+        return this.data.ground[x][y] > 32 * 4
     }
 
     isShadowCaster (x, y) {
         if (!this.inRange(x, y)) {
             return false
         }
-        return this.data.ground[x][y] > 32 * 8 || this.data.ground[x][y] === 1
+        return this.data.ground[x][y] > 32 * 4 || this.data.ground[x][y] === 1
     }
 
     addMask (obj) {

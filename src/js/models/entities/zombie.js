@@ -35,8 +35,6 @@ export default class Zombie extends Entity {
         this.energy -= damage
         if (this.energy <= 0) {
             this.dead = true
-            // this._game.explosion(this.x, this.y)
-            // this._game.elements.add('coin', {x: this.x + 8, y: this.y})
         }
     }
 

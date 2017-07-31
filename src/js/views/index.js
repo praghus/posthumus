@@ -2,16 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Game } from '../components'
-import { tickTime, startTicker, updateMousePos } from '../actions'
+import { tickTime, startTicker } from '../actions'
 
 const propTypes = {
-    width: PropTypes.number,
-    height: PropTypes.number,
+    ticker: PropTypes.object.isRequired,
+    input: PropTypes.object.isRequired,
     viewport: PropTypes.object,
-    multiplier: PropTypes.number,
-    lastFrameTime: PropTypes.number,
-    tickerStarted: PropTypes.bool,
-    mousePos: PropTypes.array,
     // from connect
     dispatch: PropTypes.func
 }
@@ -20,47 +16,35 @@ class AppContainer extends Component {
     constructor (props) {
         super(props)
         this.wrapper = null
-        this.updateMousePos = this.updateMousePos.bind(this)
         this.startTicker = this.startTicker.bind(this)
     }
 
     render () {
         return (
-            <Game {...this.props}
-                startTicker={this.startTicker}
-                updateMousePos={this.updateMousePos} />
+            <Game {...this.props} startTicker={this.startTicker} />
         )
     }
 
     startTicker () {
-        const { tickerStarted, dispatch } = this.props
-        const ticker = () => {
+        const { ticker, dispatch } = this.props
+        const tick = () => {
             dispatch(tickTime())
-            window.requestAnimationFrame(ticker)
+            window.requestAnimationFrame(tick)
         }
-        if (!tickerStarted) {
+        if (!ticker.tickerStarted) {
             /*eslint no-console: ["error", { allow: ["info"] }] */
             console.info('Starting ticker')
             dispatch(startTicker())
-            ticker()
+            tick()
         }
-    }
-
-    updateMousePos (x, y) {
-        const { dispatch } = this.props
-        dispatch(updateMousePos(x, y))
     }
 }
 
 const mapStateToProps = (state) => {
     return {
-        width: state.width,
-        height: state.height,
         viewport: state.viewport,
-        mousePos: state.mousePos,
-        multiplier: state.multiplier,
-        lastFrameTime: state.lastFrameTime,
-        tickerStarted: state.tickerStarted
+        input: state.input,
+        ticker: state.ticker
     }
 }
 

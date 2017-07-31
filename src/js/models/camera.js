@@ -14,10 +14,10 @@ export default class Camera {
         const { spriteSize, surface } = world
 
         if ((player.x + (player.width / 2)) + this.x > resolutionX / 2) {
-            this.x -= player.force.x > 0 ? Math.floor(player.force.x) : 0.5
+            this.x -= player.force.x > 0 ? player.force.x : 0.5
         }
         if ((player.x + (player.width / 2)) + this.x < resolutionX / 2) {
-            this.x -= player.force.x < 0 ? Math.floor(player.force.x) : -0.5
+            this.x -= player.force.x < 0 ? player.force.x : -0.5
         }
         if (this.x > 0) {
             this.x = 0

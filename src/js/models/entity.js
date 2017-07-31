@@ -41,7 +41,7 @@ export default class Entity {
             new SAT.Vector(0, this.height)
         ]
     }
-    // ----------------------------------------------------------------------
+
     draw (ctx) {
         const { camera, assets } = this._game
         if (this.visible && this.onScreen()) {
@@ -172,7 +172,7 @@ export default class Entity {
 
         for (let y = PY; y <= PH; y++) {
             for (let x = PX; x <= PW; x++) {
-                nearMatrix.push(this._game.world.tileData(x, y))
+                nearMatrix.push(world.tileData(x, y))
             }
         }
 

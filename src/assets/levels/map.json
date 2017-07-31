@@ -1918,8 +1918,8 @@
                  "type":"player",
                  "visible":true,
                  "width":16,
-                 "x":2179.33333333333,
-                 "y":1049.83333333333
+                 "x":1978,
+                 "y":1052
                 }, 
                 {
                  "height":8,
@@ -1931,6 +1931,17 @@
                  "width":30.75,
                  "x":2825,
                  "y":736
+                }, 
+                {
+                 "height":8,
+                 "id":167,
+                 "name":"",
+                 "rotation":0,
+                 "type":"jump_through",
+                 "visible":true,
+                 "width":17,
+                 "x":1451,
+                 "y":1040
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1949,7 +1960,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":167,
+ "nextobjectid":168,
  "orientation":"orthogonal",
  "properties":
     {
