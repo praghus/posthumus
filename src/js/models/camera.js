@@ -16,19 +16,25 @@ export default class Camera {
         if ((player.x + (player.width / 2)) + this.x > resolutionX / 2) {
             this.x -= player.force.x > 0 ? player.force.x : 0.5
         }
+
         if ((player.x + (player.width / 2)) + this.x < resolutionX / 2) {
             this.x -= player.force.x < 0 ? player.force.x : -0.5
         }
+
         if (this.x > 0) {
             this.x = 0
         }
+
         if (this.x - resolutionX < -world.width * spriteSize) {
             this.x = (-world.width * spriteSize) + resolutionX
         }
+
         this.y = -((player.y + player.height) - (resolutionY / 1.2))
+
         if (this.y > 0) {
             this.y = 0
         }
+
         // above the surface
         if (Math.round((player.y + (player.height / 2)) / spriteSize) < surface) {
             this.underground = false
@@ -36,36 +42,26 @@ export default class Camera {
                 this.y = (-surface * spriteSize) + resolutionY
             }
         }
+        // under the surface
         else {
-            // under the surface
             this.underground = true
             if ((this.y) >= -surface * spriteSize) {
                 this.y = (-surface * spriteSize)
             }
         }
+
         if (this.y - resolutionY < -world.height * spriteSize) {
             this.y = (-world.height * spriteSize) + resolutionY
         }
+
         // shake
         if (this.rector !== 2) {
-            if (this.a === 1) {
-                this.y = this.y + this.rector
-            }
-            else if (this.a === 2) {
-                this.x = this.x + this.rector
-            }
-            else if (this.a === 3) {
-                this.y = this.y - this.rector
-            }
-            else {
-                this.x = this.x - this.rector
-            }
-            if (this.a < 4) {
-                this.a++
-            }
-            else {
-                this.a = 1
-            }
+            if (this.a === 1) this.y += this.rector
+            else if (this.a === 2) this.x += this.rector
+            else if (this.a === 3) this.y -= this.rector
+            else this.x -= this.rector
+
+            this.a = this.a < 4 ? this.a + 1 : 1
         }
     }
 

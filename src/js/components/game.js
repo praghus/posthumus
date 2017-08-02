@@ -2,22 +2,15 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Canvas from './canvas'
 import levelData from '../../assets/levels/map.json'
-import { select as d3Select, mouse as d3Mouse, touches as d3Touches, event as d3Event } from 'd3'
-import { requireAll } from '../lib/utils'
-import { updateMousePos, updateKeyPressed } from '../actions'
 import { Camera, Player, Elements, World, Renderer } from '../models'
-
-const allImages = require.context('../../assets/images', true, /.*\.png/)
-const images = requireAll(allImages).reduce(
-    (state, image) => ({
-        ...state, [image.split('/')[2].split('-')[0]]: image
-    }), {}
-)
+import { select as d3Select, mouse as d3Mouse, touches as d3Touches, event as d3Event } from 'd3'
+import { updateMousePos, updateKeyPressed } from '../actions'
 
 const propTypes = {
+    assets: PropTypes.object.isRequired,
+    input: PropTypes.object.isRequired,
     startTicker: PropTypes.func.isRequired,
     ticker: PropTypes.object.isRequired,
-    input: PropTypes.object.isRequired,
     viewport: PropTypes.object,
     dispatch: PropTypes.func
 }
@@ -32,9 +25,12 @@ export default class Game extends Component {
         this.world = null
         this.assets = {}
         this.wrapper = null
+        this.loadedCount = 0
+        this.assetsLoaded = false
         this.then = performance.now()
         this.viewport = props.viewport
         this.ticker = props.ticker
+        this.assets = props.assets
         this.particlesExplosion = this.particlesExplosion.bind(this)
         this.playSound = this.playSound.bind(this)
     }
@@ -42,11 +38,6 @@ export default class Game extends Component {
     componentDidMount () {
         const dom = d3Select(document)
         const svg = d3Select(this.wrapper)
-        /* todo: images preloader */
-        Object.keys(images).map((key) => {
-            this.assets[key] = new Image()
-            this.assets[key].src = images[key]
-        })
 
         this.world = new World(levelData)
         this.camera = new Camera(this)
@@ -65,6 +56,7 @@ export default class Game extends Component {
     }
 
     componentWillReceiveProps (nextProps) {
+        this.assets = nextProps.assets
         this.ticker = nextProps.ticker
         this.input = nextProps.input.keyPressed
         this.viewport = nextProps.viewport

@@ -16,7 +16,7 @@ export default class Renderer {
     }
 
     draw () {
-        const { ctx, camera, player, viewport, ticker } = this._game
+        const { ctx, camera, player, viewport } = this._game
         const { resolutionX, resolutionY, scale } = viewport
 
         // disable image smoothing
@@ -29,13 +29,19 @@ export default class Renderer {
         this.renderBackground()
         this.renderGround()
         this.renterObjects()
-        this.renderForeGround()
+
         if (this.dynamicLights && (camera.underground || player.inDark > 0)) {
+            this.renderForeGround()
             this.renderLightingEffect()
+            this.renderDarks()
+            this.renderPlayer()
         }
-        this.renderDarks()
-        this.renderPlayer()
-        this.fontPrint(`${Math.round(ticker.fps)} FPS`, 5, 5)
+        else {
+            this.renderPlayer()
+            this.renderForeGround()
+            this.renderDarks()
+        }
+        // this.fontPrint(`${Math.round(ticker.fps)} FPS`, 5, 5)
         ctx.restore()
     }
 
@@ -67,15 +73,21 @@ export default class Renderer {
             player.x + (player.width / 2) + camera.x,
             player.y + (player.height / 2) + camera.y
         )
+
         const lighting = new Lighting({light: this.playerLight, objects: this.lightmask})
         const darkmask = new DarkMask({lights: [this.playerLight]})
+
         lighting.compute(resolutionX, resolutionY)
         darkmask.compute(resolutionX, resolutionY)
+
         ctx.save()
+
         ctx.globalCompositeOperation = 'overlay' // destination-in, overlay, soft-light
         lighting.render(ctx)
+
         ctx.globalCompositeOperation = 'source-over'
         darkmask.render(ctx)
+
         ctx.restore()
     }
 
