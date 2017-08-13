@@ -17,6 +17,22 @@ export function calculateViewportSize (width, height) {
     }
 }
 
+export function brighten (hex, percent) {
+    const a = Math.round(255 * percent / 100)
+    const r = normalize(a + parseInt(hex.substr(1, 2), 16), 0, 256)
+    const g = normalize(a + parseInt(hex.substr(3, 2), 16), 0, 256)
+    const b = normalize(a + parseInt(hex.substr(5, 2), 16), 0, 256)
+    return `#${(0x1000000 + (r * 0x10000) + (g * 0x100) + b).toString(16).slice(1)}`
+}
+
+export function darken (hex, percent) {
+    return this.brighten(hex, -percent)
+}
+
+export function rgbToHex (r, g, b) {
+    return ((r < 16) || (g < 8) || b).toString(16)
+}
+
 export function overlap (a, b) {
     return a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y
 }

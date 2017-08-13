@@ -37,7 +37,7 @@ export default class Game extends Component {
 
     componentDidMount () {
         const dom = d3Select(document)
-        const svg = d3Select(this.wrapper)
+        // const svg = d3Select(this.wrapper)
 
         this.world = new World(levelData)
         this.camera = new Camera(this)
@@ -46,10 +46,10 @@ export default class Game extends Component {
         this.elements = new Elements(this.world.getObjects(), this)
         this.camera.center()
 
-        svg.on('mousedown', () => this.updateMousePos())
-        svg.on('touchstart', () => this.updateTouchPos())
-        dom.on('keydown', () => this.onKey(d3Event.key, true))
-        dom.on('keyup', () => this.onKey(d3Event.key, false))
+        // svg.on('mousedown', () => this.updateMousePos())
+        // svg.on('touchstart', () => this.updateTouchPos())
+        dom.on('keydown', () => this.onKey(d3Event.code, true))
+        dom.on('keyup', () => this.onKey(d3Event.code, false))
 
         this.ctx = this.canvas.context
         this.props.startTicker()
@@ -93,24 +93,45 @@ export default class Game extends Component {
     onKey (key, pressed) {
         const { dispatch } = this.props
         switch (key) {
+        case 'KeyA':
         case 'ArrowLeft':
             dispatch(updateKeyPressed('left', pressed))
             break
+        case 'KeyD':
         case 'ArrowRight':
             dispatch(updateKeyPressed('right', pressed))
             break
+        case 'KeyS':
         case 'ArrowDown':
             dispatch(updateKeyPressed('down', pressed))
             break
+        case 'KeyW':
         case 'ArrowUp':
             dispatch(updateKeyPressed('up', pressed))
             break
+        case 'Space':
+            dispatch(updateKeyPressed('fire', pressed))
+            break
+        }
+    }
+
+    shootExplosion (x, y, color) {
+        const particle_count = 5 + parseInt(Math.random() * 5)
+        for (let i = 0; i < particle_count; i++) {
+            const r = (1 + Math.random())
+            this.elements.add({
+                x: x,
+                y: y,
+                width: r,
+                height: r,
+                type: 'particle',
+                properties: {color: color}
+            })
         }
     }
 
     particlesExplosion (x, y) {
         const particle_count = 10 + parseInt(Math.random() * 5)
-        this.camera.shake()
         for (let i = 0; i < particle_count; i++) {
             const r = (1 + Math.random())
             this.elements.add({

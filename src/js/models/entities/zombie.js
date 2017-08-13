@@ -30,20 +30,20 @@ export default class Zombie extends Entity {
     }
 
     hit (damage) {
+        const { particlesExplosion } = this._game
         this.force.x += -(this.force.x * 4)
         this.force.y = -2
         this.energy -= damage
         if (this.energy <= 0) {
             this.dead = true
+            particlesExplosion(this.x, this.y)
         }
     }
 
     collide (element) {
-        const { player, particlesExplosion } = this._game
+        const { player } = this._game
         if (element.type === ENTITIES.PLAYER && player.canHurt) {
             this.attack = true
-            this.dead = true
-            particlesExplosion(this.x, this.y)
         }
         if (element.type === ENTITIES.SLOPE && !this.canFall) {
             this.canFall = true

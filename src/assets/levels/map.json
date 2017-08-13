@@ -1911,17 +1911,6 @@
                  "y":1008
                 }, 
                 {
-                 "height":43,
-                 "id":157,
-                 "name":"Player",
-                 "rotation":0,
-                 "type":"player",
-                 "visible":true,
-                 "width":16,
-                 "x":1978,
-                 "y":1052
-                }, 
-                {
                  "height":8,
                  "id":158,
                  "name":"",
@@ -1942,6 +1931,17 @@
                  "width":17,
                  "x":1451,
                  "y":1040
+                }, 
+                {
+                 "height":43,
+                 "id":169,
+                 "name":"Player",
+                 "rotation":0,
+                 "type":"player",
+                 "visible":true,
+                 "width":16,
+                 "x":117,
+                 "y":1059.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1960,7 +1960,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":168,
+ "nextobjectid":170,
  "orientation":"orthogonal",
  "properties":
     {
@@ -1973,7 +1973,7 @@
      "surfaceLevel":"string"
     },
  "renderorder":"right-down",
- "tiledversion":"2017.06.20",
+ "tiledversion":"1.0.2",
  "tileheight":16,
  "tilesets":[
         {

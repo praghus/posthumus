@@ -1,5 +1,6 @@
 import Entity from '../entity'
-import { DIRECTIONS, ENTITIES_FAMILY } from '../../lib/utils'
+import { DIRECTIONS, ENTITIES, ENTITIES_FAMILY } from '../../lib/utils'
+import { playerReload, playerShoot } from '../../actions/sounds'
 
 export default class Player extends Entity {
     constructor (obj, game) {
@@ -7,30 +8,33 @@ export default class Player extends Entity {
         this.godMode = true
         this.canShoot = true
         this.canHurt = true
+        this.hurtTimeout = null
         this.direction = DIRECTIONS.RIGHT
         this.inDark = 0
-        this.energy = 30
-        this.maxEnergy = 30
+        this.energy = 3
+        this.maxEnergy = 3
         this.maxSpeed = 2
         this.speed = 0.2
-        this.coinCollect = 0
-        this.throwDelay = 500
-        this.shootDelay = 500
-        this.throwSpeed = 0
-        this.throwMaxSpeed = 5
         this.solid = true
         this.items = []
+        this.ammo = 2
+        this.maxAmmo = 4
+        this.shootTimeout = null
+        this.shootTimeout = null
+        this.shootDelay = 500
+        this.countToReload = 0
         this.animations = {
-            RIGHT: {x: 0, y: 16, w: 32, h: 48, frames: 8, fps: 15, loop: true},
-            JUMP_RIGHT: {x: 256, y: 16, w: 32, h: 48, frames: 5, fps: 15, loop: false},
-            FALL_RIGHT: {x: 320, y: 16, w: 32, h: 48, frames: 2, fps: 15, loop: false},
-            STAND_RIGHT: {x: 448, y: 16, w: 32, h: 48, frames: 1, fps: 15, loop: false},
-            STAND_LEFT: {x: 480, y: 16, w: 32, h: 48, frames: 1, fps: 15, loop: false},
-            FALL_LEFT: {x: 512, y: 16, w: 32, h: 48, frames: 2, fps: 15, loop: false},
-            JUMP_LEFT: {x: 576, y: 16, w: 32, h: 48, frames: 4, fps: 15, loop: false},
-            LEFT: {x: 704, y: 16, w: 32, h: 48, frames: 8, fps: 15, loop: true},
-            DEAD_RIGHT: {x: 448, y: 128, w: 32, h: 64, frames: 1, fps: 15, loop: false},
-            DEAD_LEFT: {x: 480, y: 128, w: 32, h: 64, frames: 1, fps: 15, loop: false}
+            RIGHT: {x: 0, y: 80, w: 32, h: 48, frames: 8, fps: 15, loop: true},
+            JUMP_RIGHT: {x: 256, y: 80, w: 32, h: 48, frames: 5, fps: 15, loop: false},
+            FALL_RIGHT: {x: 320, y: 80, w: 32, h: 48, frames: 2, fps: 15, loop: false},
+            STAND_RIGHT: {x: 448, y: 80, w: 32, h: 48, frames: 1, fps: 15, loop: false},
+            STAND_LEFT: {x: 480, y: 80, w: 32, h: 48, frames: 1, fps: 15, loop: false},
+            FALL_LEFT: {x: 512, y: 80, w: 32, h: 48, frames: 2, fps: 15, loop: false},
+            JUMP_LEFT: {x: 576, y: 80, w: 32, h: 48, frames: 4, fps: 15, loop: false},
+            LEFT: {x: 704, y: 80, w: 32, h: 48, frames: 8, fps: 15, loop: true},
+            SHOOT_RIGHT: {x: 0, y: 144, w: 32, h: 48, frames: 5, fps: 11, loop: false},
+            SHOOT_LEFT: {x: 160, y: 144, w: 32, h: 48, frames: 5, fps: 11, loop: false},
+            RELOADING: {x: 320, y: 144, w: 32, h: 48, frames: 4, fps: 4, loop: true}
         }
         this.animation = this.animations.STAND_RIGHT
     }
@@ -60,8 +64,11 @@ export default class Player extends Entity {
                 this.force.x += this.speed
                 this.direction = DIRECTIONS.RIGHT
             }
-            if (this.onFloor && input.up) {
+            if (input.up && this.onFloor) {
                 this.doJump = true
+            }
+            if (input.fire && this.canShoot && this.ammo > 0) {
+                this.shoot()
             }
 
             // slow down
@@ -83,9 +90,19 @@ export default class Player extends Entity {
         else {
             this.force.y += world.gravity
         }
+
         this.move()
 
-        if (this.doJump || this.fall) {
+        if (this.shootTimeout && this.force.x === 0) {
+            this.animate(this.direction === DIRECTIONS.RIGHT
+                ? this.animations.SHOOT_RIGHT
+                : this.animations.SHOOT_LEFT)
+        }
+        else if (this.countToReload >= 40 && this.ammo < this.maxAmmo) {
+            this.animate(this.animations.RELOADING)
+        }
+        else if (this.doJump || this.fall) {
+            this.animCount = 0
             if (this.force.y < -2) {
                 this.animate(this.direction === DIRECTIONS.RIGHT
                     ? this.animations.JUMP_RIGHT
@@ -107,6 +124,11 @@ export default class Player extends Entity {
                 ? this.animations.STAND_RIGHT
                 : this.animations.STAND_LEFT)
         }
+
+        this.force.x === 0
+            ? this.countToReload++
+            : this.countToReload = 0
+        if (this.countToReload === 100) this.reload()
     }
 
     collide (element) {
@@ -126,8 +148,46 @@ export default class Player extends Entity {
         if (this.energy <= 0 && !this.dead) {
             // this.kill = true;
         }
-        setTimeout(() => {
+        this.hurtTimeout = setTimeout(() => {
             this.canHurt = true
+            this.hurtTimeout = null
         }, 1000)
     }
+
+    shoot () {
+        const { elements, playSound } = this._game
+        this.canShoot = false
+        this.force.x = 0
+        this.ammo -= 1
+        this.animFrame = 0
+        this.countToReload = 0
+        elements.add({
+            type: ENTITIES.BULLET,
+            x: this.direction === DIRECTIONS.RIGHT
+                ? this.x + this.width
+                : this.x,
+            y: this.y + 21,
+            direction: this.direction}
+        )
+
+        this.flashTimeout = setTimeout(() => {
+            this.shootFlash = true
+            this.flashTimeout = null
+        }, 60)
+        this.shootTimeout = setTimeout(() => {
+            this.canShoot = true // player.animOffset = 0;
+            this.shootTimeout = null
+        }, this.shootDelay)
+        playSound(playerShoot)
+    };
+
+    reload () {
+        const { playSound } = this._game
+        if (this.ammo < this.maxAmmo) {
+            playSound(playerReload)
+            this.ammo += 1
+            this.reloading = false
+            this.countToReload = 40
+        }
+    };
 }

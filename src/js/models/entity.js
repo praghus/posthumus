@@ -13,7 +13,7 @@ export default class Entity {
         this.height = obj.height
         this.type = obj.type
         this.properties = obj.properties
-        this.direction = DIRECTIONS.LEFT
+        this.direction = obj.direction || DIRECTIONS.LEFT
         this.family = 'elements'
         this.force = {x: 0, y: 0}
         this.speed = 0
@@ -60,12 +60,12 @@ export default class Entity {
                     this.width, this.height
                 )
             }
-            if (this.seesPlayer()) {
-                ctx.save()
-                ctx.fillStyle = 'green'
-                ctx.fillRect(Math.floor(this.x + camera.x), Math.floor(this.y + camera.y - 5), this.width, 2)
-                ctx.restore()
-            }
+            // if (this.seesPlayer()) {
+            //     ctx.save()
+            //     ctx.fillStyle = 'green'
+            //     ctx.fillRect(Math.floor(this.x + camera.x), Math.floor(this.y + camera.y - 5), this.width, 2)
+            //     ctx.restore()
+            // }
         }
     }
 
@@ -145,6 +145,9 @@ export default class Entity {
         else if (++(entity.animCount) === Math.round(60 / animation.fps)) {
             if (entity.animFrame <= entity.animation.frames && animation.loop) {
                 entity.animFrame = normalize(entity.animFrame + 1, 0, entity.animation.frames)
+            }
+            else if (entity.animFrame < entity.animation.frames - 1 && !animation.loop) {
+                entity.animFrame += 1
             }
             entity.animCount = 0
         }

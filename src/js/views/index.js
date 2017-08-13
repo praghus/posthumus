@@ -16,8 +16,7 @@ const propTypes = {
     ticker: PropTypes.object.isRequired,
     input: PropTypes.object.isRequired,
     viewport: PropTypes.object,
-    // from connect
-    dispatch: PropTypes.func
+    dispatch: PropTypes.func // via connect
 }
 
 class AppContainer extends Component {

@@ -77,7 +77,7 @@ const rules = [
     {
         test: /\.(png|gif|jpg|svg)$/,
         include: imgPath,
-        use: 'url-loader?limit=1024&name=assets/[name]-[hash].[ext]'
+        use: 'url-loader?limit=100&name=assets/[name]-[hash].[ext]'
     },
     {
         test: /\.json$/,

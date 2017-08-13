@@ -6,6 +6,7 @@ import {
 const initialState = {
     mousePos: [0, 0],
     keyPressed: {
+        fire: false,
         left: false,
         right: false,
         down: false,
