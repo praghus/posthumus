@@ -7,7 +7,7 @@ export default class World {
 
         this.width = parseInt(data.width)
         this.height = parseInt(data.height)
-        this.gravity = parseFloat(data.properties.gravity)
+        this.gravity = 0.4// parseFloat(data.properties.gravity)
         this.surface = parseInt(data.properties.surfaceLevel)
         this.spriteSize = parseInt(data.tilewidth)
         this.spriteCols = parseInt(data.tilesets[0].columns)

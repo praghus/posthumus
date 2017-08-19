@@ -29,7 +29,7 @@ export default class Camera {
             this.x = (-world.width * spriteSize) + resolutionX
         }
 
-        this.y = -((player.y + player.height) - (resolutionY / 1.2))
+        this.y = -((player.y + player.height) - (resolutionY / 2))
 
         if (this.y > 0) {
             this.y = 0

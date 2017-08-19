@@ -11,22 +11,15 @@ export default class JumpThrough extends Entity {
 
     collide (element) {
         const { input, player } = this._game
-        if (element.force.y > 0 && element.y + element.height < this.y + this.height) {
+        if (element.force.y > 0 && element.y + element.height <= this.y + this.height) {
             element.y = this.y - element.height
             element.force.y = this.y - element.y - element.height
             element.onFloor = true
+            element.doJump = false
             element.fall = false
 
-            if (element.doJump) {
-                element.doJump = false
-            }
-
             if (element.type === ENTITIES.PLAYER) {
-                if (input.up) {
-                    player.force.y = -6
-                    player.doJump = true
-                }
-                else if (input.down) {
+                if (input.down) {
                     player.y += this.height
                 }
             }

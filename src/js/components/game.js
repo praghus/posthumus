@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Canvas from './canvas'
-import levelData from '../../assets/levels/map.json'
+import levelData from '../../assets/levels/map2.json'
 import { Camera, Player, Elements, World, Renderer } from '../models'
 import { select as d3Select, mouse as d3Mouse, touches as d3Touches, event as d3Event } from 'd3'
 import { updateMousePos, updateKeyPressed } from '../actions'
@@ -37,7 +37,7 @@ export default class Game extends Component {
 
     componentDidMount () {
         const dom = d3Select(document)
-        // const svg = d3Select(this.wrapper)
+        const svg = d3Select(this.wrapper)
 
         this.world = new World(levelData)
         this.camera = new Camera(this)
@@ -46,8 +46,8 @@ export default class Game extends Component {
         this.elements = new Elements(this.world.getObjects(), this)
         this.camera.center()
 
-        // svg.on('mousedown', () => this.updateMousePos())
-        // svg.on('touchstart', () => this.updateTouchPos())
+        svg.on('mousedown', () => this.updateMousePos())
+        svg.on('touchstart', () => this.updateTouchPos())
         dom.on('keydown', () => this.onKey(d3Event.code, true))
         dom.on('keyup', () => this.onKey(d3Event.code, false))
 

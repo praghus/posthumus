@@ -1,14 +1,15 @@
 import Entity from '../entity'
 import { DIRECTIONS, ENTITIES, ENTITIES_FAMILY } from '../../lib/utils'
-import { randomChoice } from '../../lib/utils'
+// import { randomChoice } from '../../lib/utils'
 import { zombieGroan } from '../../actions/sounds'
 
 export default class Zombie extends Entity {
     constructor (obj, game) {
         super(obj, game)
         this.family = ENTITIES_FAMILY.ENEMIES
+        this.direction = DIRECTIONS.LEFT
         this.maxSpeed = 0.5
-        this.speed = 0.1
+        this.speed = 0.05
         this.energy = 30
         this.maxEnergy = 30
         this.damage = 10
@@ -17,13 +18,17 @@ export default class Zombie extends Entity {
         this.attack = false
         this.canFall = false
         this.fallTimeout = null
-        this.type = randomChoice(['zombie1', 'zombie2'])
+        this.type = 'zombie'
+        this.bounds = {
+            x: 8,
+            y: 8,
+            width: this.width - 16,
+            height: this.height - 8
+        }
         this.animations = {
-            RIGHT: {x: 0, y: 0, w: 28, h: 32, frames: 12, fps: 10, loop: true},
-            RUN_RIGHT: {x: 0, y: 0, w: 28, h: 32, frames: 12, fps: 20, loop: true},
+            RIGHT: {x: 0, y: 0, w: 32, h: 48, frames: 12, fps: 8, loop: true},
+            LEFT: {x: 384, y: 0, w: 32, h: 48, frames: 12, fps: 8, loop: true},
             ATTACK_RIGHT: {x: 336, y: 0, w: 28, h: 32, frames: 3, fps: 10, loop: true},
-            LEFT: {x: 0, y: 32, w: 28, h: 32, frames: 12, fps: 10, loop: true},
-            RUN_LEFT: {x: 0, y: 32, w: 28, h: 32, frames: 12, fps: 20, loop: true},
             ATTACK_LEFT: {x: 336, y: 32, w: 28, h: 32, frames: 3, fps: 10, loop: true}
         }
         this.animation = this.animations.LEFT
@@ -41,10 +46,10 @@ export default class Zombie extends Entity {
     }
 
     collide (element) {
-        const { player } = this._game
-        if (element.type === ENTITIES.PLAYER && player.canHurt) {
-            this.attack = true
-        }
+        // const { player } = this._game
+        // if (element.type === ENTITIES.PLAYER && player.canHurt) {
+        //     this.attack = true
+        // }
         if (element.type === ENTITIES.SLOPE && !this.canFall) {
             this.canFall = true
             this.fallTimeout = setTimeout(() => {
@@ -71,12 +76,12 @@ export default class Zombie extends Entity {
             if (this.attack) {
                 this.force.x = 0
             }
-            else if (this.seesPlayer() && this.maxSpeed <= 1.5) {
-                this.maxSpeed += 0.1
-            }
-            else if (this.maxSpeed > 0.5) {
-                this.maxSpeed -= 0.1
-            }
+            // else if (this.seesPlayer() && this.maxSpeed <= 1.5) {
+            //     this.maxSpeed += 0.1
+            // }
+            // else if (this.maxSpeed > 0.5) {
+            //     this.maxSpeed -= 0.1
+            // }
 
             this.move()
 
@@ -88,15 +93,15 @@ export default class Zombie extends Entity {
                     else {
                         if (this.expectedX < this.x) {
                             this.direction = DIRECTIONS.RIGHT
-                            // this.force.x *= -0.6
                         }
                         if (this.expectedX > this.x) {
                             this.direction = DIRECTIONS.LEFT
-                            // this.force.x *= -0.6
                         }
                     }
                 }
 
+                if (this.onLeftEdge) this.direction = DIRECTIONS.RIGHT
+                if (this.onRightEdge) this.direction = DIRECTIONS.LEFT
                 if (this.attack) {
                     this.animate(this.direction === DIRECTIONS.RIGHT
                         ? this.animations.ATTACK_RIGHT
@@ -106,13 +111,9 @@ export default class Zombie extends Entity {
                     }
                 }
                 else {
-                    this.maxSpeed > 0.5
-                        ? this.animate(this.direction === DIRECTIONS.RIGHT
-                            ? this.animations.RUN_RIGHT
-                            : this.animations.RUN_LEFT)
-                        : this.animate(this.direction === DIRECTIONS.RIGHT
-                            ? this.animations.RIGHT
-                            : this.animations.LEFT)
+                    this.animate(this.direction === DIRECTIONS.RIGHT
+                        ? this.animations.RIGHT
+                        : this.animations.LEFT)
                 }
             }
             this.animate()

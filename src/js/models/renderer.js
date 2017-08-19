@@ -42,7 +42,8 @@ export default class Renderer {
             this.renderDarks()
         }
         // this.fontPrint(`${Math.round(ticker.fps)} FPS`, 5, 5)
-        this.renderScore()
+        this.renderIndicators()
+
         ctx.restore()
     }
 
@@ -83,7 +84,8 @@ export default class Renderer {
 
         ctx.save()
 
-        ctx.globalCompositeOperation = 'overlay' // destination-in, overlay, soft-light
+        // destination-in, overlay, soft-light
+        ctx.globalCompositeOperation = 'overlay' // camera.underground ? 'destination-in' : 'overlay'
         lighting.render(ctx)
 
         ctx.globalCompositeOperation = 'source-over'
@@ -249,7 +251,7 @@ export default class Renderer {
         })
     }
 
-    renderScore () {
+    renderIndicators () {
         const { ctx, assets, player, viewport } = this._game
         const { resolutionY } = viewport
 

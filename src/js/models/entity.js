@@ -5,7 +5,6 @@ import { DIRECTIONS } from '../lib/utils'
 export default class Entity {
     constructor (obj, game) {
         this._game = game
-        this.PlayerM = 0
         this.id = obj.id
         this.x = obj.x
         this.y = obj.y
@@ -14,81 +13,23 @@ export default class Entity {
         this.type = obj.type
         this.properties = obj.properties
         this.direction = obj.direction || DIRECTIONS.LEFT
-        this.family = 'elements'
-        this.force = {x: 0, y: 0}
+        this.force = { x: 0, y: 0 }
         this.speed = 0
         this.maxSpeed = 1
-        this.energy = 0
-        this.maxEnergy = 0
-        this.doJump = false
         this.canShoot = false
         this.canJump = false
         this.activated = false
         this.dead = false
+        this.jump = false
         this.fall = false
         this.onFloor = false
         this.solid = false
         this.shadowCaster = false
         this.visible = true
+        this.family = null
         this.animation = null
-        this.animOffset = 0
         this.animFrame = 0
         this.animCount = 0
-        this.vectorMask = [
-            new SAT.Vector(0, 0),
-            new SAT.Vector(this.width, 0),
-            new SAT.Vector(this.width, this.height),
-            new SAT.Vector(0, this.height)
-        ]
-    }
-
-    draw (ctx) {
-        const { camera, assets } = this._game
-        if (this.visible && this.onScreen()) {
-            if (this.animation) {
-                ctx.drawImage(assets[this.type],
-                    this.animation.x + (this.animFrame * this.animation.w), this.animation.y + this.animOffset,
-                    this.animation.w, this.animation.h,
-                    Math.floor(this.x + camera.x), Math.floor(this.y + camera.y),
-                    this.animation.w, this.animation.h
-                )
-            }
-            else {
-                ctx.drawImage(assets[this.type],
-                    0, 0, this.width, this.height,
-                    Math.floor(this.x + camera.x), Math.floor(this.y + camera.y),
-                    this.width, this.height
-                )
-            }
-            // if (this.seesPlayer()) {
-            //     ctx.save()
-            //     ctx.fillStyle = 'green'
-            //     ctx.fillRect(Math.floor(this.x + camera.x), Math.floor(this.y + camera.y - 5), this.width, 2)
-            //     ctx.restore()
-            // }
-        }
-    }
-
-    update () {
-        // update
-    }
-
-    getMask () {
-        return new SAT.Polygon(new SAT.Vector(this.x, this.y), this.vectorMask)
-    }
-
-    overlapTest (obj) {
-        if (!this.dead && overlap(this, obj) && (this.onScreen() || this.activated)) {
-            // poligon collision checking
-            if (SAT.testPolygonPolygon(this.getMask(), obj.getMask())) {
-                this.collide(obj)
-                obj.collide(this)
-            }
-        }
-    }
-
-    collide (element) {
-        // console.log("Object "+element.type+" collide with "+this.type);
     }
 
     onScreen () {
@@ -100,34 +41,6 @@ export default class Entity {
                 this.x - spriteSize < -camera.x + resolutionX &&
                 this.y - spriteSize < -camera.y + resolutionY &&
                 this.y + this.height + spriteSize > -camera.y
-    }
-
-    kill () {
-        this.dead = true
-    }
-
-    seesPlayer () {
-        const { player, world } = this._game
-        const { spriteSize } = world
-
-        this.PlayerM = ((player.y + player.height) - (this.y + this.height)) / (player.x - this.x)
-
-        if ((this.x < player.x && this.direction !== DIRECTIONS.RIGHT) ||
-            (this.x > player.x && this.direction !== DIRECTIONS.LEFT) || !player.canHurt) {
-            return false
-        }
-
-        if (this.PlayerM > -0.9 && this.PlayerM < 0.9) {
-            const steps = Math.abs(Math.floor(player.x / spriteSize) - Math.floor(this.x / spriteSize))
-            const from = player.x < this.x ? Math.floor(player.x / spriteSize) : Math.floor(this.x / spriteSize)
-            for (let X = from; X < from + steps; X++) {
-                if (world.isSolid(X, Math.round(this.y / spriteSize))) {
-                    return false
-                }
-            }
-            return true
-        }
-        return false
     }
 
     animate (animation) {
@@ -153,13 +66,112 @@ export default class Entity {
         }
     }
 
+    draw (ctx) {
+        const { camera, assets } = this._game
+        if (this.visible && this.onScreen()) {
+            if (this.animation) {
+                ctx.drawImage(assets[this.type],
+                    this.animation.x + this.animFrame * this.animation.w, this.animation.y,
+                    this.animation.w, this.animation.h,
+                    this.x + camera.x, this.y + camera.y,
+                    this.animation.w, this.animation.h
+                )
+            }
+            else {
+                ctx.drawImage(assets[this.type],
+                    0, 0, this.width, this.height,
+                    Math.floor(this.x + camera.x), Math.floor(this.y + camera.y),
+                    this.width, this.height
+                )
+            }
+        }
+    }
+
+    update () {
+        // update
+    }
+
+    getBounds () {
+        return this.bounds
+            ? this.bounds
+            : {
+                x: 0,
+                y: 0,
+                width: this.width,
+                height: this.height
+            }
+    }
+
+    getVectorMask () {
+        const { x, y, width, height } = this.getBounds()
+        const vectorMask = [
+            [x, y],
+            [x + width, y],
+            [x + width, y + height],
+            [x, y + height]
+        ]
+        return new SAT.Polygon(new SAT.Vector(this.x, this.y), vectorMask)
+    }
+
+    overlapTest (obj) {
+        if (!this.dead && overlap(this, obj) && (this.onScreen() || this.activated)) {
+            // poligon collision checking
+            if (SAT.testPolygonPolygon(this.getVectorMask(), obj.getVectorMask())) {
+                this.collide(obj)
+                obj.collide(this)
+            }
+        }
+    }
+
+    collide (element) {
+        // console.log("Object "+element.type+" collide with "+this.type);
+    }
+
+    kill () {
+        this.dead = true
+    }
+
+    seesPlayer () {
+        const { player, world } = this._game
+        const { spriteSize } = world
+
+        const playerM = ((player.y + player.height) - (this.y + this.height)) / (player.x - this.x)
+
+        if ((this.x < player.x && this.direction !== DIRECTIONS.RIGHT) ||
+            (this.x > player.x && this.direction !== DIRECTIONS.LEFT) || !player.canHurt) {
+            return false
+        }
+
+        if (playerM > -0.9 && playerM < 0.9) {
+            const steps = Math.abs(Math.floor(player.x / spriteSize) - Math.floor(this.x / spriteSize))
+            const from = player.x < this.x ? Math.floor(player.x / spriteSize) : Math.floor(this.x / spriteSize)
+            for (let X = from; X < from + steps; X++) {
+                if (world.isSolid(X, Math.round(this.y / spriteSize))) {
+                    return false
+                }
+            }
+            return true
+        }
+        return false
+    }
+
     move () {
         const { world } = this._game
         const { spriteSize } = world
+        const {
+            x: boundsX,
+            y: boundsY,
+            width: boundsWidth,
+            height: boundsHeight
+        } = this.getBounds()
+
+        let offsetX = this.x + boundsX
+        let offsetY = this.y + boundsY
 
         if (this.force.x > this.maxSpeed) {
             this.force.x = this.maxSpeed
         }
+
         if (this.force.x < -this.maxSpeed) {
             this.force.x = -this.maxSpeed
         }
@@ -167,10 +179,10 @@ export default class Entity {
         this.expectedX = this.x + this.force.x
         this.expectedY = this.y + this.force.y
 
-        const PX = Math.floor(this.expectedX / spriteSize)
-        const PY = Math.floor(this.expectedY / spriteSize)
-        const PW = Math.floor((this.expectedX + this.width) / spriteSize)
-        const PH = Math.floor((this.expectedY + this.height) / spriteSize)
+        const PX = Math.floor((this.expectedX + boundsX) / spriteSize)
+        const PY = Math.floor((this.expectedY + boundsY) / spriteSize)
+        const PW = Math.floor((this.expectedX + boundsX + boundsWidth) / spriteSize)
+        const PH = Math.floor((this.expectedY + boundsY + boundsHeight) / spriteSize)
         const nearMatrix = []
 
         for (let y = PY; y <= PH; y++) {
@@ -179,33 +191,34 @@ export default class Entity {
             }
         }
 
-        for (let i = 0; i < nearMatrix.length; i++) {
-            const c1 = {x: this.x + this.force.x, y: this.y, width: this.width, height: this.height}
-            if (nearMatrix[i].solid && overlap(c1, nearMatrix[i])) {
-                if (this.force.x < 0) {
-                    this.force.x = nearMatrix[i].x + nearMatrix[i].width - this.x
+        nearMatrix.forEach((tile) => {
+            if (tile.solid) {
+                const nextX = { x: offsetX + this.force.x, y: offsetY, width: boundsWidth, height: boundsHeight }
+                const nextY = { x: offsetX, y: offsetY + this.force.y, width: boundsWidth, height: boundsHeight }
+                if (overlap(nextX, tile)) {
+                    if (this.force.x < 0) {
+                        this.force.x = tile.x + tile.width - offsetX
+                    }
+                    else if (this.force.x > 0) {
+                        this.force.x = tile.x - offsetX - boundsWidth
+                    }
                 }
-                else if (this.force.x > 0) {
-                    this.force.x = nearMatrix[i].x - this.x - this.width
-                }
-            }
-        }
-
-        this.x += this.force.x
-
-        for (let j = 0; j < nearMatrix.length; j++) {
-            const c2 = {x: this.x, y: this.y + this.force.y, width: this.width, height: this.height}
-            if (nearMatrix[j].solid && overlap(c2, nearMatrix[j])) {
-                if (this.force.y < 0) {
-                    this.force.y = nearMatrix[j].y + nearMatrix[j].height - this.y
-                }
-                else if (this.force.y > 0) {
-                    this.force.y = nearMatrix[j].y - this.y - this.height
+                if (overlap(nextY, tile)) {
+                    if (this.force.y < 0) {
+                        this.force.y = tile.y + tile.height - offsetY
+                    }
+                    else if (this.force.y > 0) {
+                        this.force.y = tile.y - offsetY - boundsHeight
+                    }
                 }
             }
-        }
+        })
 
-        this.y += this.force.y
+        offsetX += this.force.x
+        offsetY += this.force.y
+
+        this.x = offsetX - boundsX
+        this.y = offsetY - boundsY
 
         this.onCeiling = this.expectedY < this.y
         this.onFloor = this.expectedY > this.y
@@ -214,13 +227,8 @@ export default class Entity {
 
         if (this.onFloor) {
             this.force.y *= -0.2
-            this.doJump = false
+            this.jump = false
             this.fall = false
-        }
-
-        if (this.expectedY < this.y) {
-            this.doJump = false
-            this.fall = true
         }
     }
 }
