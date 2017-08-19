@@ -6,10 +6,6 @@ import { playerReload, playerShoot } from '../../actions/sounds'
 export default class Player extends Entity {
     constructor (obj, game) {
         super(obj, game)
-        this.godMode = true
-        this.canShoot = true
-        this.canHurt = true
-        this.hurtTimeout = null
         this.direction = DIRECTIONS.RIGHT
         this.inDark = 0
         this.energy = 3
@@ -17,10 +13,8 @@ export default class Player extends Entity {
         this.maxSpeed = 2
         this.speed = 0.2
         this.solid = true
-        this.items = []
         this.ammo = 2
         this.maxAmmo = 8
-        this.shootTimeout = null
         this.shootTimeout = null
         this.shootDelay = 500
         this.countToReload = 0
@@ -46,6 +40,15 @@ export default class Player extends Entity {
         this.animation = this.animations.STAND_RIGHT
     }
 
+    draw (ctx) {
+        ctx.save()
+        if (!this.canHurt()) {
+            ctx.globalAlpha = 0.2
+        }
+        super.draw(ctx)
+        ctx.restore()
+    }
+
     update () {
         const { input, world } = this._game
         if (!this.dead) {
@@ -57,10 +60,10 @@ export default class Player extends Entity {
                 this.force.x += this.speed
                 this.direction = DIRECTIONS.RIGHT
             }
-            if (input.up && this.onFloor) {
+            if (input.up && this.canJump()) {
                 this.doJump = true
             }
-            if (input.fire && this.canShoot && this.ammo > 0) {
+            if (input.fire && this.canShoot()) {
                 this.shoot()
             }
 
@@ -79,6 +82,7 @@ export default class Player extends Entity {
         this.force.x === 0 && this.onFloor
             ? this.countToReload++
             : this.countToReload = 0
+
         if (this.countToReload === 100) this.reload()
 
         this.move()
@@ -123,7 +127,7 @@ export default class Player extends Entity {
     }
 
     collide (element) {
-        if (element.damage > 0 && (
+        if (this.canHurt() && element.damage > 0 && (
             element.family === ENTITIES_FAMILY.ENEMIES ||
             element.family === ENTITIES_FAMILY.TRAPS
         )) {
@@ -132,24 +136,15 @@ export default class Player extends Entity {
     }
 
     hit (s) {
-        if (this.godMode || !this.canHurt) {
-            return
-        }
         this.energy -= s
         this.force.y -= 3
-        this.canHurt = false
-        if (this.energy <= 0 && !this.dead) {
-            // this.kill = true;
-        }
         this.hurtTimeout = setTimeout(() => {
-            this.canHurt = true
             this.hurtTimeout = null
-        }, 1000)
+        }, 3000)
     }
 
     shoot () {
         const { elements, playSound } = this._game
-        this.canShoot = false
         this.force.x = 0
         this.ammo -= 1
         this.animFrame = 0
@@ -170,12 +165,23 @@ export default class Player extends Entity {
         }, 60)
 
         this.shootTimeout = setTimeout(() => {
-            this.canShoot = true
             this.shootTimeout = null
         }, this.shootDelay)
 
         playSound(playerShoot)
     };
+
+    canShoot () {
+        return this.ammo > 0 && !this.shootTimeout && this.onFloor
+    }
+
+    canJump () {
+        return this.onFloor && !this.doJump && !this.jump
+    }
+
+    canHurt () {
+        return !this.hurtTimeout
+    }
 
     reload () {
         const { playSound } = this._game

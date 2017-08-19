@@ -16,8 +16,6 @@ export default class Entity {
         this.force = { x: 0, y: 0 }
         this.speed = 0
         this.maxSpeed = 1
-        this.canShoot = false
-        this.canJump = false
         this.activated = false
         this.dead = false
         this.jump = false
@@ -137,8 +135,9 @@ export default class Entity {
 
         const playerM = ((player.y + player.height) - (this.y + this.height)) / (player.x - this.x)
 
-        if ((this.x < player.x && this.direction !== DIRECTIONS.RIGHT) ||
-            (this.x > player.x && this.direction !== DIRECTIONS.LEFT) || !player.canHurt) {
+        if (!player.canHurt() ||
+            (this.x < player.x && this.direction !== DIRECTIONS.RIGHT) ||
+            (this.x > player.x && this.direction !== DIRECTIONS.LEFT)) {
             return false
         }
 

@@ -1004,6 +1004,17 @@
                  "width":32,
                  "x":1184,
                  "y":944
+                }, 
+                {
+                 "height":48,
+                 "id":171,
+                 "name":"zombie",
+                 "rotation":0,
+                 "type":"zombie",
+                 "visible":true,
+                 "width":32,
+                 "x":48,
+                 "y":944
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1022,7 +1033,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":171,
+ "nextobjectid":172,
  "orientation":"orthogonal",
  "properties":
     {

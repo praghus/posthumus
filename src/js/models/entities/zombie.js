@@ -12,7 +12,7 @@ export default class Zombie extends Entity {
         this.speed = 0.05
         this.energy = 30
         this.maxEnergy = 30
-        this.damage = 10
+        this.damage = 1
         this.tryJump = 0
         this.solid = true
         this.attack = false
@@ -50,12 +50,12 @@ export default class Zombie extends Entity {
         // if (element.type === ENTITIES.PLAYER && player.canHurt) {
         //     this.attack = true
         // }
-        if (element.type === ENTITIES.SLOPE && !this.canFall) {
-            this.canFall = true
-            this.fallTimeout = setTimeout(() => {
-                this.canFall = false
-            }, 2000)
-        }
+        // if (element.type === ENTITIES.SLOPE && !this.canFall) {
+        //     this.canFall = true
+        //     this.fallTimeout = setTimeout(() => {
+        //         this.canFall = false
+        //     }, 2000)
+        // }
         if (element.damage > 0 && element.family !== ENTITIES_FAMILY.ENEMIES) {
             this.hit(element.damage)
         }
