@@ -1,5 +1,5 @@
 import Entity from '../entity'
-import { DIRECTIONS, ENTITIES, ENTITIES_FAMILY } from '../../lib/utils'
+import { DIRECTIONS, ENTITIES_FAMILY } from '../../lib/utils'
 // import { randomChoice } from '../../lib/utils'
 import { zombieGroan } from '../../actions/sounds'
 
@@ -49,12 +49,6 @@ export default class Zombie extends Entity {
         // const { player } = this._game
         // if (element.type === ENTITIES.PLAYER && player.canHurt) {
         //     this.attack = true
-        // }
-        // if (element.type === ENTITIES.SLOPE && !this.canFall) {
-        //     this.canFall = true
-        //     this.fallTimeout = setTimeout(() => {
-        //         this.canFall = false
-        //     }, 2000)
         // }
         if (element.damage > 0 && element.family !== ENTITIES_FAMILY.ENEMIES) {
             this.hit(element.damage)

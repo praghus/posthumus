@@ -91,8 +91,13 @@ export default class Player extends Entity {
             this.animate(this.direction === DIRECTIONS.RIGHT
                 ? this.animations.JUMP_RIGHT
                 : this.animations.JUMP_LEFT)
+
+            if (this.animFrame === 0 && this.force.x !== 0) {
+                this.animFrame = 2
+            }
+
             if (this.animFrame === 2) {
-                this.force.y = -8
+                this.force.y = -7
                 this.jump = true
                 this.doJump = false
             }

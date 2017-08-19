@@ -157,15 +157,6 @@ export default class Entity {
     move () {
         const { world } = this._game
         const { spriteSize } = world
-        const {
-            x: boundsX,
-            y: boundsY,
-            width: boundsWidth,
-            height: boundsHeight
-        } = this.getBounds()
-
-        let offsetX = this.x + boundsX
-        let offsetY = this.y + boundsY
 
         if (this.force.x > this.maxSpeed) {
             this.force.x = this.maxSpeed
@@ -178,46 +169,59 @@ export default class Entity {
         this.expectedX = this.x + this.force.x
         this.expectedY = this.y + this.force.y
 
-        const PX = Math.floor((this.expectedX + boundsX) / spriteSize)
-        const PY = Math.floor((this.expectedY + boundsY) / spriteSize)
-        const PW = Math.floor((this.expectedX + boundsX + boundsWidth) / spriteSize)
-        const PH = Math.floor((this.expectedY + boundsY + boundsHeight) / spriteSize)
+        const {
+            x: boundsX,
+            y: boundsY,
+            width: boundsWidth,
+            height: boundsHeight
+        } = this.getBounds()
+
+        const boundsSize = { width: boundsWidth, height: boundsHeight }
+
+        const offsetX = this.x + boundsX
+        const offsetY = this.y + boundsY
+
+        const nextX = { x: offsetX + this.force.x, y: offsetY, ...boundsSize }
+        const nextY = { x: offsetX, y: offsetY + this.force.y, ...boundsSize }
+
+        const PX = Math.floor(this.expectedX / spriteSize)
+        const PY = Math.floor(this.expectedY / spriteSize)
+        const PW = Math.floor((this.expectedX + this.width) / spriteSize)
+        const PH = Math.floor((this.expectedY + this.height) / spriteSize)
+
         const nearMatrix = []
 
         for (let y = PY; y <= PH; y++) {
             for (let x = PX; x <= PW; x++) {
-                nearMatrix.push(world.tileData(x, y))
+                const data = world.tileData(x, y)
+                if (data.solid) {
+                    nearMatrix.push(data)
+                }
             }
         }
 
         nearMatrix.forEach((tile) => {
-            if (tile.solid) {
-                const nextX = { x: offsetX + this.force.x, y: offsetY, width: boundsWidth, height: boundsHeight }
-                const nextY = { x: offsetX, y: offsetY + this.force.y, width: boundsWidth, height: boundsHeight }
-                if (overlap(nextX, tile)) {
-                    if (this.force.x < 0) {
-                        this.force.x = tile.x + tile.width - offsetX
-                    }
-                    else if (this.force.x > 0) {
-                        this.force.x = tile.x - offsetX - boundsWidth
-                    }
+            if (overlap(nextX, tile)) {
+                if (this.force.x < 0) {
+                    this.force.x = tile.x + tile.width - offsetX
                 }
-                if (overlap(nextY, tile)) {
-                    if (this.force.y < 0) {
-                        this.force.y = tile.y + tile.height - offsetY
-                    }
-                    else if (this.force.y > 0) {
-                        this.force.y = tile.y - offsetY - boundsHeight
-                    }
+                else if (this.force.x > 0) {
+                    this.force.x = tile.x - offsetX - boundsWidth
+                }
+            }
+            if (overlap(nextY, tile)) {
+                // && tile !JumpThrough
+                if (this.force.y < 0) {
+                    this.force.y = tile.y + tile.height - offsetY
+                }
+                else if (this.force.y > 0) {
+                    this.force.y = tile.y - offsetY - boundsHeight
                 }
             }
         })
 
-        offsetX += this.force.x
-        offsetY += this.force.y
-
-        this.x = offsetX - boundsX
-        this.y = offsetY - boundsY
+        this.x += this.force.x
+        this.y += this.force.y
 
         this.onCeiling = this.expectedY < this.y
         this.onFloor = this.expectedY > this.y
