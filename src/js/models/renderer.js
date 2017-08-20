@@ -8,7 +8,7 @@ export default class Renderer {
         this.lightmask = []
         this.playerLight = new Lamp({
             position: new Vec2(0, 0),
-            color: 'rgba(255,200,100,0.5)',
+            color: 'rgba(255,200,200,0.5)',
             distance: 100,
             samples: 1,
             radius: 1

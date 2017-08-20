@@ -28,6 +28,7 @@ export default class Zombie extends Entity {
         this.animations = {
             RIGHT: {x: 0, y: 0, w: 32, h: 48, frames: 12, fps: 8, loop: true},
             LEFT: {x: 384, y: 0, w: 32, h: 48, frames: 12, fps: 8, loop: true},
+            RISE: {x: 768, y: 0, w: 32, h: 48, frames: 9, fps: 8, loop: false},
             ATTACK_RIGHT: {x: 336, y: 0, w: 28, h: 32, frames: 3, fps: 10, loop: true},
             ATTACK_LEFT: {x: 336, y: 32, w: 28, h: 32, frames: 3, fps: 10, loop: true}
         }
@@ -59,8 +60,11 @@ export default class Zombie extends Entity {
         const { world, playSound } = this._game
 
         if (this.onScreen() && !this.awake) {
-            this.awake = true
-            playSound(zombieGroan)
+            this.animate(this.animations.RISE)
+            if (this.animFrame === 8) {
+                playSound(zombieGroan)
+                this.awake = true
+            }
         }
 
         if (this.awake && !this.dead) {
