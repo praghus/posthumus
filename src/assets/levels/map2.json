@@ -991,8 +991,8 @@
                  "type":"player",
                  "visible":true,
                  "width":32,
-                 "x":1280,
-                 "y":944
+                 "x":928,
+                 "y":928
                 }, 
                 {
                  "height":48,
@@ -1070,6 +1070,50 @@
                  "width":32,
                  "x":2080,
                  "y":944
+                }, 
+                {
+                 "height":48,
+                 "id":177,
+                 "name":"zombie",
+                 "rotation":0,
+                 "type":"zombie",
+                 "visible":true,
+                 "width":32,
+                 "x":1984,
+                 "y":944
+                }, 
+                {
+                 "height":48,
+                 "id":178,
+                 "name":"zombie",
+                 "rotation":0,
+                 "type":"zombie",
+                 "visible":true,
+                 "width":32,
+                 "x":1872,
+                 "y":944
+                }, 
+                {
+                 "height":48,
+                 "id":179,
+                 "name":"zombie",
+                 "rotation":0,
+                 "type":"zombie",
+                 "visible":true,
+                 "width":32,
+                 "x":1568,
+                 "y":944
+                }, 
+                {
+                 "height":48,
+                 "id":180,
+                 "name":"zombie",
+                 "rotation":0,
+                 "type":"zombie",
+                 "visible":true,
+                 "width":32,
+                 "x":1392,
+                 "y":944
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1088,7 +1132,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":177,
+ "nextobjectid":181,
  "orientation":"orthogonal",
  "properties":
     {

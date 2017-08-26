@@ -11,6 +11,7 @@ export default class Zombie extends Entity {
         this.maxSpeed = 0.5
         this.speed = 0.05
         this.energy = 30
+        this.dying = false
         this.maxEnergy = 30
         this.damage = 1
         this.tryJump = 0
@@ -29,6 +30,7 @@ export default class Zombie extends Entity {
             RIGHT: {x: 0, y: 0, w: 32, h: 48, frames: 12, fps: 8, loop: true},
             LEFT: {x: 384, y: 0, w: 32, h: 48, frames: 12, fps: 8, loop: true},
             RISE: {x: 768, y: 0, w: 32, h: 48, frames: 9, fps: 8, loop: false},
+            DEAD: {x: 1056, y: 0, w: 32, h: 48, frames: 7, fps: 16, loop: false},
             ATTACK_RIGHT: {x: 336, y: 0, w: 28, h: 32, frames: 3, fps: 10, loop: true},
             ATTACK_LEFT: {x: 336, y: 32, w: 28, h: 32, frames: 3, fps: 10, loop: true}
         }
@@ -41,7 +43,7 @@ export default class Zombie extends Entity {
         this.force.y = -2
         this.energy -= damage
         if (this.energy <= 0) {
-            this.dead = true
+            this.dying = true
             particlesExplosion(this.x, this.y)
         }
     }
@@ -67,7 +69,15 @@ export default class Zombie extends Entity {
             }
         }
 
-        if (this.awake && !this.dead) {
+        if (this.dying) {
+            this.animate(this.animations.DEAD)
+            if (this.animFrame === 6) {
+                playSound(zombieGroan)
+                this.dead = true
+            }
+        }
+
+        if (this.awake && !this.dead && !this.dying) {
             this.force.y += world.gravity
             this.force.x += this.direction === DIRECTIONS.RIGHT ? this.speed : -this.speed
 

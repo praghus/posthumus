@@ -13,7 +13,7 @@ export default class Player extends Entity {
         this.maxSpeed = 2
         this.speed = 0.2
         this.solid = true
-        this.ammo = 2
+        this.ammo = 8
         this.maxAmmo = 8
         this.shootTimeout = null
         this.shootDelay = 500
