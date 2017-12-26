@@ -1,5 +1,5 @@
 import { ENTITIES } from '../lib/utils'
-import { Bullet, DarkMask, JumpThrough, Particle, Slope, Zombie } from './entities'
+import { Bat, Bullet, DarkMask, JumpThrough, Particle, Slope, Zombie } from './entities'
 
 export default class Elements {
     constructor (entities, game) {
@@ -45,6 +45,9 @@ export default class Elements {
     add (obj) {
         const { world } = this._game
         switch (obj.type) {
+        case ENTITIES.BAT:
+            this.objects.push(new Bat(obj, this._game))
+            break
         case ENTITIES.BULLET:
             this.objects.push(new Bullet(obj, this._game))
             break

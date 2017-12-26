@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Canvas from './canvas'
-import levelData from '../../assets/levels/map2.json'
+import levelData from '../../assets/levels/posthumus.json'
 import { Camera, Player, Elements, World, Renderer } from '../models'
 import { select as d3Select, mouse as d3Mouse, touches as d3Touches, event as d3Event } from 'd3'
 import { updateMousePos, updateKeyPressed } from '../actions'

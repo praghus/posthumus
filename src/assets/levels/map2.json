@@ -991,8 +991,8 @@
                  "type":"player",
                  "visible":true,
                  "width":32,
-                 "x":928,
-                 "y":928
+                 "x":331.090909090909,
+                 "y":924.030303030303
                 }, 
                 {
                  "height":48,
@@ -1068,8 +1068,8 @@
                  "type":"zombie",
                  "visible":true,
                  "width":32,
-                 "x":2080,
-                 "y":944
+                 "x":2666,
+                 "y":927
                 }, 
                 {
                  "height":48,
@@ -1145,7 +1145,7 @@
      "surfaceLevel":"string"
     },
  "renderorder":"right-down",
- "tiledversion":"2017.06.20",
+ "tiledversion":"1.0.3",
  "tileheight":16,
  "tilesets":[
         {

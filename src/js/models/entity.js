@@ -90,23 +90,21 @@ export default class Entity {
     }
 
     getBounds () {
-        return this.bounds
-            ? this.bounds
-            : {
-                x: 0,
-                y: 0,
-                width: this.width,
-                height: this.height
-            }
+        return this.bounds || {
+            x: 0,
+            y: 0,
+            width: this.width,
+            height: this.height
+        }
     }
 
     getVectorMask () {
         const { x, y, width, height } = this.getBounds()
-        const vectorMask = [
-            [x, y],
-            [x + width, y],
-            [x + width, y + height],
-            [x, y + height]
+        const vectorMask = this.vectorMask || [
+            new SAT.Vector(x, y),
+            new SAT.Vector(x + width, y),
+            new SAT.Vector(x + width, y + height),
+            new SAT.Vector(x, y + height)
         ]
         return new SAT.Polygon(new SAT.Vector(this.x, this.y), vectorMask)
     }
@@ -123,6 +121,17 @@ export default class Entity {
 
     collide (element) {
         // console.log("Object "+element.type+" collide with "+this.type);
+    }
+
+    hit (damage) {
+        const { particlesExplosion } = this._game
+        this.force.x += -(this.force.x * 4)
+        this.force.y = -2
+        this.energy -= damage
+        if (this.energy <= 0) {
+            this.dying = true
+            particlesExplosion(this.x, this.y)
+        }
     }
 
     kill () {

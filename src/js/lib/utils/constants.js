@@ -25,3 +25,8 @@ export const ENTITIES_FAMILY = {
     PARTICLES: 'particles',
     TRAPS: 'traps'
 }
+
+export const COLORS = {
+    PLAYER_SHOOT: '#deeed6',
+    PLAYER_LIGHT: 'rgba(150,150,200,0.3)'
+}

@@ -1277,7 +1277,7 @@
      "surfaceLevel":"string"
     },
  "renderorder":"right-down",
- "tiledversion":"2017.06.20",
+ "tiledversion":"1.0.3",
  "tileheight":16,
  "tilesets":[
         {

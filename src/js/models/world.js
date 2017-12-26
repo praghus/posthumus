@@ -1,16 +1,16 @@
 export default class World {
     constructor (data) {
-        const backgroundLayer = data.layers[0].data
-        const mainLayer = data.layers[1].data
-        const objectsLayer = data.layers[2].objects
-        const foregroundLayer = data.layers[3].data
+        const backgroundLayer = data.layers.find(({name}) => name === 'background').data
+        const mainLayer = data.layers.find(({name}) => name === 'main').data
+        const foregroundLayer = data.layers.find(({name}) => name === 'foreground').data
+        const objectsLayer = data.layers.find(({name}) => name === 'objects').objects
 
         this.width = parseInt(data.width)
         this.height = parseInt(data.height)
-        this.gravity = 0.4// parseFloat(data.properties.gravity)
+        this.gravity = parseFloat(data.properties.gravity)
         this.surface = parseInt(data.properties.surfaceLevel)
         this.spriteSize = parseInt(data.tilewidth)
-        this.spriteCols = parseInt(data.tilesets[0].columns)
+        this.spriteCols = 32
         this.playerData = null
         this.objectsData = []
         this.data = { back: [], ground: [], mask: [], fore: [] }
@@ -86,15 +86,15 @@ export default class World {
         if (!this.inRange(x, y)) {
             return true
         }
-        return this.data.ground[x][y] > 32 * 4
+        return this.data.ground[x][y] > 0 // 32 * 4
     }
 
-    isShadowCaster (x, y) {
-        if (!this.inRange(x, y)) {
-            return false
-        }
-        return this.data.ground[x][y] > 32 * 4 || this.data.ground[x][y] === 1
-    }
+    // isShadowCaster (x, y) {
+    //     if (!this.inRange(x, y)) {
+    //         return false
+    //     }
+    //     return this.data.ground[x][y] > 32 * 4 || this.data.ground[x][y] === 1
+    // }
 
     addMask (obj) {
         const x = Math.round(obj.x / this.spriteSize) - 1

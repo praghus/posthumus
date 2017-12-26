@@ -20,10 +20,7 @@ const loadedSoundsMiddleware = soundsMiddleware(soundsData)
 const middleware = applyMiddleware(...[thunk, loadedSoundsMiddleware])
 
 if (isProduction) {
-    store = createStore(
-        rootReducer,
-        middleware
-    )
+    store = createStore(rootReducer, middleware)
 }
 else {
     let enhancer
@@ -33,10 +30,7 @@ else {
     else {
         enhancer = compose(middleware)
     }
-    store = createStore(
-        rootReducer,
-        enhancer
-    )
+    store = createStore(rootReducer, enhancer)
 }
 
 const onResize = function () {

@@ -37,17 +37,6 @@ export default class Zombie extends Entity {
         this.animation = this.animations.LEFT
     }
 
-    hit (damage) {
-        const { particlesExplosion } = this._game
-        this.force.x += -(this.force.x * 4)
-        this.force.y = -2
-        this.energy -= damage
-        if (this.energy <= 0) {
-            this.dying = true
-            particlesExplosion(this.x, this.y)
-        }
-    }
-
     collide (element) {
         // const { player } = this._game
         // if (element.type === ENTITIES.PLAYER && player.canHurt) {

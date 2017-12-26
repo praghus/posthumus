@@ -1,4 +1,5 @@
 import '../lib/illuminated'
+import { COLORS } from '../lib/utils'
 
 export default class Renderer {
     constructor (game) {
@@ -8,8 +9,15 @@ export default class Renderer {
         this.lightmask = []
         this.playerLight = new Lamp({
             position: new Vec2(0, 0),
-            color: 'rgba(255,200,200,0.5)',
-            distance: 100,
+            color: COLORS.PLAYER_LIGHT,
+            distance: 300,
+            samples: 1,
+            radius: 1
+        })
+        this.playerShootLight = new Lamp({
+            position: new Vec2(0, 0),
+            color: COLORS.PLAYER_SHOOT,
+            distance: 500,
             samples: 1,
             radius: 1
         })
@@ -28,21 +36,24 @@ export default class Renderer {
 
         this.renderBackground()
         this.renderGround()
-        this.renterObjects()
 
         if (this.dynamicLights && (camera.underground || player.inDark > 0)) {
-            this.renderForeGround()
             this.renderLightingEffect()
             this.renderDarks()
+            this.renderObjects()
             this.renderPlayer()
+            this.renderForeGround()
         }
         else {
+            this.renderObjects()
             this.renderPlayer()
             this.renderForeGround()
             this.renderDarks()
         }
         // this.fontPrint(`${Math.round(ticker.fps)} FPS`, 5, 5)
         this.renderIndicators()
+        // restore player shoot flash flag
+        player.shootFlash = false
 
         ctx.restore()
     }
@@ -71,13 +82,17 @@ export default class Renderer {
         const { resolutionX, resolutionY } = viewport
         const { DarkMask, Lighting, Vec2 } = window.illuminated
 
-        this.playerLight.position = new Vec2(
+        const light = player.shootFlash
+            ? this.playerShootLight
+            : this.playerLight
+
+        light.position = new Vec2(
             player.x + (player.width / 2) + camera.x,
             player.y + (player.height / 2) + camera.y
         )
 
-        const lighting = new Lighting({light: this.playerLight, objects: this.lightmask})
-        const darkmask = new DarkMask({lights: [this.playerLight]})
+        const lighting = new Lighting({light: light, objects: this.lightmask})
+        const darkmask = new DarkMask({lights: [light]})
 
         lighting.compute(resolutionX, resolutionY)
         darkmask.compute(resolutionX, resolutionY)
@@ -85,10 +100,10 @@ export default class Renderer {
         ctx.save()
 
         // destination-in, overlay, soft-light
-        ctx.globalCompositeOperation = 'overlay' // camera.underground ? 'destination-in' : 'overlay'
+        ctx.globalCompositeOperation = 'hard-light' // camera.underground ? 'destination-in' : 'overlay'
         lighting.render(ctx)
 
-        ctx.globalCompositeOperation = 'source-over'
+        ctx.globalCompositeOperation = 'source-overlay'
         darkmask.render(ctx)
 
         ctx.restore()
@@ -101,7 +116,7 @@ export default class Renderer {
         if (!camera.underground) {
             ctx.drawImage(assets.bg1, 0, 0)
             ctx.drawImage(assets.moon, resolutionX - 100, 16)
-            ctx.drawImage(assets.bg2, (camera.x / 8), -32 + (camera.y / 16))
+            ctx.drawImage(assets.bg2, (camera.x / 8), -62 + (camera.y / 16))
         }
     }
 
@@ -115,84 +130,83 @@ export default class Renderer {
         let _y = Math.floor(-camera.y / spriteSize)
 
         this.lightmask = []
-        if (player.shootFlash) {
-            player.shootFlash = false
-            ctx.fillStyle = '#deeed6'
+
+        if (player.shootFlash && !camera.underground && !player.inDark) {
+            ctx.fillStyle = COLORS.PLAYER_SHOOT
             ctx.fillRect(0, 0, resolutionX, resolutionY)
         }
-        else {
-            while (y < resolutionY) {
-                let x = Math.floor(camera.x % spriteSize)
-                let _x = Math.floor(-camera.x / spriteSize)
-                while (x < resolutionX) {
-                    const tile = world.get('ground', _x, _y)
-                    const back = world.get('back', _x, _y)
-                    if (tile > 1 || back > 1) {
+
+        while (y < resolutionY) {
+            let x = Math.floor(camera.x % spriteSize)
+            let _x = Math.floor(-camera.x / spriteSize)
+            while (x < resolutionX) {
+                const tile = world.get('ground', _x, _y)
+                const back = world.get('back', _x, _y)
+                if (tile > 0 || back > 0) {
                     // illuminated.js light mask
-                        if (tile > 224 && this.dynamicLights) {
-                            this.lightmask.push(new RectangleObject({
-                                topleft: new Vec2(x, y),
-                                bottomright: new Vec2(x + spriteSize, y + spriteSize)
-                            }))
-                        }
-                        if (back > 1) {
-                            ctx.drawImage(assets.tiles,
-                                (((back - 1) % spriteCols)) * spriteSize,
-                                (Math.ceil(back / spriteCols) - 1) * spriteSize,
-                                spriteSize, spriteSize, x, y,
-                                spriteSize, spriteSize)
-                        }
-                        if (tile > 1) {
-                            ctx.drawImage(assets.tiles,
-                                (((tile - 1) % spriteCols)) * spriteSize,
-                                (Math.ceil(tile / spriteCols) - 1) * spriteSize,
-                                spriteSize, spriteSize, x, y,
-                                spriteSize, spriteSize)
-                        }
-                        // calculate shadow
-                        if (back > 1 && tile < 224) {
-                            let shadow = 0
-                            if (_x > 0 && _y > 0 &&
-                          world.isShadowCaster(_x - 1, _y) &&
-                          world.isShadowCaster(_x - 1, _y - 1) &&
-                          world.isShadowCaster(_x, _y - 1)) {
-                                shadow = 6
-                            }
-                            else if (_x > 0 && _y > 0 &&
-                          world.isShadowCaster(_x - 1, _y - 1) &&
-                          world.isShadowCaster(_x, _y - 1)) {
-                                shadow = 5
-                            }
-                            else if (_x > 0 && _y > 0 &&
-                          world.isShadowCaster(_x - 1, _y) &&
-                          world.isShadowCaster(_x - 1, _y - 1)) {
-                                shadow = 4
-                            }
-                            else if (_x > 0 &&
-                          world.isShadowCaster(_x - 1, _y)) {
-                                shadow = 1
-                            }
-                            else if (_y > 0 &&
-                          world.isShadowCaster(_x, _y - 1)) {
-                                shadow = 2
-                            }
-                            else if (_x > 0 && _y > 0 &&
-                            world.isShadowCaster(_x - 1, _y - 1)) {
-                                shadow = 3
-                            }
-                            if (shadow > 0) {
-                                ctx.drawImage(assets.shadows, (shadow - 1) * spriteSize, 0,
-                                    spriteSize, spriteSize, x, y,
-                                    spriteSize, spriteSize)
-                            }
-                        }
+                    if (tile && this.dynamicLights) {
+                        this.lightmask.push(new RectangleObject({
+                            topleft: new Vec2(x, y),
+                            bottomright: new Vec2(x + spriteSize, y + spriteSize)
+                        }))
                     }
-                    x += spriteSize
-                    _x++
+                    if (back > 0) {
+                        ctx.drawImage(assets.tiles,
+                            (((back - 1) % spriteCols)) * spriteSize,
+                            (Math.ceil(back / spriteCols) - 1) * spriteSize,
+                            spriteSize, spriteSize, x, y,
+                            spriteSize, spriteSize)
+                    }
+                    if (tile > 0) {
+                        ctx.drawImage(assets.tiles,
+                            (((tile - 1) % spriteCols)) * spriteSize,
+                            (Math.ceil(tile / spriteCols) - 1) * spriteSize,
+                            spriteSize, spriteSize, x, y,
+                            spriteSize, spriteSize)
+                    }
+                    // calculate shadow
+                    // if (back > 1 && tile < 224) {
+                    //     let shadow = 0
+                    //     if (_x > 0 && _y > 0 &&
+                    //   world.isShadowCaster(_x - 1, _y) &&
+                    //   world.isShadowCaster(_x - 1, _y - 1) &&
+                    //   world.isShadowCaster(_x, _y - 1)) {
+                    //         shadow = 6
+                    //     }
+                    //     else if (_x > 0 && _y > 0 &&
+                    //   world.isShadowCaster(_x - 1, _y - 1) &&
+                    //   world.isShadowCaster(_x, _y - 1)) {
+                    //         shadow = 5
+                    //     }
+                    //     else if (_x > 0 && _y > 0 &&
+                    //   world.isShadowCaster(_x - 1, _y) &&
+                    //   world.isShadowCaster(_x - 1, _y - 1)) {
+                    //         shadow = 4
+                    //     }
+                    //     else if (_x > 0 &&
+                    //   world.isShadowCaster(_x - 1, _y)) {
+                    //         shadow = 1
+                    //     }
+                    //     else if (_y > 0 &&
+                    //   world.isShadowCaster(_x, _y - 1)) {
+                    //         shadow = 2
+                    //     }
+                    //     else if (_x > 0 && _y > 0 &&
+                    //     world.isShadowCaster(_x - 1, _y - 1)) {
+                    //         shadow = 3
+                    //     }
+                    //     if (shadow > 0) {
+                    //         ctx.drawImage(assets.shadows, (shadow - 1) * spriteSize, 0,
+                    //             spriteSize, spriteSize, x, y,
+                    //             spriteSize, spriteSize)
+                    //     }
+                    // }
                 }
-                y += spriteSize
-                _y++
+                x += spriteSize
+                _x++
             }
+            y += spriteSize
+            _y++
         }
     }
 
@@ -201,7 +215,7 @@ export default class Renderer {
         player.draw(ctx)
     }
 
-    renterObjects () {
+    renderObjects () {
         const { ctx, elements } = this._game
         const { objects } = elements
         objects.forEach((elem) => {

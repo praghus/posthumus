@@ -8,20 +8,6 @@ export default class Slope extends Entity {
         this.solid = true
         this.visible = false
         this.family = ENTITIES_FAMILY.MODIFIERS
-        if (this.type === ENTITIES.SLOPE_RIGHT) {
-            this.vectorMask = [
-                new SAT.Vector(0, this.height),
-                new SAT.Vector(this.width, 0),
-                new SAT.Vector(this.width, this.height)
-            ]
-        }
-        else {
-            this.vectorMask = [
-                new SAT.Vector(0, 0),
-                new SAT.Vector(0, this.height),
-                new SAT.Vector(this.width, this.height)
-            ]
-        }
     }
 
     collide (element) {
@@ -32,7 +18,7 @@ export default class Slope extends Entity {
                 ? (this.y - height) + this.height - (((x + width) - this.x) * (this.height / this.width))
                 : (this.y - height) + (x - this.x) * (this.height / this.width)
 
-            if (element.y >= expectedY && !element.doJump) {
+            if (element.y >= expectedY && !element.jump) {
                 element.y = expectedY
                 element.force.y = 0
                 element.fall = false

@@ -103,6 +103,7 @@ export default class Player extends Entity {
             }
             if (this.force.y > 0) {
                 this.jump = false
+                this.doJump = false
                 this.fall = true
             }
         }
