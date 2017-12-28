@@ -1,15 +1,14 @@
 import Entity from '../entity'
-import { DIRECTIONS, ENTITIES_FAMILY } from '../../lib/utils/constants'
+import { DIRECTIONS, ENTITIES_FAMILY } from '../../lib/constants'
 
 export default class Bat extends Entity {
     constructor (obj, game) {
         super(obj, game)
-        this.family = ENTITIES_FAMILY.ENEMIES
         this.direction = DIRECTIONS.LEFT
         this.maxSpeed = 1
         this.speed = 0.2
-        this.energy = 30
-        this.maxEnergy = 30
+        this.energy = 20
+        this.maxEnergy = 20
         this.damage = 10
         this.canFly = true
         this.solid = true
@@ -36,11 +35,18 @@ export default class Bat extends Entity {
         if (this.onScreen()) {
             this.awake = true
         }
-        if (this.awake && !this.dead) {
+        if (this.dying) {
+            this.kill()
+        }
+        if (this.awake && !this.dead && !this.dying) {
+            const { camera } = this._game
             this.force.y += this.y > this._game.player.y ? -0.01 : 0.01
             this.force.x += this.direction === DIRECTIONS.RIGHT ? this.speed : -this.speed
             if (this.onScreen()) {
                 this.direction = this._game.player.x > this.x ? DIRECTIONS.RIGHT : DIRECTIONS.LEFT
+                if (-(this.y + this.force.y) > camera.y) {
+                    this.force.y += this.speed
+                }
             }
             this.move()
             if (this.expectedX !== this.x) {
@@ -59,6 +65,7 @@ export default class Bat extends Entity {
             else if (this.expectedY !== this.y) {
                 this.force.y += this.direction === DIRECTIONS.RIGHT ? this.speed : -this.speed
             }
+
             this.animate(this.direction === DIRECTIONS.RIGHT ? this.animations.RIGHT : this.animations.LEFT)
         }
     }

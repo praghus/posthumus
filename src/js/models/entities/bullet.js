@@ -1,6 +1,6 @@
 import Entity from '../entity'
-// import { brighten, rgbToHex } from '../../lib/utils/helpers'
-import { DIRECTIONS, ENTITIES_FAMILY } from '../../lib/utils/constants'
+// import { brighten, rgbToHex } from '../../lib/helpers'
+import { DIRECTIONS } from '../../lib/constants'
 
 export default class Bullet extends Entity {
     constructor (obj, game) {
@@ -10,22 +10,12 @@ export default class Bullet extends Entity {
         this.speed = 10
         this.maxSpeed = 10
         this.damage = 10
-        this.color = '#666666'
-        this.family = ENTITIES_FAMILY.BULLETS
     }
 
     collide (element) {
         if (element.solid) {
-            // const { ctx, camera } = this._game
-            // const EX = this.x
-            // const EY = this.y
-            // const BX = this.direction === DIRECTIONS.RIGHT
-            //     ? EX + this.speed
-            //     : EX - this.speed
-            // const p = ctx.getImageData(BX + camera.x, EY + camera.y, 1, 1).data
             this.dead = true
-            this.color = '#000000' // brighten('#' + ('000000' + rgbToHex(p[0], p[1], p[2])).slice(-6), 20)
-            this._game.shootExplosion(this.x, this.y, this.color)
+            this.particles(`rgb(${parseInt(128 + ((Math.random() * 32) * 4))}, 0, 0)`)
         }
     }
 
@@ -39,10 +29,19 @@ export default class Bullet extends Entity {
 
             if (this.expectedX !== this.x) {
                 this.dead = true
-            }
-            if (this.dead) {
-                this._game.shootExplosion(this.x, this.y, this.color)
+                this.particles('#333333')
             }
         }
+    }
+
+    particles (color) {
+        const { elements } = this._game
+        elements.emitParticles(5 + parseInt(Math.random() * 5), {
+            x: this.direction === DIRECTIONS.RIGHT ? this.x + this.width : this.x,
+            y: this.y,
+            width: 1,
+            height: 1,
+            color
+        })
     }
 }

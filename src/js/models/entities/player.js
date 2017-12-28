@@ -1,6 +1,6 @@
 
 import Entity from '../entity'
-import { DIRECTIONS, ENTITIES, ENTITIES_FAMILY } from '../../lib/utils'
+import { DIRECTIONS, ENTITIES_TYPE, ENTITIES_FAMILY } from '../../lib/constants'
 import { playerReload, playerShoot } from '../../actions/sounds'
 
 export default class Player extends Entity {
@@ -157,7 +157,7 @@ export default class Player extends Entity {
         this.countToReload = 0
 
         elements.add({
-            type: ENTITIES.BULLET,
+            type: ENTITIES_TYPE.BULLET,
             x: this.direction === DIRECTIONS.RIGHT
                 ? this.x + this.width
                 : this.x,

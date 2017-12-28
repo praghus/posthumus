@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Game } from '../components'
-import { requireAll } from '../lib/utils'
+import { requireAll } from '../lib/helpers'
 import { tickTime, startTicker } from '../actions'
 
 const allImages = require.context('../../assets/images', true, /.*\.png/)

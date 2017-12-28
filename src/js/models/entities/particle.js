@@ -1,29 +1,18 @@
 import Entity from '../entity'
-import { ENTITIES_FAMILY } from '../../lib/utils'
-import { overlap } from '../../lib/utils'
+import { overlap } from '../../lib/helpers'
 
 export default class Particle extends Entity {
     constructor (obj, game) {
         super(obj, game)
-        this.family = this.family = ENTITIES_FAMILY.PARTICLES
-        this.life = Math.random() * 30 + 30
-        this.maxSpeed = 0.5 + Math.random()
-        this.dead = false
-        switch (this.type) {
-        case 'shoot_particles':
-            this.force = {
-                x: Math.random() * 2 - 1,
-                y: Math.random() * -4 - 2
-            }
-            break
-        default:
-            const dir = Math.random() * 2 * Math.PI
-            this.force = {
-                x: Math.cos(dir) * this.maxSpeed,
-                y: Math.sin(dir) * this.maxSpeed
-            }
-            break
+        const dir = Math.random() * 2 * Math.PI
+        this.force = obj.force || {
+            x: Math.cos(dir) * this.maxSpeed,
+            y: Math.sin(dir) * this.maxSpeed
         }
+        this.life = Math.random() * 30 + 30
+        this.maxSpeed = 0.5 + Math.random() * 1
+        this.mass = obj.mass || 0.5 + Math.random() * 1
+        this.dead = false
     }
 
     overlapTest (obj) {
@@ -34,9 +23,8 @@ export default class Particle extends Entity {
     }
 
     update () {
-        const { gravity } = this._game.world
         if (!this.dead) {
-            this.force.y += gravity
+            this.force.y += this.mass
             this.move()
             if (this.y !== this.expectedY || this.x !== this.expectedX) {
                 this.force.y *= -0.8
@@ -52,7 +40,7 @@ export default class Particle extends Entity {
     draw (ctx) {
         const { camera } = this._game
         ctx.save()
-        ctx.fillStyle = this.properties.color
+        ctx.fillStyle = this.color
         ctx.beginPath()
         ctx.rect(this.x + camera.x, this.y + camera.y, this.width, this.height)
         ctx.fill()

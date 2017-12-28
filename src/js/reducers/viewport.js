@@ -1,4 +1,4 @@
-import { calculateViewportSize } from '../lib/utils'
+import { calculateViewportSize } from '../lib/helpers'
 import {
     RESIZE_SCREEN
 } from '../actions'

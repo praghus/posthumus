@@ -1,11 +1,29 @@
-import { ENTITIES } from '../lib/utils'
-import { Bat, Bullet, DarkMask, JumpThrough, Particle, Slope, Zombie } from './entities'
+import '../lib/illuminated'
+import { COLORS, ENTITIES_TYPE, LIGHTS, getEntityByType } from '../lib/constants'
+
+const { Lamp, Vec2 } = window.illuminated
 
 export default class Elements {
     constructor (entities, game) {
         this._game = game
         this.objects = []
         this.darks = []
+        this.lights = {
+            [LIGHTS.PLAYER_LIGHT]: new Lamp({
+                position: new Vec2(0, 0),
+                color: COLORS.PLAYER_LIGHT,
+                distance: 300,
+                samples: 1,
+                radius: 1
+            }),
+            [LIGHTS.SHOOT_LIGHT]: new Lamp({
+                position: new Vec2(0, 0),
+                color: COLORS.PLAYER_SHOOT,
+                distance: 500,
+                samples: 1,
+                radius: 1
+            })
+        }
         for (let i = 0; i < entities.length; i++) {
             this.add(entities[i])
         }
@@ -34,40 +52,62 @@ export default class Elements {
         })
     }
 
-    getById (id) {
-        return this.objects.find((x) => x.id === id)
+    create (obj) {
+        const entity = getEntityByType(obj.type)
+        if (entity) {
+            const Model = entity.model
+            return new Model(Object.assign({}, obj, entity), this._game)
+        }
+        return null
     }
 
-    getByProperties (k, v) {
-        return this.objects.find((x) => x.properties && x.properties[k] === v)
+    setLight (id, color, distance = 300) {
+        this.lights[id] = new Lamp({
+            position: new Vec2(0, 0),
+            color,
+            distance,
+            samples: 1,
+            radius: 1
+        })
+    }
+
+    getLight (id) {
+        return this.lights[id] || null
     }
 
     add (obj) {
         const { world } = this._game
-        switch (obj.type) {
-        case ENTITIES.BAT:
-            this.objects.push(new Bat(obj, this._game))
-            break
-        case ENTITIES.BULLET:
-            this.objects.push(new Bullet(obj, this._game))
-            break
-        case ENTITIES.DARK_MASK:
-            this.darks.push(new DarkMask(obj, this._game))
-            world.addMask(obj)
-            break
-        case ENTITIES.JUMP_THROUGH:
-            this.objects.push(new JumpThrough(obj, this._game))
-            break
-        case ENTITIES.PARTICLE:
-            this.objects.push(new Particle(obj, this._game))
-            break
-        case ENTITIES.SLOPE_LEFT:
-        case ENTITIES.SLOPE_RIGHT:
-            this.objects.push(new Slope(obj, this._game))
-            break
-        case ENTITIES.ZOMBIE:
-            this.objects.push(new Zombie(obj, this._game))
-            break
+        const entity = this.create(obj)
+        if (entity) {
+            this.objects.push(entity)
+            if (entity.type === ENTITIES_TYPE.DARK_MASK) {
+                world.addMask(obj)
+            }
+        }
+    }
+
+    emitParticles (count, properties) {
+        const particle_count = count || 1
+        for (let i = 0; i < particle_count; i++) {
+            const props = Object.assign({}, properties)
+            props.x = properties.x + Math.random() * 8
+            this.add(Object.assign({}, {type: ENTITIES_TYPE.PARTICLE}, props))
+        }
+    }
+
+    particlesExplosion (x, y) {
+        const particle_count = 10 + parseInt(Math.random() * 5)
+        for (let i = 0; i < particle_count; i++) {
+            const r = (1 + Math.random())
+            this.add({
+                x: x,
+                y: y,
+                width: r,
+                height: r,
+                mass: 0.2,
+                type: 'particle',
+                color: `rgb(${parseInt(128 + ((Math.random() * 32) * 4))}, 0, 0)`
+            })
         }
     }
 }

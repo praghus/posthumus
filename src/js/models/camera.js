@@ -38,7 +38,7 @@ export default class Camera {
         // above the surface
         if (Math.round((player.y + (player.height / 2)) / spriteSize) < surface) {
             this.underground = false
-            if ((this.y - resolutionY) < -surface * spriteSize) {
+            if (this.y - resolutionY < -surface * spriteSize) {
                 this.y = (-surface * spriteSize) + resolutionY
             }
         }
@@ -48,10 +48,6 @@ export default class Camera {
             if ((this.y) >= -surface * spriteSize) {
                 this.y = (-surface * spriteSize)
             }
-        }
-
-        if (this.y - resolutionY < -world.height * spriteSize) {
-            this.y = (-world.height * spriteSize) + resolutionY
         }
 
         // shake

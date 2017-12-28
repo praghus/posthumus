@@ -1,12 +1,11 @@
 import Entity from '../entity'
-import { ENTITIES, ENTITIES_FAMILY } from '../../lib/utils'
+import { ENTITIES_TYPE } from '../../lib/constants'
 
 export default class JumpThrough extends Entity {
     constructor (obj, game) {
         super(obj, game)
         this.solid = false
         this.visible = false
-        this.family = ENTITIES_FAMILY.MODIFIERS
     }
 
     collide (element) {
@@ -18,7 +17,7 @@ export default class JumpThrough extends Entity {
             element.doJump = false
             element.fall = false
 
-            if (element.type === ENTITIES.PLAYER) {
+            if (element.type === ENTITIES_TYPE.PLAYER) {
                 if (input.down) {
                     player.y += this.height
                 }

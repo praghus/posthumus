@@ -1,27 +1,24 @@
 import Entity from '../entity'
-import { DIRECTIONS, ENTITIES_FAMILY } from '../../lib/utils'
-// import { randomChoice } from '../../lib/utils'
+import { DIRECTIONS, ENTITIES_FAMILY } from '../../lib/constants'
 import { zombieGroan } from '../../actions/sounds'
 
 export default class Zombie extends Entity {
     constructor (obj, game) {
         super(obj, game)
-        this.family = ENTITIES_FAMILY.ENEMIES
         this.direction = DIRECTIONS.LEFT
         this.maxSpeed = 0.5
         this.speed = 0.05
-        this.energy = 30
+        this.energy = 20
         this.dying = false
-        this.maxEnergy = 30
+        this.maxEnergy = 20
         this.damage = 1
         this.tryJump = 0
         this.solid = true
         this.attack = false
         this.canFall = false
         this.fallTimeout = null
-        this.type = 'zombie'
         this.bounds = {
-            x: 8,
+            x: 12,
             y: 8,
             width: this.width - 16,
             height: this.height - 8
@@ -48,10 +45,24 @@ export default class Zombie extends Entity {
     }
 
     update () {
-        const { world, playSound } = this._game
+        const { elements, world, playSound } = this._game
 
         if (this.onScreen() && !this.awake) {
             this.animate(this.animations.RISE)
+            if (this.animFrame === 1) {
+                elements.emitParticles(5 + parseInt(Math.random() * 5), {
+                    x: this.x + 8,
+                    y: this.y + this.height,
+                    mass: 0.1,
+                    width: 2,
+                    height: 2,
+                    force: {
+                        x: Math.cos(Math.random() * 2 * Math.PI) * 0.5 + Math.random(),
+                        y: -7
+                    },
+                    color: '#000000'
+                })
+            }
             if (this.animFrame === 8) {
                 playSound(zombieGroan)
                 this.awake = true
@@ -62,7 +73,7 @@ export default class Zombie extends Entity {
             this.animate(this.animations.DEAD)
             if (this.animFrame === 6) {
                 playSound(zombieGroan)
-                this.dead = true
+                this.kill()
             }
         }
 
@@ -97,8 +108,8 @@ export default class Zombie extends Entity {
                     }
                 }
 
-                if (this.onLeftEdge) this.direction = DIRECTIONS.RIGHT
-                if (this.onRightEdge) this.direction = DIRECTIONS.LEFT
+                // if (this.onLeftEdge) this.direction = DIRECTIONS.RIGHT
+                // if (this.onRightEdge) this.direction = DIRECTIONS.LEFT
                 if (this.attack) {
                     this.animate(this.direction === DIRECTIONS.RIGHT
                         ? this.animations.ATTACK_RIGHT

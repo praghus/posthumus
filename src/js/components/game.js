@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Canvas from './canvas'
 import levelData from '../../assets/levels/posthumus.json'
-import { Camera, Player, Elements, World, Renderer } from '../models'
+import { Camera, Elements, World, Renderer } from '../models'
 import { select as d3Select, mouse as d3Mouse, touches as d3Touches, event as d3Event } from 'd3'
 import { updateMousePos, updateKeyPressed } from '../actions'
 
@@ -31,7 +31,6 @@ export default class Game extends Component {
         this.viewport = props.viewport
         this.ticker = props.ticker
         this.assets = props.assets
-        this.particlesExplosion = this.particlesExplosion.bind(this)
         this.playSound = this.playSound.bind(this)
     }
 
@@ -42,8 +41,8 @@ export default class Game extends Component {
         this.world = new World(levelData)
         this.camera = new Camera(this)
         this.renderer = new Renderer(this)
-        this.player = new Player(this.world.getPlayer(), this)
         this.elements = new Elements(this.world.getObjects(), this)
+        this.player = this.elements.create(this.world.getPlayer())
         this.camera.center()
 
         svg.on('mousedown', () => this.updateMousePos())
@@ -85,7 +84,7 @@ export default class Game extends Component {
 
         return (
             <div ref={(ref) => { this.wrapper = ref }}>
-                <Canvas ref={(ref) => { this.canvas = ref }} {...{width, height}} />
+                <Canvas ref={(ref) => { this.canvas = ref }} {...{ width, height }} />
             </div>
         )
     }
@@ -115,36 +114,6 @@ export default class Game extends Component {
         }
     }
 
-    shootExplosion (x, y, color) {
-        const particle_count = 5 + parseInt(Math.random() * 5)
-        for (let i = 0; i < particle_count; i++) {
-            const r = (1 + Math.random())
-            this.elements.add({
-                x: x,
-                y: y,
-                width: r,
-                height: r,
-                type: 'particle',
-                properties: {color: color}
-            })
-        }
-    }
-
-    particlesExplosion (x, y) {
-        const particle_count = 10 + parseInt(Math.random() * 5)
-        for (let i = 0; i < particle_count; i++) {
-            const r = (1 + Math.random())
-            this.elements.add({
-                x: x,
-                y: y,
-                width: r,
-                height: r,
-                type: 'particle',
-                properties: {color: `rgb(${parseInt(128 + ((Math.random() * 32) * 4))}, 0, 0)`}
-            })
-        }
-    }
-
     getRelativePointerPosition (pos) {
         const [x, y] = pos
         const { scale } = this.props.viewport
@@ -157,7 +126,7 @@ export default class Game extends Component {
     updateMousePos () {
         const { dispatch } = this.props
         const [x, y] = this.getRelativePointerPosition(d3Mouse(this.wrapper))
-        this.particlesExplosion(x, y)
+        this.elements.particlesExplosion(x, y)
         dispatch(updateMousePos(x, y))
     }
 

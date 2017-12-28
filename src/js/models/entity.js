@@ -1,6 +1,6 @@
 import SAT from 'sat'
-import { overlap, normalize } from '../lib/utils'
-import { DIRECTIONS } from '../lib/utils'
+import { overlap, normalize } from '../lib/helpers'
+import { DIRECTIONS, ENTITIES_TYPE } from '../lib/constants'
 
 export default class Entity {
     constructor (obj, game) {
@@ -8,8 +8,10 @@ export default class Entity {
         this.id = obj.id
         this.x = obj.x
         this.y = obj.y
+        this.color = obj.color
         this.width = obj.width
         this.height = obj.height
+        this.family = obj.family || null
         this.type = obj.type
         this.properties = obj.properties
         this.direction = obj.direction || DIRECTIONS.LEFT
@@ -24,7 +26,6 @@ export default class Entity {
         this.solid = false
         this.shadowCaster = false
         this.visible = true
-        this.family = null
         this.animation = null
         this.animFrame = 0
         this.animCount = 0
@@ -124,13 +125,14 @@ export default class Entity {
     }
 
     hit (damage) {
-        const { particlesExplosion } = this._game
+        const { elements } = this._game
         this.force.x += -(this.force.x * 4)
         this.force.y = -2
         this.energy -= damage
         if (this.energy <= 0) {
             this.dying = true
-            particlesExplosion(this.x, this.y)
+            elements.add({type: ENTITIES_TYPE.COIN, x: this.x + 8, y: this.y})
+            elements.particlesExplosion(this.x, this.y)
         }
     }
 

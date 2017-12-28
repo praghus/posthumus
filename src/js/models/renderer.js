@@ -1,26 +1,11 @@
 import '../lib/illuminated'
-import { COLORS } from '../lib/utils'
+import { COLORS, LIGHTS } from '../lib/constants'
 
 export default class Renderer {
     constructor (game) {
-        const { Lamp, Vec2 } = window.illuminated
         this._game = game
         this.dynamicLights = true
         this.lightmask = []
-        this.playerLight = new Lamp({
-            position: new Vec2(0, 0),
-            color: COLORS.PLAYER_LIGHT,
-            distance: 300,
-            samples: 1,
-            radius: 1
-        })
-        this.playerShootLight = new Lamp({
-            position: new Vec2(0, 0),
-            color: COLORS.PLAYER_SHOOT,
-            distance: 500,
-            samples: 1,
-            radius: 1
-        })
     }
 
     draw () {
@@ -78,13 +63,14 @@ export default class Renderer {
      * illuminated.js
      */
     renderLightingEffect () {
-        const { ctx, camera, player, viewport } = this._game
+        const { ctx, camera, elements, player, viewport } = this._game
         const { resolutionX, resolutionY } = viewport
         const { DarkMask, Lighting, Vec2 } = window.illuminated
 
-        const light = player.shootFlash
-            ? this.playerShootLight
-            : this.playerLight
+        const light = elements.getLight(player.shootFlash
+            ? LIGHTS.SHOOT_LIGHT
+            : LIGHTS.PLAYER_LIGHT
+        )
 
         light.position = new Vec2(
             player.x + (player.width / 2) + camera.x,
@@ -276,10 +262,10 @@ export default class Renderer {
         }
 
         for (let i = 0; i < player.maxAmmo; i++) {
-            ctx.drawImage(assets.shell, 7, 0, 7, 16, 4 + (i * 6), resolutionY - 18, 7, 16)
+            ctx.drawImage(assets.shell, 6, 0, 6, 14, 4 + (i * 5), resolutionY - 18, 6, 14)
         }
         for (let i = 0; i < player.ammo; i++) {
-            ctx.drawImage(assets.shell, 0, 0, 7, 16, 4 + (i * 6), resolutionY - 18, 7, 16)
+            ctx.drawImage(assets.shell, 0, 0, 6, 14, 4 + (i * 5), resolutionY - 18, 6, 14)
         }
     }
 }

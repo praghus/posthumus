@@ -1,6 +1,6 @@
 import Entity from '../entity'
-import { ENTITIES_FAMILY } from '../../lib/utils'
-import { overlap } from '../../lib/utils'
+import { LIGHTS } from '../../lib/constants'
+import { overlap } from '../../lib/helpers'
 
 export default class DarkMask extends Entity {
     constructor (obj, game) {
@@ -8,7 +8,6 @@ export default class DarkMask extends Entity {
         this.solid = false
         this.active = false
         this.activated = false
-        this.family = ENTITIES_FAMILY.MODIFIERS
     }
 
     update () {
@@ -18,6 +17,10 @@ export default class DarkMask extends Entity {
                 this.active = true
                 if (!this.activated) {
                     player.inDark += 1
+                    const { light_color } = this.properties
+                    if (light_color) {
+                        this._game.elements.setLight(LIGHTS.PLAYER_LIGHT, light_color)
+                    }
                     this.activated = true
                 }
             }
