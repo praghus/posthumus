@@ -15,7 +15,7 @@ export default class Bullet extends Entity {
     collide (element) {
         if (element.solid) {
             this.dead = true
-            this.particles(`rgb(${parseInt(128 + ((Math.random() * 32) * 4))}, 0, 0)`)
+            this.particles(`rgb(${parseInt(128 + ((Math.random() * 32) * 4))}, 0, 0)`, 5)
         }
     }
 
@@ -29,19 +29,8 @@ export default class Bullet extends Entity {
 
             if (this.expectedX !== this.x) {
                 this.dead = true
-                this.particles('#333333')
+                this.particles('#333333', 5)
             }
         }
-    }
-
-    particles (color) {
-        const { elements } = this._game
-        elements.emitParticles(5 + parseInt(Math.random() * 5), {
-            x: this.direction === DIRECTIONS.RIGHT ? this.x + this.width : this.x,
-            y: this.y,
-            width: 1,
-            height: 1,
-            color
-        })
     }
 }

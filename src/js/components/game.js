@@ -11,6 +11,7 @@ const propTypes = {
     input: PropTypes.object.isRequired,
     startTicker: PropTypes.func.isRequired,
     ticker: PropTypes.object.isRequired,
+    // fps: PropTypes.number,
     viewport: PropTypes.object,
     dispatch: PropTypes.func
 }
@@ -26,6 +27,8 @@ export default class Game extends Component {
         this.assets = {}
         this.wrapper = null
         this.loadedCount = 0
+        this.frameTime = 0
+        this.lastLoop = null
         this.assetsLoaded = false
         this.then = performance.now()
         this.viewport = props.viewport
@@ -59,17 +62,18 @@ export default class Game extends Component {
         this.ticker = nextProps.ticker
         this.input = nextProps.input.keyPressed
         this.viewport = nextProps.viewport
+        this.frameStart = performance.now()
 
         const { interval } = this.ticker
-        const now = performance.now()
-        const delta = now - this.then
+        const delta = this.frameStart - this.then
 
         // obey 60 fps limit
         if (delta > interval) {
             this.elements.update()
             this.camera.update()
             this.player.update()
-            this.then = now - (delta % interval)
+            this.then = this.frameStart - (delta % interval)
+            this.countFPS()
         }
     }
 
@@ -81,13 +85,22 @@ export default class Game extends Component {
 
     render () {
         const { width, height } = this.props.viewport
-
         return (
             <div ref={(ref) => { this.wrapper = ref }}>
                 <Canvas ref={(ref) => { this.canvas = ref }} {...{ width, height }} />
             </div>
         )
     }
+
+    countFPS () {
+        const smoothing = 10
+        const now = performance.now()
+        const frameTime = now - this.lastLoop
+        this.frameTime += (frameTime - this.frameTime) / smoothing
+        this.fps = 1000 / this.frameTime
+        this.duration = this.frameStart < this.lastLoop ? this.frameTime : now - this.frameStart
+        this.lastLoop = now
+    };
 
     onKey (key, pressed) {
         const { dispatch } = this.props

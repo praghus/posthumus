@@ -17,8 +17,10 @@ export default class LavaStone extends Entity {
 
     draw (ctx) {
         const { camera } = this._game
+        ctx.save()
         ctx.fillStyle = this.color
         ctx.fillRect(this.x + camera.x, this.y + camera.y, this.width, this.height)
+        ctx.restore()
     }
 
     update () {

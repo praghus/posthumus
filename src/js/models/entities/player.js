@@ -9,6 +9,7 @@ export default class Player extends Entity {
         this.direction = DIRECTIONS.RIGHT
         this.inDark = 0
         this.energy = 3
+        this.canMove = true
         this.maxEnergy = 3
         this.maxSpeed = 2
         this.speed = 0.2
@@ -17,6 +18,7 @@ export default class Player extends Entity {
         this.maxAmmo = 8
         this.shootTimeout = null
         this.shootDelay = 500
+        this.freezeTimeout = null
         this.countToReload = 0
         this.bounds = {
             x: 8,
@@ -52,16 +54,18 @@ export default class Player extends Entity {
     update () {
         const { input, world } = this._game
         if (!this.dead) {
-            if (input.left) {
-                this.force.x -= this.speed
-                this.direction = DIRECTIONS.LEFT
-            }
-            if (input.right) {
-                this.force.x += this.speed
-                this.direction = DIRECTIONS.RIGHT
-            }
-            if (input.up && this.canJump()) {
-                this.doJump = true
+            if (this.canMove) {
+                if (input.left) {
+                    this.force.x -= this.speed
+                    this.direction = DIRECTIONS.LEFT
+                }
+                if (input.right) {
+                    this.force.x += this.speed
+                    this.direction = DIRECTIONS.RIGHT
+                }
+                if (input.up && this.canJump()) {
+                    this.doJump = true
+                }
             }
             if (input.fire && this.canShoot()) {
                 this.shoot()
@@ -78,14 +82,13 @@ export default class Player extends Entity {
         }
 
         this.force.y += world.gravity
-
         this.force.x === 0 && this.onFloor
             ? this.countToReload++
             : this.countToReload = 0
 
         if (this.countToReload === 100) this.reload()
 
-        this.move()
+        if (this.canMove) this.move()
 
         if (this.doJump || this.jump) {
             this.animate(this.direction === DIRECTIONS.RIGHT
@@ -187,6 +190,16 @@ export default class Player extends Entity {
 
     canHurt () {
         return !this.hurtTimeout
+    }
+
+    freeze (delay) {
+        if (this.canMove) {
+            this.canMove = false
+            this.freezeTimeout = setTimeout(() => {
+                this.freezeTimeout = null
+                this.canMove = true
+            }, delay)
+        }
     }
 
     reload () {

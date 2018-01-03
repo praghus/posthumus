@@ -1,16 +1,6 @@
 import {
-    Bat,
-    Bullet,
-    Coin,
-    DarkMask,
-    JumpThrough,
-    Lava,
-    LavaStone,
-    Particle,
-    Player,
-    Slope,
-    Spikes,
-    Zombie
+    Bat, Bullet, Coin, DarkMask, JumpThrough, Lava, LavaStone, Particle,
+    Player, Slope, Spider, SpiderBullet, SpiderWeb, Spikes, Zombie
 } from '../models/entities'
 
 export const DIRECTIONS = {
@@ -44,6 +34,8 @@ export const ENTITIES_TYPE = {
     SLOPE_LEFT: 'slope_left',
     SLOPE_RIGHT: 'slope_right',
     SPIDER: 'spider',
+    SPIDER_BULLET: 'spider_bullet',
+    SPIDER_WEB: 'spider_web',
     SPIKES: 'spikes',
     TANK: 'tank',
     WOLF: 'wolf',
@@ -69,6 +61,9 @@ export const ENTITIES = [
     { type: ENTITIES_TYPE.LAVA_STONE, family: ENTITIES_FAMILY.TRAPS, model: LavaStone },
     { type: ENTITIES_TYPE.PARTICLE, family: ENTITIES_FAMILY.PARTICLES, model: Particle },
     { type: ENTITIES_TYPE.PLAYER, model: Player},
+    { type: ENTITIES_TYPE.SPIDER, family: ENTITIES_FAMILY.ENEMIES, model: Spider },
+    { type: ENTITIES_TYPE.SPIDER_BULLET, family: ENTITIES_FAMILY.BULLETS, model: SpiderBullet },
+    { type: ENTITIES_TYPE.SPIDER_WEB, family: ENTITIES_FAMILY.MODIFIER, model: SpiderWeb },
     { type: ENTITIES_TYPE.SPIKES, family: ENTITIES_FAMILY.TRAPS, model: Spikes },
     { type: ENTITIES_TYPE.SLOPE_LEFT, family: ENTITIES_FAMILY.MODIFIER, model: Slope },
     { type: ENTITIES_TYPE.SLOPE_RIGHT, family: ENTITIES_FAMILY.MODIFIER, model: Slope },

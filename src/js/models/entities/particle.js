@@ -11,7 +11,7 @@ export default class Particle extends Entity {
         }
         this.life = Math.random() * 30 + 30
         this.maxSpeed = 0.5 + Math.random() * 1
-        this.mass = obj.mass || 0.5 + Math.random() * 1
+        this.mass = obj.mass || 0.3 + Math.random() * 0.7
         this.dead = false
     }
 

@@ -1,11 +1,26 @@
+import SAT from 'sat'
 import Entity from '../entity'
 import { ENTITIES_TYPE } from '../../lib/constants'
 
 export default class Slope extends Entity {
     constructor (obj, game) {
         super(obj, game)
-        this.solid = true
+        this.solid = false
         this.visible = false
+        if (this.type === ENTITIES_TYPE.SLOPE_RIGHT) {
+            this.vectorMask = [
+                new SAT.Vector(0, this.height),
+                new SAT.Vector(0, 0),
+                new SAT.Vector(this.width, 0)
+            ]
+        }
+        else {
+            this.vectorMask = [
+                new SAT.Vector(0, 0),
+                new SAT.Vector(this.width, 0),
+                new SAT.Vector(this.width, this.height)
+            ]
+        }
     }
 
     collide (element) {

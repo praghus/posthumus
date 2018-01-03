@@ -31,6 +31,15 @@ export default class Lava extends Entity {
         }
     }
 
+    update () {
+        if (this.onScreen()) {
+            if (this.canShoot) {
+                this.shoot()
+            }
+            this.animate()
+        }
+    }
+
     shoot () {
         const { elements } = this._game
         elements.add({
@@ -42,14 +51,5 @@ export default class Lava extends Entity {
             this.canShoot = true
         }, this.shootDelay)
         this.canShoot = false
-    }
-
-    update () {
-        if (this.onScreen()) {
-            if (this.canShoot) {
-                this.shoot()
-            }
-            this.animate()
-        }
     }
 }

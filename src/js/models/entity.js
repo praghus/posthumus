@@ -245,4 +245,15 @@ export default class Entity {
             this.fall = false
         }
     }
+
+    particles (color, count) {
+        const { elements } = this._game
+        elements.emitParticles(count + parseInt(Math.random() * count), {
+            x: this.direction === DIRECTIONS.RIGHT ? this.x + this.width : this.x,
+            y: this.y,
+            width: 1,
+            height: 1,
+            color
+        })
+    }
 }

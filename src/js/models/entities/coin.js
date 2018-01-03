@@ -1,4 +1,5 @@
 import Entity from '../entity'
+import { ENTITIES_TYPE } from '../../lib/constants'
 
 export default class Coin extends Entity {
     constructor (obj, game) {
@@ -11,7 +12,7 @@ export default class Coin extends Entity {
 
     collide (element) {
         const { player } = this._game
-        if (element.type === 'player') {
+        if (element.type === ENTITIES_TYPE.PLAYER) {
             this.dead = true
             player.coinCollect += 1
         }

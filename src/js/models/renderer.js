@@ -4,7 +4,11 @@ import { COLORS, LIGHTS } from '../lib/constants'
 export default class Renderer {
     constructor (game) {
         this._game = game
+        this.frame = 0
+        this.fps = 0
+        this.then = performance.now()
         this.dynamicLights = true
+        this.last
         this.lightmask = []
     }
 
@@ -25,17 +29,16 @@ export default class Renderer {
         if (this.dynamicLights && (camera.underground || player.inDark > 0)) {
             this.renderLightingEffect()
             this.renderDarks()
-            this.renderObjects()
             this.renderPlayer()
+            this.renderObjects()
             this.renderForeGround()
         }
         else {
-            this.renderObjects()
             this.renderPlayer()
+            this.renderObjects()
             this.renderForeGround()
             this.renderDarks()
         }
-        // this.fontPrint(`${Math.round(ticker.fps)} FPS`, 5, 5)
         this.renderIndicators()
         // restore player shoot flash flag
         player.shootFlash = false
@@ -252,8 +255,11 @@ export default class Renderer {
     }
 
     renderIndicators () {
-        const { ctx, assets, player, viewport } = this._game
-        const { resolutionY } = viewport
+        const { ctx, assets, fps, player, viewport } = this._game
+        const { resolutionX, resolutionY } = viewport
+        const fpsIndicator = `FPS:${Math.round(fps)}`
+
+        this.fontPrint(fpsIndicator, resolutionX - (8 + fpsIndicator.length * 8), 6)
 
         ctx.drawImage(assets.live, 0, 10, player.maxEnergy * 11, 10, 5, 5, player.maxEnergy * 11, 10)
 

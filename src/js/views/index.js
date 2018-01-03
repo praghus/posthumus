@@ -16,7 +16,7 @@ const propTypes = {
     ticker: PropTypes.object.isRequired,
     input: PropTypes.object.isRequired,
     viewport: PropTypes.object,
-    dispatch: PropTypes.func // via connect
+    dispatch: PropTypes.func
 }
 
 class AppContainer extends Component {
@@ -26,6 +26,7 @@ class AppContainer extends Component {
             loadedCount: 0,
             assetsLoaded: false
         }
+        this.then = performance.now()
         this.assets = {}
         this.wrapper = null
         this.onAssetLoad = this.onAssetLoad.bind(this)
