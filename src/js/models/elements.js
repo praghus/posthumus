@@ -105,7 +105,7 @@ export default class Elements {
                 width: r,
                 height: r,
                 mass: 0.2,
-                type: 'particle',
+                type: ENTITIES_TYPE.PARTICLE,
                 color: `rgb(${parseInt(128 + ((Math.random() * 32) * 4))}, 0, 0)`
             })
         }

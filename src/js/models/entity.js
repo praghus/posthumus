@@ -66,10 +66,17 @@ export default class Entity {
     }
 
     draw (ctx) {
-        const { camera, assets } = this._game
+        const { camera, assets, renderer } = this._game
+        const sprite = assets[this.type] || assets['no_image']
         if (this.visible && this.onScreen()) {
+            if (this.shadowCaster && renderer.dynamicLights) {
+                renderer.addLightmaskElement(
+                    this.x + camera.x, this.y + camera.y,
+                    this.width, this.height
+                )
+            }
             if (this.animation) {
-                ctx.drawImage(assets[this.type],
+                ctx.drawImage(sprite,
                     this.animation.x + this.animFrame * this.animation.w, this.animation.y,
                     this.animation.w, this.animation.h,
                     this.x + camera.x, this.y + camera.y,
@@ -77,8 +84,8 @@ export default class Entity {
                 )
             }
             else {
-                ctx.drawImage(assets[this.type],
-                    0, 0, this.width, this.height,
+                ctx.drawImage(sprite,
+                    0, 0, assets[this.type] ? this.width : 16, assets[this.type] ? this.height : 16,
                     Math.floor(this.x + camera.x), Math.floor(this.y + camera.y),
                     this.width, this.height
                 )
@@ -125,14 +132,16 @@ export default class Entity {
     }
 
     hit (damage) {
-        const { elements } = this._game
-        this.force.x += -(this.force.x * 4)
-        this.force.y = -2
-        this.energy -= damage
-        if (this.energy <= 0) {
-            this.dying = true
-            elements.add({type: ENTITIES_TYPE.COIN, x: this.x + 8, y: this.y})
-            elements.particlesExplosion(this.x, this.y)
+        if (!this.dead && !this.dying) {
+            const { elements } = this._game
+            this.force.x += -(this.force.x * 4)
+            this.force.y = -2
+            this.energy -= damage
+            if (this.energy <= 0) {
+                this.dying = true
+                elements.add({type: ENTITIES_TYPE.COIN, x: this.x + 8, y: this.y})
+                elements.particlesExplosion(this.x, this.y)
+            }
         }
     }
 

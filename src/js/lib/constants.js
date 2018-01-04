@@ -1,6 +1,7 @@
 import {
-    Bat, Bullet, Coin, DarkMask, JumpThrough, Lava, LavaStone, Particle,
-    Player, Slope, Spider, SpiderBullet, SpiderWeb, Spikes, Zombie
+    Bat, Bullet, Coin, Crusher, DarkMask, JumpThrough, Lava,
+    LavaStone, Particle, Player, Slope, Spider, SpiderBullet,
+    SpiderTrap, SpiderWeb, Spikes, Zombie
 } from '../models/entities'
 
 export const DIRECTIONS = {
@@ -24,6 +25,7 @@ export const ENTITIES_TYPE = {
     BAT: 'bat',
     BULLET: 'bullet',
     COIN: 'coin',
+    CRUSHER: 'crusher',
     DARK_MASK: 'dark_mask',
     EVIL_EYE: 'evil_eye',
     JUMP_THROUGH: 'jump_through',
@@ -35,6 +37,7 @@ export const ENTITIES_TYPE = {
     SLOPE_RIGHT: 'slope_right',
     SPIDER: 'spider',
     SPIDER_BULLET: 'spider_bullet',
+    SPIDER_TRAP: 'spider_trap',
     SPIDER_WEB: 'spider_web',
     SPIKES: 'spikes',
     TANK: 'tank',
@@ -55,6 +58,7 @@ export const ENTITIES = [
     { type: ENTITIES_TYPE.BAT, family: ENTITIES_FAMILY.ENEMIES, model: Bat },
     { type: ENTITIES_TYPE.BULLET, family: ENTITIES_FAMILY.BULLETS, model: Bullet },
     { type: ENTITIES_TYPE.COIN, family: ENTITIES_FAMILY.ITEMS, model: Coin },
+    { type: ENTITIES_TYPE.CRUSHER, family: ENTITIES_FAMILY.TRAPS, model: Crusher },
     { type: ENTITIES_TYPE.DARK_MASK, family: ENTITIES_FAMILY.MODIFIERS, model: DarkMask },
     { type: ENTITIES_TYPE.JUMP_THROUGH, family: ENTITIES_FAMILY.MODIFIERS, model: JumpThrough },
     { type: ENTITIES_TYPE.LAVA, family: ENTITIES_FAMILY.TRAPS, model: Lava },
@@ -63,6 +67,7 @@ export const ENTITIES = [
     { type: ENTITIES_TYPE.PLAYER, model: Player},
     { type: ENTITIES_TYPE.SPIDER, family: ENTITIES_FAMILY.ENEMIES, model: Spider },
     { type: ENTITIES_TYPE.SPIDER_BULLET, family: ENTITIES_FAMILY.BULLETS, model: SpiderBullet },
+    { type: ENTITIES_TYPE.SPIDER_TRAP, family: ENTITIES_FAMILY.TRAPS, model: SpiderTrap },
     { type: ENTITIES_TYPE.SPIDER_WEB, family: ENTITIES_FAMILY.MODIFIER, model: SpiderWeb },
     { type: ENTITIES_TYPE.SPIKES, family: ENTITIES_FAMILY.TRAPS, model: Spikes },
     { type: ENTITIES_TYPE.SLOPE_LEFT, family: ENTITIES_FAMILY.MODIFIER, model: Slope },

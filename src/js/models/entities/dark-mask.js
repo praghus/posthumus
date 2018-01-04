@@ -11,7 +11,7 @@ export default class DarkMask extends Entity {
     }
 
     update () {
-        const { player } = this._game
+        const { elements, player } = this._game
         if (this.onScreen()) {
             if (overlap(player, this)) {
                 this.active = true
@@ -19,7 +19,7 @@ export default class DarkMask extends Entity {
                     player.inDark += 1
                     const { light_color } = this.properties
                     if (light_color) {
-                        this._game.elements.setLight(LIGHTS.PLAYER_LIGHT, light_color)
+                        elements.setLight(LIGHTS.PLAYER_LIGHT, light_color)
                     }
                     this.activated = true
                 }

@@ -17,12 +17,8 @@ const actionsMap = {
         })
     },
     [TIME_TICK]: (state) => {
-        // const { lastFrameTime } = state
-        // const newFrameTime = performance.now()
-        // const fps = 1000 / (newFrameTime - lastFrameTime)
         return Object.assign({}, state, {
-            lastFrameTime: performance.now() // newFrameTime,
-            // interval: 1000 / fps
+            lastFrameTime: performance.now()
         })
     }
 }

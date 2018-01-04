@@ -5,12 +5,12 @@ export default class Particle extends Entity {
     constructor (obj, game) {
         super(obj, game)
         const dir = Math.random() * 2 * Math.PI
+        this.maxSpeed = 0.5 + Math.random() * 1
         this.force = obj.force || {
             x: Math.cos(dir) * this.maxSpeed,
             y: Math.sin(dir) * this.maxSpeed
         }
         this.life = Math.random() * 30 + 30
-        this.maxSpeed = 0.5 + Math.random() * 1
         this.mass = obj.mass || 0.3 + Math.random() * 0.7
         this.dead = false
     }

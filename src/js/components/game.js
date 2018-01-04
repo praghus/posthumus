@@ -11,7 +11,6 @@ const propTypes = {
     input: PropTypes.object.isRequired,
     startTicker: PropTypes.func.isRequired,
     ticker: PropTypes.object.isRequired,
-    // fps: PropTypes.number,
     viewport: PropTypes.object,
     dispatch: PropTypes.func
 }
@@ -27,10 +26,11 @@ export default class Game extends Component {
         this.assets = {}
         this.wrapper = null
         this.loadedCount = 0
-        this.frameTime = 0
+        this.fps = 0
         this.lastLoop = null
-        this.assetsLoaded = false
+        this.frameTime = null
         this.then = performance.now()
+        this.assetsLoaded = false
         this.viewport = props.viewport
         this.ticker = props.ticker
         this.assets = props.assets
@@ -93,12 +93,10 @@ export default class Game extends Component {
     }
 
     countFPS () {
-        const smoothing = 10
         const now = performance.now()
-        const frameTime = now - this.lastLoop
-        this.frameTime += (frameTime - this.frameTime) / smoothing
+        const currentFrameTime = now - this.lastLoop
+        this.frameTime += (currentFrameTime - this.frameTime) / 100
         this.fps = 1000 / this.frameTime
-        this.duration = this.frameStart < this.lastLoop ? this.frameTime : now - this.frameStart
         this.lastLoop = now
     };
 

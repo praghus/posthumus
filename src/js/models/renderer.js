@@ -1,6 +1,8 @@
 import '../lib/illuminated'
 import { COLORS, LIGHTS } from '../lib/constants'
 
+const { DarkMask, Lighting, Vec2, RectangleObject } = window.illuminated
+
 export default class Renderer {
     constructor (game) {
         this._game = game
@@ -65,10 +67,16 @@ export default class Renderer {
     /**
      * illuminated.js
      */
+    addLightmaskElement (x, y, width, height) {
+        this.lightmask.push(new RectangleObject({
+            topleft: new Vec2(x, y),
+            bottomright: new Vec2(x + width, y + height)
+        }))
+    }
+
     renderLightingEffect () {
         const { ctx, camera, elements, player, viewport } = this._game
         const { resolutionX, resolutionY } = viewport
-        const { DarkMask, Lighting, Vec2 } = window.illuminated
 
         const light = elements.getLight(player.shootFlash
             ? LIGHTS.SHOOT_LIGHT
@@ -104,7 +112,7 @@ export default class Renderer {
 
         if (!camera.underground) {
             ctx.drawImage(assets.bg1, 0, 0)
-            ctx.drawImage(assets.moon, resolutionX - 100, 16)
+            ctx.drawImage(assets.moon, resolutionX - 80, 16)
             ctx.drawImage(assets.bg2, (camera.x / 8), -62 + (camera.y / 16))
         }
     }
@@ -113,7 +121,6 @@ export default class Renderer {
         const { ctx, world, camera, assets, viewport, player } = this._game
         const { resolutionX, resolutionY } = viewport
         const { spriteCols, spriteSize } = world
-        const { Vec2, RectangleObject } = window.illuminated
 
         let y = Math.floor(camera.y % spriteSize)
         let _y = Math.floor(-camera.y / spriteSize)
@@ -134,10 +141,7 @@ export default class Renderer {
                 if (tile > 0 || back > 0) {
                     // illuminated.js light mask
                     if (tile && this.dynamicLights) {
-                        this.lightmask.push(new RectangleObject({
-                            topleft: new Vec2(x, y),
-                            bottomright: new Vec2(x + spriteSize, y + spriteSize)
-                        }))
+                        this.addLightmaskElement(x, y, spriteSize, spriteSize)
                     }
                     if (back > 0) {
                         ctx.drawImage(assets.tiles,
@@ -153,43 +157,6 @@ export default class Renderer {
                             spriteSize, spriteSize, x, y,
                             spriteSize, spriteSize)
                     }
-                    // calculate shadow
-                    // if (back > 1 && tile < 224) {
-                    //     let shadow = 0
-                    //     if (_x > 0 && _y > 0 &&
-                    //   world.isShadowCaster(_x - 1, _y) &&
-                    //   world.isShadowCaster(_x - 1, _y - 1) &&
-                    //   world.isShadowCaster(_x, _y - 1)) {
-                    //         shadow = 6
-                    //     }
-                    //     else if (_x > 0 && _y > 0 &&
-                    //   world.isShadowCaster(_x - 1, _y - 1) &&
-                    //   world.isShadowCaster(_x, _y - 1)) {
-                    //         shadow = 5
-                    //     }
-                    //     else if (_x > 0 && _y > 0 &&
-                    //   world.isShadowCaster(_x - 1, _y) &&
-                    //   world.isShadowCaster(_x - 1, _y - 1)) {
-                    //         shadow = 4
-                    //     }
-                    //     else if (_x > 0 &&
-                    //   world.isShadowCaster(_x - 1, _y)) {
-                    //         shadow = 1
-                    //     }
-                    //     else if (_y > 0 &&
-                    //   world.isShadowCaster(_x, _y - 1)) {
-                    //         shadow = 2
-                    //     }
-                    //     else if (_x > 0 && _y > 0 &&
-                    //     world.isShadowCaster(_x - 1, _y - 1)) {
-                    //         shadow = 3
-                    //     }
-                    //     if (shadow > 0) {
-                    //         ctx.drawImage(assets.shadows, (shadow - 1) * spriteSize, 0,
-                    //             spriteSize, spriteSize, x, y,
-                    //             spriteSize, spriteSize)
-                    //     }
-                    // }
                 }
                 x += spriteSize
                 _x++
@@ -259,19 +226,18 @@ export default class Renderer {
         const { resolutionX, resolutionY } = viewport
         const fpsIndicator = `FPS:${Math.round(fps)}`
 
+        // FPS meter
         this.fontPrint(fpsIndicator, resolutionX - (8 + fpsIndicator.length * 8), 6)
 
+        // energy
         ctx.drawImage(assets.live, 0, 10, player.maxEnergy * 11, 10, 5, 5, player.maxEnergy * 11, 10)
-
         if (player.energy > 0) {
             ctx.drawImage(assets.live, 0, 0, player.energy * 11, 10, 5, 5, player.energy * 11, 10)
         }
 
+        // ammo
         for (let i = 0; i < player.maxAmmo; i++) {
-            ctx.drawImage(assets.shell, 6, 0, 6, 14, 4 + (i * 5), resolutionY - 18, 6, 14)
-        }
-        for (let i = 0; i < player.ammo; i++) {
-            ctx.drawImage(assets.shell, 0, 0, 6, 14, 4 + (i * 5), resolutionY - 18, 6, 14)
+            ctx.drawImage(assets.shell, i < player.ammo ? 0 : 6, 0, 6, 14, 4 + (i * 5), resolutionY - 18, 6, 14)
         }
     }
 }

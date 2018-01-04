@@ -24,7 +24,7 @@ export default class Slope extends Entity {
     }
 
     collide (element) {
-        if (!this.dead && element.solid) {
+        if (!this.dead && element.solid && element.type !== ENTITIES_TYPE.SPIDER) {
             const { input } = this._game
             const { x, width, height } = element
             const expectedY = this.type === ENTITIES_TYPE.SLOPE_RIGHT
