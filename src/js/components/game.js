@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import Canvas from './canvas'
 import levelData from '../../assets/levels/posthumus.json'
 import { Camera, Elements, World, Renderer } from '../models'
-import { select as d3Select, mouse as d3Mouse, touches as d3Touches, event as d3Event } from 'd3'
 import { updateMousePos, updateKeyPressed } from '../actions'
 
 const propTypes = {
@@ -35,12 +34,10 @@ export default class Game extends Component {
         this.ticker = props.ticker
         this.assets = props.assets
         this.playSound = this.playSound.bind(this)
+        this.updateMousePos = this.updateMousePos.bind(this)
     }
 
     componentDidMount () {
-        const dom = d3Select(document)
-        const svg = d3Select(this.wrapper)
-
         this.world = new World(levelData)
         this.camera = new Camera(this)
         this.renderer = new Renderer(this)
@@ -48,10 +45,9 @@ export default class Game extends Component {
         this.player = this.elements.create(this.world.getPlayer())
         this.camera.center()
 
-        svg.on('mousedown', () => this.updateMousePos())
-        svg.on('touchstart', () => this.updateTouchPos())
-        dom.on('keydown', () => this.onKey(d3Event.code, true))
-        dom.on('keyup', () => this.onKey(d3Event.code, false))
+        this.wrapper.addEventListener('click', this.updateMousePos, false)
+        document.addEventListener('keydown', ({code}) => this.onKey(code, true))
+        document.addEventListener('keyup', ({code}) => this.onKey(code, false))
 
         this.ctx = this.canvas.context
         this.props.startTicker()
@@ -81,6 +77,12 @@ export default class Game extends Component {
         if (this.ctx) {
             this.renderer.draw()
         }
+    }
+
+    componentWillUnmount () {
+        this.wrapper.removeEventListener('click', this.updateMousePos, false)
+        document.removeEventListener('keydown', ({code}) => this.onKey(code, true))
+        document.removeEventListener('keyup', ({code}) => this.onKey(code, false))
     }
 
     render () {
@@ -125,25 +127,9 @@ export default class Game extends Component {
         }
     }
 
-    getRelativePointerPosition (pos) {
-        const [x, y] = pos
-        const { scale } = this.props.viewport
-        return [
-            (x / scale) - this.camera.x,
-            (y / scale) - this.camera.y
-        ]
-    }
-
-    updateMousePos () {
+    updateMousePos (event) {
         const { dispatch } = this.props
-        const [x, y] = this.getRelativePointerPosition(d3Mouse(this.wrapper))
-        this.elements.particlesExplosion(x, y)
-        dispatch(updateMousePos(x, y))
-    }
-
-    updateTouchPos () {
-        const { dispatch } = this.props
-        const [x, y] = this.getRelativePointerPosition(d3Touches(this.wrapper)[0])
+        const {x, y} = event
         dispatch(updateMousePos(x, y))
     }
 

@@ -16,6 +16,12 @@ export const COLORS = {
     PLAYER_LIGHT: 'rgba(150,150,200,0.3)'
 }
 
+export const FONTS = {
+    FONT_SMALL: { name: 'font_small', size: 5},
+    FONT_NORMAL: { name: 'font_normal', size: 8},
+    FONT_BIG: { name: 'font_big', size: 16}
+}
+
 export const LIGHTS = {
     PLAYER_LIGHT: 'player_light',
     SHOOT_LIGHT: 'shoot_light'

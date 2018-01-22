@@ -72,7 +72,7 @@ export default class Zombie extends Entity {
         if (this.dying) {
             this.animate(this.animations.DEAD)
             if (this.animFrame === 6) {
-                playSound(zombieGroan)
+                // playSound(zombieGroan)
                 this.kill()
             }
         }

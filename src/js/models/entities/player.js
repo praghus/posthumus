@@ -14,8 +14,8 @@ export default class Player extends Entity {
         this.maxSpeed = 2
         this.speed = 0.2
         this.solid = true
-        this.ammo = 8
-        this.maxAmmo = 8
+        this.ammo = 2
+        this.maxAmmo = 4
         this.shootTimeout = null
         this.shootDelay = 500
         this.freezeTimeout = null
@@ -67,7 +67,7 @@ export default class Player extends Entity {
                     this.doJump = true
                 }
             }
-            if (input.fire && this.canShoot()) {
+            if (input.fire) {
                 this.shoot()
             }
 
@@ -153,31 +153,33 @@ export default class Player extends Entity {
     }
 
     shoot () {
-        const { elements, playSound } = this._game
-        this.force.x = 0
-        this.ammo -= 1
-        this.animFrame = 0
-        this.countToReload = 0
+        if (this.canShoot()) {
+            const { elements, playSound } = this._game
+            this.force.x = 0
+            this.ammo -= 1
+            this.animFrame = 0
+            this.countToReload = 0
 
-        elements.add({
-            type: ENTITIES_TYPE.BULLET,
-            x: this.direction === DIRECTIONS.RIGHT
-                ? this.x + this.width
-                : this.x,
-            y: this.y + 26,
-            direction: this.direction}
-        )
+            elements.add({
+                type: ENTITIES_TYPE.BULLET,
+                x: this.direction === DIRECTIONS.RIGHT
+                    ? this.x + this.width
+                    : this.x,
+                y: this.y + 26,
+                direction: this.direction}
+            )
 
-        this.flashTimeout = setTimeout(() => {
-            this.shootFlash = true
-            this.flashTimeout = null
-        }, 60)
+            this.flashTimeout = setTimeout(() => {
+                this.shootFlash = true
+                this.flashTimeout = null
+            }, 60)
 
-        this.shootTimeout = setTimeout(() => {
-            this.shootTimeout = null
-        }, this.shootDelay)
+            this.shootTimeout = setTimeout(() => {
+                this.shootTimeout = null
+            }, this.shootDelay)
 
-        playSound(playerShoot)
+            playSound(playerShoot)
+        }
     };
 
     canShoot () {

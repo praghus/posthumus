@@ -1,5 +1,5 @@
 import '../lib/illuminated'
-import { COLORS, LIGHTS } from '../lib/constants'
+import { COLORS, FONTS, LIGHTS } from '../lib/constants'
 
 const { DarkMask, Lighting, Vec2, RectangleObject } = window.illuminated
 
@@ -48,18 +48,18 @@ export default class Renderer {
         ctx.restore()
     }
 
-    fontPrint (text, x = -1, y = -1) {
+    fontPrint (text, x = -1, y = -1, font = FONTS.FONT_NORMALL) {
         const { ctx, assets, viewport } = this._game
         const { resolutionX, resolutionY } = viewport
 
-        x = x === -1 ? (resolutionX - text.length * 8) / 2 : x
-        y = y === -1 ? (resolutionY - 8) / 2 : y
+        x = x === -1 ? (resolutionX - text.length * font.size) / 2 : x
+        y = y === -1 ? (resolutionY - font.size) / 2 : y
 
         for (let i = 0; i < text.length; i++) {
             const chr = text.charCodeAt(i)
-            ctx.drawImage(assets.font,
-                ((chr) % 16) * 16, Math.ceil(((chr + 1) / 16) - 1) * 16,
-                16, 16, x + (i * 8), y, 8, 8
+            ctx.drawImage(assets[font.name],
+                ((chr) % 16) * font.size, Math.ceil(((chr + 1) / 16) - 1) * font.size,
+                font.size, font.size, x + (i * font.size), y, font.size, font.size
             )
         }
     }
@@ -113,7 +113,7 @@ export default class Renderer {
         if (!camera.underground) {
             ctx.drawImage(assets.bg1, 0, 0)
             ctx.drawImage(assets.moon, resolutionX - 80, 16)
-            ctx.drawImage(assets.bg2, (camera.x / 8), -62 + (camera.y / 16))
+            ctx.drawImage(assets.bg2, (camera.x / 8), -50 + (camera.y / 16))
         }
     }
 
@@ -227,7 +227,7 @@ export default class Renderer {
         const fpsIndicator = `FPS:${Math.round(fps)}`
 
         // FPS meter
-        this.fontPrint(fpsIndicator, resolutionX - (8 + fpsIndicator.length * 8), 6)
+        this.fontPrint(fpsIndicator, resolutionX - (5 + fpsIndicator.length * 5), resolutionY - 10, FONTS.FONT_SMALL)
 
         // energy
         ctx.drawImage(assets.live, 0, 10, player.maxEnergy * 11, 10, 5, 5, player.maxEnergy * 11, 10)

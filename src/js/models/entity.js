@@ -249,7 +249,7 @@ export default class Entity {
         this.onRightEdge = !world.isSolid(PW, PH)
 
         if (this.onFloor) {
-            this.force.y *= -0.2
+            this.force.y *= -0.8
             this.jump = false
             this.fall = false
         }
