@@ -3,15 +3,17 @@ import PropTypes from 'prop-types'
 import Canvas from './canvas'
 import levelData from '../../assets/levels/posthumus.json'
 import { Camera, Elements, World, Renderer } from '../models'
-import { updateMousePos, updateKeyPressed } from '../actions'
+import { getKeyPressed } from '../lib/constants'
 
 const propTypes = {
     assets: PropTypes.object.isRequired,
     input: PropTypes.object.isRequired,
+    onMouse: PropTypes.func.isRequired,
+    onKey: PropTypes.func.isRequired,
+    playSound: PropTypes.func.isRequired,
     startTicker: PropTypes.func.isRequired,
     ticker: PropTypes.object.isRequired,
-    viewport: PropTypes.object,
-    dispatch: PropTypes.func
+    viewport: PropTypes.object
 }
 
 export default class Game extends Component {
@@ -33,11 +35,11 @@ export default class Game extends Component {
         this.viewport = props.viewport
         this.ticker = props.ticker
         this.assets = props.assets
-        this.playSound = this.playSound.bind(this)
-        this.updateMousePos = this.updateMousePos.bind(this)
+        this.playSound = props.playSound.bind(this)
     }
 
     componentDidMount () {
+        const { onKey, onMouse } = this.props
         this.world = new World(levelData)
         this.camera = new Camera(this)
         this.renderer = new Renderer(this)
@@ -45,9 +47,9 @@ export default class Game extends Component {
         this.player = this.elements.create(this.world.getPlayer())
         this.camera.center()
 
-        this.wrapper.addEventListener('click', this.updateMousePos, false)
-        document.addEventListener('keydown', ({code}) => this.onKey(code, true))
-        document.addEventListener('keyup', ({code}) => this.onKey(code, false))
+        this.wrapper.addEventListener('click', onMouse, false)
+        document.addEventListener('keydown', ({code}) => onKey(getKeyPressed(code), true))
+        document.addEventListener('keyup', ({code}) => onKey(getKeyPressed(code), false))
 
         this.ctx = this.canvas.context
         this.props.startTicker()
@@ -101,42 +103,6 @@ export default class Game extends Component {
         this.fps = 1000 / this.frameTime
         this.lastLoop = now
     };
-
-    onKey (key, pressed) {
-        const { dispatch } = this.props
-        switch (key) {
-        case 'KeyA':
-        case 'ArrowLeft':
-            dispatch(updateKeyPressed('left', pressed))
-            break
-        case 'KeyD':
-        case 'ArrowRight':
-            dispatch(updateKeyPressed('right', pressed))
-            break
-        case 'KeyS':
-        case 'ArrowDown':
-            dispatch(updateKeyPressed('down', pressed))
-            break
-        case 'KeyW':
-        case 'ArrowUp':
-            dispatch(updateKeyPressed('up', pressed))
-            break
-        case 'Space':
-            dispatch(updateKeyPressed('fire', pressed))
-            break
-        }
-    }
-
-    updateMousePos (event) {
-        const { dispatch } = this.props
-        const {x, y} = event
-        dispatch(updateMousePos(x, y))
-    }
-
-    playSound (sound) {
-        const { dispatch } = this.props
-        dispatch(sound())
-    }
 }
 
 Game.propTypes = propTypes

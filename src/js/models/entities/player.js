@@ -1,6 +1,6 @@
 
 import Entity from '../entity'
-import { DIRECTIONS, ENTITIES_TYPE, ENTITIES_FAMILY } from '../../lib/constants'
+import { DIRECTIONS, ENTITIES_TYPE, ENTITIES_FAMILY, INPUTS } from '../../lib/constants'
 import { playerReload, playerShoot } from '../../actions/sounds'
 
 export default class Player extends Entity {
@@ -55,24 +55,24 @@ export default class Player extends Entity {
         const { input, world } = this._game
         if (!this.dead) {
             if (this.canMove) {
-                if (input.left) {
+                if (input[INPUTS.INPUT_LEFT]) {
                     this.force.x -= this.speed
                     this.direction = DIRECTIONS.LEFT
                 }
-                if (input.right) {
+                if (input[INPUTS.INPUT_RIGHT]) {
                     this.force.x += this.speed
                     this.direction = DIRECTIONS.RIGHT
                 }
-                if (input.up && this.canJump()) {
+                if (input[INPUTS.INPUT_UP] && this.canJump()) {
                     this.doJump = true
                 }
             }
-            if (input.fire) {
+            if (input[INPUTS.INPUT_FIRE]) {
                 this.shoot()
             }
 
             // slow down
-            if (!input.left && !input.right && this.force.x !== 0) {
+            if (!input[INPUTS.INPUT_LEFT] && !input[INPUTS.INPUT_RIGHT] && this.force.x !== 0) {
                 this.force.x += this.direction === DIRECTIONS.RIGHT ? -this.speed : this.speed
                 if (this.direction === DIRECTIONS.LEFT && this.force.x > 0 ||
                     this.direction === DIRECTIONS.RIGHT && this.force.x < 0) {

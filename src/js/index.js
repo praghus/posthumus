@@ -22,13 +22,10 @@ if (isProduction) {
     store = createStore(rootReducer, middleware)
 }
 else {
-    let enhancer
-    if (window.__REDUX_DEVTOOLS_EXTENSION__) {
-        enhancer = compose(middleware, window.__REDUX_DEVTOOLS_EXTENSION__())
-    }
-    else {
-        enhancer = compose(middleware)
-    }
+    const enhancer = window.__REDUX_DEVTOOLS_EXTENSION__
+        ? compose(middleware, window.__REDUX_DEVTOOLS_EXTENSION__())
+        : compose(middleware)
+
     store = createStore(rootReducer, enhancer)
 }
 

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Game } from '../components'
 import { requireAll } from '../lib/helpers'
-import { tickTime, startTicker } from '../actions'
+import {startTicker, tickTime, updateKeyPressed, updateMousePos } from '../actions'
 
 const allImages = require.context('../../assets/images', true, /.*\.png/)
 const images = requireAll(allImages).reduce(
@@ -13,10 +13,14 @@ const images = requireAll(allImages).reduce(
 )
 
 const propTypes = {
-    ticker: PropTypes.object.isRequired,
     input: PropTypes.object.isRequired,
-    viewport: PropTypes.object,
-    dispatch: PropTypes.func
+    onKey: PropTypes.func.isRequired,
+    onMouse: PropTypes.func.isRequired,
+    playSound: PropTypes.func.isRequired,
+    ticker: PropTypes.object.isRequired,
+    tickerStart: PropTypes.func.isRequired,
+    tickerTick: PropTypes.func.isRequired,
+    viewport: PropTypes.object
 }
 
 class AppContainer extends Component {
@@ -58,15 +62,17 @@ class AppContainer extends Component {
     }
 
     startTicker () {
-        const { ticker, dispatch } = this.props
+        const { ticker, tickerStart, tickerTick } = this.props
+        const { requestAnimationFrame } = window
+
         const tick = () => {
-            dispatch(tickTime())
-            window.requestAnimationFrame(tick)
+            tickerTick()
+            requestAnimationFrame(tick)
         }
         if (!ticker.tickerStarted) {
             /*eslint no-console: ["error", { allow: ["info"] }] */
             console.info('Starting ticker')
-            dispatch(startTicker())
+            tickerStart()
             tick()
         }
     }
@@ -80,6 +86,16 @@ const mapStateToProps = (state) => {
     }
 }
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onKey: (key, pressed) => dispatch(updateKeyPressed(key, pressed)),
+        onMouse: (event) => dispatch(updateMousePos(event.x, event.y)),
+        playSound: (sound) => dispatch(sound()),
+        tickerStart: () => dispatch(startTicker(performance.now())),
+        tickerTick: () => dispatch(tickTime(performance.now()))
+    }
+}
+
 AppContainer.propTypes = propTypes
 
-export default connect(mapStateToProps)(AppContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(AppContainer)

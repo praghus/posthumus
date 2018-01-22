@@ -1,6 +1,6 @@
 import SAT from 'sat'
 import Entity from '../entity'
-import { ENTITIES_TYPE } from '../../lib/constants'
+import { ENTITIES_TYPE, INPUTS } from '../../lib/constants'
 
 export default class Slope extends Entity {
     constructor (obj, game) {
@@ -41,7 +41,7 @@ export default class Slope extends Entity {
                 element.force.y += 1
             }
 
-            if (element.type === ENTITIES_TYPE.PLAYER && input.up) {
+            if (element.type === ENTITIES_TYPE.PLAYER && input[INPUTS.INPUT_UP]) {
                 element.doJump = true
             }
         }

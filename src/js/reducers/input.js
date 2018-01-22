@@ -1,3 +1,4 @@
+import { INPUTS } from '../lib/constants'
 import {
     UPDATE_KEY_PRESSED,
     UPDATE_MOUSE_POS
@@ -6,11 +7,11 @@ import {
 const initialState = {
     mousePos: [0, 0],
     keyPressed: {
-        fire: false,
-        left: false,
-        right: false,
-        down: false,
-        up: false
+        [INPUTS.INPUT_FIRE]: false,
+        [INPUTS.INPUT_LEFT]: false,
+        [INPUTS.INPUT_RIGHT]: false,
+        [INPUTS.INPUT_DOWN]: false,
+        [INPUTS.INPUT_UP]: false
     }
 }
 
@@ -25,7 +26,6 @@ const actionsMap = {
         keyPressed[action.key] = action.pressed
         return Object.assign({}, state, {...{keyPressed}})
     }
-
 }
 
 export default function reducer (state = initialState, action) {

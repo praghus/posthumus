@@ -4,13 +4,6 @@ import {
     SpiderTrap, SpiderWeb, Spikes, Zombie
 } from '../models/entities'
 
-export const DIRECTIONS = {
-    UP: 0,
-    RIGHT: 1,
-    BOTTOM: 2,
-    LEFT: 3
-}
-
 export const COLORS = {
     PLAYER_SHOOT: '#deeed6',
     PLAYER_LIGHT: 'rgba(150,150,200,0.3)'
@@ -25,6 +18,29 @@ export const FONTS = {
 export const LIGHTS = {
     PLAYER_LIGHT: 'player_light',
     SHOOT_LIGHT: 'shoot_light'
+}
+
+export const DIRECTIONS = {
+    UP: 0,
+    RIGHT: 1,
+    DOWN: 2,
+    LEFT: 3
+}
+
+export const INPUTS = {
+    INPUT_UP: 'up',
+    INPUT_RIGHT: 'right',
+    INPUT_DOWN: 'down',
+    INPUT_LEFT: 'left',
+    INPUT_FIRE: 'fire'
+}
+
+export const INPUT_KEYS = {
+    [INPUTS.INPUT_UP]: ['KeyW', 'ArrowUp'],
+    [INPUTS.INPUT_RIGHT]: ['KeyD', 'ArrowRight'],
+    [INPUTS.INPUT_DOWN]: ['KeyS', 'ArrowDown'],
+    [INPUTS.INPUT_LEFT]: ['KeyA', 'ArrowLeft'],
+    [INPUTS.INPUT_FIRE]: ['Space']
 }
 
 export const ENTITIES_TYPE = {
@@ -83,4 +99,8 @@ export const ENTITIES = [
 
 export function getEntityByType (entityType) {
     return ENTITIES.filter(({ type }) => entityType === type)[0] || null
+}
+
+export function getKeyPressed (key) {
+    return Object.keys(INPUT_KEYS).find((input) => INPUT_KEYS[input].indexOf(key) !== -1)
 }
