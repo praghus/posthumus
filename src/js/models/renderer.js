@@ -10,7 +10,6 @@ export default class Renderer {
         this.fps = 0
         this.then = performance.now()
         this.dynamicLights = true
-        this.last
         this.lightmask = []
     }
 
@@ -44,7 +43,6 @@ export default class Renderer {
         this.renderIndicators()
         // restore player shoot flash flag
         player.shootFlash = false
-
         ctx.restore()
     }
 
