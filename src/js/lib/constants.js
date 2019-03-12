@@ -1,106 +1,96 @@
-import {
-    Bat, Bullet, Coin, Crusher, DarkMask, JumpThrough, Lava,
-    LavaStone, Particle, Player, Slope, Spider, SpiderBullet,
-    SpiderTrap, SpiderWeb, Spikes, Zombie
-} from '../models/entities'
-
-export const COLORS = {
-    PLAYER_SHOOT: '#deeed6',
-    PLAYER_LIGHT: 'rgba(150,150,200,0.3)'
+export const JUMP_THROUGH_TILES = [
+    87, 88, 210, 211, 212, 213, 214, 215, 243, 836,
+    868, 1088, 1089, 917, 918, 1077, 1078
+]
+export const NON_COLLIDE_TILES = [
+    // 1, 2, 6, 9, 7, 15, 16, 17, 18, 19,
+    // 40, 42, 44, 47, 48, 49, 50, 51, 22, 38,
+    // 39, 54, 58, 59, 60, 61, 69, 71, 79, 80,
+    // 81, 119, 120, 90, 91, 92, 93, 97, 101, 110,
+    // 111, 112, 115, 116, 121, 122, 125, 153, 129, 130,
+    // 131, 132, 133, 140, 141, 142, 143, 144, 145, 146,
+    // 147, 148, 149, 177, 178, 179, 180, 181, 182, 230,
+    // 233, 234, 235, 245, 1045, 1046
+]
+export const MINI_TILES = {
+    '230': {offsetX: 8, offsetY: 8, width: 8, height: 8},
+    '233': {offsetX: 0, offsetY: 8, width: 8, height: 8},
+    '234': {offsetX: 8, offsetY: 8, width: 8, height: 8},
+    '235': {offsetX: 0, offsetY: 8, width: 8, height: 8}
 }
-
+export const SCENES = {
+    INTRO: 'INTRO',
+    GAME: 'GAME'
+}
 export const FONTS = {
     FONT_SMALL: { name: 'font_small', size: 5},
     FONT_NORMAL: { name: 'font_normal', size: 8},
     FONT_BIG: { name: 'font_big', size: 16}
 }
-
-export const LIGHTS = {
-    PLAYER_LIGHT: 'player_light',
-    SHOOT_LIGHT: 'shoot_light'
+export const COLORS = {
+    BLUE_SKY: '#7CF',
+    BLACK: '#000',
+    DARK_GREY: '#222',
+    DARK_RED: '#D00',
+    GREEN: '#0F0',
+    PURPLE: '#F0F',
+    LIGHT_RED: '#F00',
+    SPIDER_WEB: 'rgba(255,255,255,0.5)',
+    TRANS_WHITE: 'rgba(255,255,255,0.1)'
 }
-
+export const LAYERS = {
+    BACKGROUND: 1,
+    MAIN: 2,
+    OBJECTS: 3,
+    FOREGROUND: 4
+}
 export const DIRECTIONS = {
-    UP: 0,
-    RIGHT: 1,
-    DOWN: 2,
-    LEFT: 3
+    UP: 'up',
+    RIGHT: 'right',
+    DOWN: 'down',
+    LEFT: 'left'
 }
-
 export const INPUTS = {
     INPUT_UP: 'up',
     INPUT_RIGHT: 'right',
     INPUT_DOWN: 'down',
     INPUT_LEFT: 'left',
-    INPUT_FIRE: 'fire'
+    INPUT_SHOT: 'shot',
+    INPUT_MAP: 'map',
+    INPUT_DEBUG: 'debug',
+    INPUT_RESTORE: 'restore'
 }
-
 export const INPUT_KEYS = {
     [INPUTS.INPUT_UP]: ['KeyW', 'ArrowUp'],
     [INPUTS.INPUT_RIGHT]: ['KeyD', 'ArrowRight'],
     [INPUTS.INPUT_DOWN]: ['KeyS', 'ArrowDown'],
     [INPUTS.INPUT_LEFT]: ['KeyA', 'ArrowLeft'],
-    [INPUTS.INPUT_FIRE]: ['Space']
+    [INPUTS.INPUT_SHOT]: ['Space'],
+    [INPUTS.INPUT_MAP]: ['KeyM'],
+    [INPUTS.INPUT_DEBUG]: ['KeyI'],
+    [INPUTS.INPUT_RESTORE]: ['KeyL']
 }
-
-export const ENTITIES_TYPE = {
+export const TIMEOUTS = {
+    'MESSAGE': { name: 'message', duration: 3000 },
+    'HINT': { name: 'hint', duration: 2000 },
+    'PLAYER_HURT': { name: 'player_hurt', duration: 3000 },
+    'PLAYER_MAP': { name: 'player_map', duration: 2000 },
+    'PLAYER_RESPAWN': { name: 'player_respawn', duration: 1000 },
+    'PLAYER_TAKE': { name: 'player_take', duration: 500 }
+}
+export const ASSETS = {
     BAT: 'bat',
     BULLET: 'bullet',
-    COIN: 'coin',
+    SLIME: 'slime',
     CRUSHER: 'crusher',
-    DARK_MASK: 'dark_mask',
-    EVIL_EYE: 'evil_eye',
-    JUMP_THROUGH: 'jump_through',
+    DUST: 'dust',
+    ENERGY: 'energy',
+    HEARTS: 'hearts',
     LAVA: 'lava',
-    LAVA_STONE: 'lava_stone',
-    PARTICLE: 'particle',
+    LIGHTING: 'lighting',
     PLAYER: 'player',
-    SLOPE_LEFT: 'slope_left',
-    SLOPE_RIGHT: 'slope_right',
-    SPIDER: 'spider',
-    SPIDER_BULLET: 'spider_bullet',
+    ROCK: 'rock',
     SPIDER_TRAP: 'spider_trap',
-    SPIDER_WEB: 'spider_web',
-    SPIKES: 'spikes',
-    TANK: 'tank',
-    WOLF: 'wolf',
-    ZOMBIE: 'zombie'
-}
-
-export const ENTITIES_FAMILY = {
-    BULLETS: 'bullets',
-    ENEMIES: 'enemies',
-    ITEMS: 'items',
-    MODIFIERS: 'modifiers',
-    PARTICLES: 'particles',
-    TRAPS: 'traps'
-}
-
-export const ENTITIES = [
-    { type: ENTITIES_TYPE.BAT, family: ENTITIES_FAMILY.ENEMIES, model: Bat },
-    { type: ENTITIES_TYPE.BULLET, family: ENTITIES_FAMILY.BULLETS, model: Bullet },
-    { type: ENTITIES_TYPE.COIN, family: ENTITIES_FAMILY.ITEMS, model: Coin },
-    { type: ENTITIES_TYPE.CRUSHER, family: ENTITIES_FAMILY.TRAPS, model: Crusher },
-    { type: ENTITIES_TYPE.DARK_MASK, family: ENTITIES_FAMILY.MODIFIERS, model: DarkMask },
-    { type: ENTITIES_TYPE.JUMP_THROUGH, family: ENTITIES_FAMILY.MODIFIERS, model: JumpThrough },
-    { type: ENTITIES_TYPE.LAVA, family: ENTITIES_FAMILY.TRAPS, model: Lava },
-    { type: ENTITIES_TYPE.LAVA_STONE, family: ENTITIES_FAMILY.TRAPS, model: LavaStone },
-    { type: ENTITIES_TYPE.PARTICLE, family: ENTITIES_FAMILY.PARTICLES, model: Particle },
-    { type: ENTITIES_TYPE.PLAYER, model: Player},
-    { type: ENTITIES_TYPE.SPIDER, family: ENTITIES_FAMILY.ENEMIES, model: Spider },
-    { type: ENTITIES_TYPE.SPIDER_BULLET, family: ENTITIES_FAMILY.BULLETS, model: SpiderBullet },
-    { type: ENTITIES_TYPE.SPIDER_TRAP, family: ENTITIES_FAMILY.TRAPS, model: SpiderTrap },
-    { type: ENTITIES_TYPE.SPIDER_WEB, family: ENTITIES_FAMILY.MODIFIER, model: SpiderWeb },
-    { type: ENTITIES_TYPE.SPIKES, family: ENTITIES_FAMILY.TRAPS, model: Spikes },
-    { type: ENTITIES_TYPE.SLOPE_LEFT, family: ENTITIES_FAMILY.MODIFIER, model: Slope },
-    { type: ENTITIES_TYPE.SLOPE_RIGHT, family: ENTITIES_FAMILY.MODIFIER, model: Slope },
-    { type: ENTITIES_TYPE.ZOMBIE, family: ENTITIES_FAMILY.ENEMIES, model: Zombie }
-]
-
-export function getEntityByType (entityType) {
-    return ENTITIES.filter(({ type }) => entityType === type)[0] || null
-}
-
-export function getKeyPressed (key) {
-    return Object.keys(INPUT_KEYS).find((input) => INPUT_KEYS[input].indexOf(key) !== -1)
+    TORCH: 'torches',
+    TILES: 'tiles'
 }

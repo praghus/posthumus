@@ -7,9 +7,13 @@ const initialState = calculateViewportSize(window.innerWidth, window.innerHeight
 
 const actionsMap = {
     [RESIZE_SCREEN]: (state, action) => {
-        return Object.assign({}, state, {
-            ...calculateViewportSize(action.width, action.height)
-        })
+        return {
+            ...state,
+            ...calculateViewportSize(
+                action.width,
+                action.height
+            )
+        }
     }
 }
 

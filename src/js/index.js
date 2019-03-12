@@ -9,7 +9,6 @@ import soundsMiddleware from 'redux-sounds'
 import rootReducer from './reducers'
 import App from './views'
 
-import 'babel-polyfill'
 import '../scss/index.scss'
 
 let store = null
