@@ -21,9 +21,21 @@ export default class Bullet extends ActiveElement {
     }
 
     collide (element) {
+        super.collide(element)
         if (element.solid) {
             this.dead = true
-            this.particles(`rgb(${parseInt(128 + ((Math.random() * 32) * 4))}, 0, 0)`, 5)
+            this.emitParticles(randomInt(10, 15), {
+                x: element.x, // this.direction === DIRECTIONS.RIGHT ? this.x + this.width : this.x,
+                y: this.y,
+                width: 1,
+                height: 1,
+                mass: 0.1,
+                force: {
+                    x: Math.cos(Math.random() * 2 * Math.PI) * 0.5 + Math.random(),
+                    y: -7
+                },
+                color: `rgb(${parseInt(128 + ((Math.random() * 32) * 4))}, 0, 0)`
+            })
         }
     }
 
@@ -42,6 +54,7 @@ export default class Bullet extends ActiveElement {
                     y: this.y,
                     width: 1,
                     height: 1,
+                    mass: 0.1,
                     color: '#333333'
                 })
             }

@@ -16,6 +16,7 @@ export const SOUNDS = {
 
 export const soundsData = {
     [SOUNDS.PLAYER_RELOAD]: {src: [loadedSounds[SOUNDS.PLAYER_RELOAD]]},
-    [SOUNDS.PLAYER_SHOOT]: {src: [loadedSounds[SOUNDS.PLAYER_SHOOT]]}
+    [SOUNDS.PLAYER_SHOOT]: {src: [loadedSounds[SOUNDS.PLAYER_SHOOT]]},
+    [SOUNDS.ZOMBIE_GROAN]: {src: [loadedSounds[SOUNDS.ZOMBIE_GROAN]]}
 }
 

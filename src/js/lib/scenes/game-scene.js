@@ -87,7 +87,6 @@ export default class GameScene extends Scene {
         //     world.showLayer(LAYERS.FOREGROUND2)
         // }
         // overlay.displayHUD()
-        this.checkTimeout(TIMEOUTS.PLAYER_MAP) && overlay.displayMap()
         overlay.update()
     }
 
