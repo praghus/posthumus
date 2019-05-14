@@ -1,6 +1,6 @@
 import './illuminated'
-import { ENTITIES } from './entities'
-import { JUMP_THROUGH_TILES, INPUT_KEYS, MINI_TILES } from './constants'
+import { ENTITIES } from '../constants/entities'
+import { JUMP_THROUGH_TILES, INPUT_KEYS } from '../constants'
 
 export const noop = () => {}
 
@@ -76,19 +76,6 @@ export function getKeyPressed (key) {
     return Object.keys(INPUT_KEYS).find((input) => INPUT_KEYS[input].indexOf(key) !== -1)
 }
 
-export function getMiniTile (id, x, y) {
-    const tile = MINI_TILES[`${id}`] || null
-    if (tile) {
-        tile.x = tile.offsetX + x
-        tile.y = tile.offsetY + y
-    }
-    return tile
-}
-
-export function isMiniTile (id) {
-    return Object.keys(MINI_TILES).indexOf(`${id}`) !== -1
-}
-
 export function canJumpThrough (id) {
     return JUMP_THROUGH_TILES.indexOf(id) !== -1
 }
@@ -116,36 +103,12 @@ export function getElementProperties (element) {
     return filteredElement
 }
 
-// export function gameElementsOrdered (objects) {
-//     const byType = (a, b) => {
-//         if (
-//             a.type === ENTITIES_TYPE.ROCK ||
-//             a.type === ENTITIES_TYPE.SWITCH ||
-//             a.type === ENTITIES_TYPE.TRIGGER
-//         ) return 1
-//         if (a.type === ENTITIES_TYPE.ITEM) return -1
-//         if (a.type < b.type) return -1
-//         if (a.type > b.type) return 1
-//         return 0
-//     }
-//     return objects.sort(byType)// .filter(({type}) => type !== ENTITIES_TYPE.PLAYER)
-// }
+export function between (value, a, b) {
+    const min = Math.min(a, b)
+    const max = Math.max(a, b)
+    return value >= min && value <= max
+};
 
-// export function clearInRange (objects, rect) {
-//     objects.map((obj) => {
-//         if (
-//             overlap(obj, rect) && !obj.dead &&
-//             obj.type !== ENTITIES_TYPE.PLAYER &&
-//             obj.type !== ENTITIES_TYPE.BALLOON &&
-//             obj.type !== ENTITIES_TYPE.DARK_MASK &&
-//             obj.type !== ENTITIES_TYPE.TRIGGER &&
-//             obj.type !== ENTITIES_TYPE.WATER &&
-//             obj.type !== ENTITIES_TYPE.ITEM
-//         ) {
-//             obj.kill()
-//         }
-//     })
-// }
 /**
  * illuminated.js
  */

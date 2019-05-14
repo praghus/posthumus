@@ -1,5 +1,5 @@
 import ActiveElement from '../models/active-element'
-import { overlap } from '../../lib/helpers'
+import { overlap } from '../../lib/utils/helpers'
 
 export default class DarkMask extends ActiveElement {
     constructor (obj, scene) {

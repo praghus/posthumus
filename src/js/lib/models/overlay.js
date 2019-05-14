@@ -29,12 +29,6 @@ export default class Overlay {
     }
 
     update () {
-        if (this.hints.length) {
-            this.hints.map((element, index) => {
-                this.displayHint(element)
-                this.hints.splice(index, 1)
-            })
-        }
         if (this.blackOverlay > 0) {
             const { ctx, viewport } = this._scene
             const { resolutionX, resolutionY } = viewport
@@ -62,7 +56,7 @@ export default class Overlay {
     displayHUD () {
         const { ctx, camera, assets, debug, fps, player, viewport, countTime } = this._scene
         const { resolutionX, resolutionY } = viewport
-        const { energy, items, lives } = player
+        const { energy, maxEnergy } = player
         const fpsIndicator = `FPS:${Math.round(fps)}`
         const time = countTime()
         this.displayText(time, resolutionX - (3 + time.length * 5), 3)
@@ -74,79 +68,20 @@ export default class Overlay {
         debug && this.displayText(`CAMERA\nx:${Math.floor(camera.x)}\ny:${Math.floor(camera.y)}`, 4, 28)
 
         // lives and energy
-        const indicatorWidth = energy && Math.round(energy / 2) || 1
-        ctx.drawImage(assets[ASSETS.HEAD], 2, 1)
-        ctx.drawImage(assets[ASSETS.ENERGY], 0, 5, 50, 5, -25 + resolutionX / 2, 3, 50, 5)
-        ctx.drawImage(assets[ASSETS.ENERGY], 0, 0, indicatorWidth, 5, -25 + resolutionX / 2, 3, indicatorWidth, 5)
-        this.displayText(`${lives}`, 12, 3)
-
-        // buttons
-        // ctx.drawImage(assets[ASSETS.BUTTONS], 0, 0, 18, 18, 6, resolutionY - 20, 18, 18)
-        // ctx.drawImage(assets[ASSETS.BUTTONS], 19, 0, 18, 18, 30, resolutionY - 20, 18, 18)
-        // ctx.drawImage(assets[ASSETS.BUTTONS], 57, 0, 18, 18, resolutionX - 22, resolutionY - 20, 18, 18)
-        // ctx.drawImage(assets[ASSETS.BUTTONS], 38, 0, 18, 18, resolutionX - 44, resolutionY - 20, 18, 18)
-
-        // items
-        const align = 3 // -19 + resolutionX / 2
-        ctx.drawImage(assets[ASSETS.FRAMES], align, resolutionY - 20)
-        items.map((item, index) => {
-            if (item) {
-                // this.displayText(item.name, 44, (resolutionY - 18) + index * 9)
-                // const {columns, name, firstgid} = world.getAssetForTile(item.gid)
-                // ctx.drawImage(assets[name],
-                //     ((item.gid - firstgid) % columns) * world.spriteSize,
-                //     (Math.ceil(((item.gid - firstgid) + 1) / columns) - 1) * world.spriteSize,
-                //     world.spriteSize, world.spriteSize,
-                //     align + 1 + (index * 20), resolutionY - 19,
-                //     world.spriteSize, world.spriteSize)
-
-                ctx.drawImage(
-                    assets[ASSETS.ITEMS],
-                    item.animation.x, item.animation.y,
-                    item.width, item.height,
-                    align + 1 + (index * 20), resolutionY - 19,
-                    item.width, item.height
-                )
-            }
-        })
-    }
-
-    displayHint ({x, y, width, hint}) {
-        const { ctx, assets, camera } = this._scene
-        ctx.drawImage(assets[ASSETS.BUBBLE],
-            Math.floor(x + camera.x + width / 2),
-            Math.floor(y + camera.y) - 20
+        ctx.drawImage(assets[ASSETS.LIVE],
+            0, 10,
+            Math.round(maxEnergy / 10) * 11, 10, 2, 2,
+            Math.round(maxEnergy / 10) * 11, 10
         )
-        ctx.drawImage(assets[ASSETS.ITEMS],
-            hint.x, hint.y,
-            hint.w, hint.h,
-            Math.floor(x + camera.x + width / 2) + 8,
-            Math.floor(y + camera.y) - 18,
-            hint.w, hint.h
-        )
-    }
+        ctx.drawImage(assets[ASSETS.LIVE],
+            0, 0,
+            (energy / 10) * 11, 10, 2, 2, (energy / 10) * 11, 10)
 
-    displayMap () {
-        const { ctx, assets, player, viewport } = this._scene
-        const { resolutionX, resolutionY } = viewport
-        ctx.save()
-        ctx.globalAlpha = 0.5
-        ctx.fillStyle = COLORS.BLACK
-        ctx.fillRect(0, 0, resolutionX, resolutionY)
-        ctx.restore()
-        player.mapPieces.map((piece) => {
-            ctx.drawImage(assets[ASSETS.MAP_PIECE],
-                piece.x, piece.y,
-                piece.w, piece.h,
-                Math.floor((resolutionX / 2) + (piece.x * 2) - 48),
-                Math.floor((resolutionY / 2) + (piece.y * 2) - 32),
-                piece.w * 2, piece.h * 2
-            )
-        })
-        this.displayText('COLLECTED MAP PIECES',
-            (resolutionX / 2) - 49,
-            (resolutionY / 2) - 42,
-        )
+        // ammo
+        this.displayText('AMMO', 2, resolutionY - 7)
+        for (let i = 0; i < player.maxAmmo; i++) {
+            ctx.drawImage(assets[ASSETS.AMMO], i < player.ammo ? 0 : 3, 0, 3, 7, 22 + (i * 3), resolutionY - 9, 3, 7)
+        }
     }
 
     displayText (text, x, y, font = FONTS.FONT_SMALL) {

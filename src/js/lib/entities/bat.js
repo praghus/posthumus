@@ -26,10 +26,10 @@ export default class Bat extends Character {
 
     update () {
         if (this.onScreen()) {
-            this.awake = true
+            this.activated = true
         }
 
-        if (this.awake && !this.dead) {
+        if (this.activated && !this.dead) {
             const flyingRight = this.direction === DIRECTIONS.RIGHT
             this.force.y = 0
             this.force.x += flyingRight

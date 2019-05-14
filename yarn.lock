@@ -1037,7 +1037,6 @@ babel-polyfill@^6.26.0:
 babel-preset-env@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/babel-preset-env/-/babel-preset-env-1.7.0.tgz#dea79fa4ebeb883cd35dab07e260c1c9c04df77a"
-  integrity sha512-9OR2afuKDneX2/q2EurSftUYM0xGu4O2D9adAhVfADDhrYDaxXV0rBbevVYoY9n6nyX1PmQW/0jtpJvUNr9CHg==
   dependencies:
     babel-plugin-check-es2015-constants "^6.22.0"
     babel-plugin-syntax-trailing-function-commas "^6.22.0"
@@ -1431,7 +1430,6 @@ browserify-zlib@^0.2.0:
 browserslist@^3.2.6:
   version "3.2.8"
   resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-3.2.8.tgz#b0005361d6471f0f5952797a76fc985f1f978fc6"
-  integrity sha512-WHVocJYavUwVgVViC0ORikPHQquXwVh939TaelZ4WDqpWgTX/FsGhl/+P4qBUAGcRvtOgDgC+xftNWWp2RUTAQ==
   dependencies:
     caniuse-lite "^1.0.30000844"
     electron-to-chromium "^1.3.47"
@@ -1625,7 +1623,6 @@ camelcase@^5.0.0:
 caniuse-lite@^1.0.30000844:
   version "1.0.30000962"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000962.tgz#6c10c3ab304b89bea905e66adf98c0905088ee44"
-  integrity sha512-WXYsW38HK+6eaj5IZR16Rn91TGhU3OhbwjKZvJ4HN/XBIABLKfbij9Mnd3pM0VEwZSlltWjoWg3I8FQ0DGgNOA==
 
 caniuse-lite@^1.0.30000918, caniuse-lite@^1.0.30000925, caniuse-lite@^1.0.30000926:
   version "1.0.30000927"
@@ -2633,7 +2630,6 @@ ee-first@1.1.1:
 electron-to-chromium@^1.3.47:
   version "1.3.125"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.125.tgz#dbde0e95e64ebe322db0eca764d951f885a5aff2"
-  integrity sha512-XxowpqQxJ4nDwUXHtVtmEhRqBpm2OnjBomZmZtHD0d2Eo0244+Ojezhk3sD/MBSSe2nxCdGQFRXHIsf/LUTL9A==
 
 electron-to-chromium@^1.3.96:
   version "1.3.98"
@@ -3776,7 +3772,6 @@ hosted-git-info@^2.1.4, hosted-git-info@^2.6.0:
 howler@2.0.15:
   version "2.0.15"
   resolved "https://registry.yarnpkg.com/howler/-/howler-2.0.15.tgz#8f26d6548d29b257441fc190644b4392ce99ad32"
-  integrity sha512-Ceui16WCAdBiRlI3cK/zPmp6eWKG4wU5yIYHtH+X4zPhwqbr2ieRQvt/1J60NCqEXFHuBKdzBrS5DRYkMwiQsg==
 
 hpack.js@^2.1.6:
   version "2.1.6"
@@ -6949,7 +6944,6 @@ redux-logger@^3.0.6:
 redux-sounds@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/redux-sounds/-/redux-sounds-3.0.1.tgz#c5aebafb5b6cf510447dfbb9c9d89d489c88c03e"
-  integrity sha512-M/hDTfv9fa2lBv8oakcy+8k4rPqjCIAalwaV/02Z3aDm4aVulZuTpcsxdVpnqGVmebnILepV/z1QSidmKkxNrg==
   dependencies:
     howler "2.0.15"
 

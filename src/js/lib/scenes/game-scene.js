@@ -1,25 +1,23 @@
 import Overlay from '../models/overlay'
 import tmxFile from '../../../assets/levels/map.tmx'
-// import levelData from '../../../assets/levels/map.json'
-import { ENTITIES, ENTITIES_TYPE } from '../../lib/entities'
 import { Camera, Tmx, Scene, World } from 'tmx-platformer-lib'
 import {
     isMobileDevice,
     createLamp,
     createRectangleObject,
-    getMiniTile,
-    isMiniTile,
     setLightmaskElement
-} from '../../lib/helpers'
+} from '../../lib/utils/helpers'
 import {
     ASSETS,
     COLORS,
+    ENTITIES,
+    ENTITIES_TYPE,
     INPUTS,
     JUMP_THROUGH_TILES,
     LAYERS,
-    NON_COLLIDE_TILES,
+    NON_COLLIDE_TILES
     // SPECIAL_TILES_INDEX,
-    TIMEOUTS
+    // TIMEOUTS
 } from '../../lib/constants'
 
 const { DarkMask, Lighting } = window.illuminated
@@ -81,23 +79,24 @@ export default class GameScene extends Scene {
         if (camera.underground || player.underground || player.inDark > 0) {
             this.dynamicLights && this.calculateShadows()
             this.renderLightingEffect()
-            // world.hideLayer(LAYERS.FOREGROUND2)
         }
-        // else {
-        //     world.showLayer(LAYERS.FOREGROUND2)
-        // }
-        // overlay.displayHUD()
+        overlay.displayHUD()
+        player.shootFlash = false
         overlay.update()
     }
 
     renderBackground () {
-        const { ctx, camera, assets, viewport } = this
-        const { resolutionX } = viewport
+        const { ctx, camera, assets, viewport, player } = this
+        const { resolutionX, resolutionY } = viewport
 
         if (!camera.underground) {
             ctx.drawImage(assets.bg1, 0, 0)
             ctx.drawImage(assets.moon, resolutionX - 80, 16)
             ctx.drawImage(assets.bg2, (camera.x / 8), -50 + (camera.y / 16))
+            if (player.shootFlash) {
+                ctx.fillStyle = COLORS.FLASH
+                ctx.fillRect(0, 0, resolutionX, resolutionY)
+            }
         }
     }
 
@@ -144,10 +143,7 @@ export default class GameScene extends Scene {
                 const tile = world.getTile(_x, _y, LAYERS.MAIN)
                 if (tile > 0 && shouldCreateLightmask) {
                     const maskElement = this.getShadowCaster(_x, _y) //
-                    if (isMiniTile(tile)) { // todo: fix this
-                        this.addLightmaskElement(maskElement, getMiniTile(tile, x, y))
-                    }
-                    else if (world.isSolidTile(tile)) {
+                    if (world.isSolidTile(tile)) {
                         this.addLightmaskElement(maskElement, {x, y})
                     }
                 }

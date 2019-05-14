@@ -1,22 +1,22 @@
 import Character from '../models/character'
 // import { playerJump, playerGet } from '../../actions/sounds'
-import { DIRECTIONS, INPUTS, LAYERS, TIMEOUTS } from '../../lib/constants'
-import { ENTITIES_FAMILY, ENTITIES_TYPE } from '../../lib/entities'
-import { SOUNDS } from '../../lib/sounds'
+import {
+    DIRECTIONS, INPUTS, ITEMS, LAYERS, ENTITIES_FAMILY, ENTITIES_TYPE, SOUNDS
+} from '../../lib/constants'
 
 export default class Player extends Character {
     constructor (obj, scene) {
         super(obj, scene)
         this.direction = DIRECTIONS.RIGHT
         this.inDark = 0
-        this.energy = 3
         this.canMove = true
-        this.maxEnergy = 3
+        this.energy = 20
+        this.maxEnergy = 30
         this.maxSpeed = 2
         this.speed = 0.2
         this.solid = true
         this.ammo = 2
-        this.maxAmmo = 4
+        this.maxAmmo = 2
         this.shootTimeout = null
         this.shootDelay = 500
         this.freezeTimeout = null
@@ -65,10 +65,10 @@ export default class Player extends Character {
                     this.direction = DIRECTIONS.RIGHT
                 }
                 if (input[INPUTS.INPUT_UP] && this.canJump()) {
-                    this.force.y = -6
+                    this.jump = true
                 }
             }
-            if (input[INPUTS.INPUT_SHOT]) {
+            if (input[INPUTS.INPUT_ACTION]) {
                 this.shoot()
             }
 
@@ -103,11 +103,9 @@ export default class Player extends Character {
             if (this.animFrame === 2) {
                 this.force.y = -7
                 this.jump = true
-                this.doJump = false
             }
-            if (this.force.y > 0) {
+            if (this.force.y >= 0) {
                 this.jump = false
-                this.doJump = false
                 this.fall = true
             }
         }
@@ -115,6 +113,7 @@ export default class Player extends Character {
             this.animate(this.direction === DIRECTIONS.RIGHT
                 ? this.animations.FALL_RIGHT
                 : this.animations.FALL_LEFT)
+            if (this.force.y === 0) this.fall = false
         }
         else if (this.force.x !== 0) {
             this.animate(this.direction === DIRECTIONS.RIGHT
@@ -153,7 +152,6 @@ export default class Player extends Character {
         this.maxEnergy <= 0
             ? this.maxEnergy = 0
             : this.force.y -= 3
-        this._scene.startTimeout(TIMEOUTS.PLAYER_HURT)
     }
 
     shoot () {
@@ -216,5 +214,30 @@ export default class Player extends Character {
             this.reloading = false
             this.countToReload = 40
         }
-    };
+    }
+
+    getItem (item) {
+        const { properties: { id }} = item
+        const { playSound } = this._scene
+
+        switch (id) {
+        case ITEMS.AMMO:
+            this.ammo += 1
+            this.maxAmmo += 1
+            break
+
+        case ITEMS.HEALTH:
+            if (this.energy < this.maxEnergy) {
+                this.energy += 10
+            }
+            break
+
+        case ITEMS.LIVE:
+            this.energy += 10
+            this.maxEnergy += 10
+            break
+        }
+        playSound(SOUNDS.POWER_UP)
+        item.kill()
+    }
 }

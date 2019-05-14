@@ -1,5 +1,4 @@
 import ActiveElement from '../models/active-element'
-import { ENTITIES_FAMILY } from '../../lib/entities'
 
 export default class Slope extends ActiveElement {
     constructor (obj, scene) {
@@ -22,9 +21,9 @@ export default class Slope extends ActiveElement {
 
     collide (element) {
         if (!this.dead && element.solid) {
-            if (element.family === ENTITIES_FAMILY.ENEMIES) {
-                return element.bounce()
-            }
+            // if (element.family === ENTITIES_FAMILY.ENEMIES) {
+            //     return element.bounce()
+            // }
             const posX = Math.ceil(element.x + (element.width / 2))
             // @todo: array.reduce instead of regular iteration
             for (let p = 0; p < this.points.length - 1; p++) {

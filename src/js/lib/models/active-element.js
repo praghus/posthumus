@@ -1,6 +1,6 @@
-import GameEntity from './game-entity'
+import Entity from './entity'
 
-export default class ActiveElement extends GameEntity {
+export default class ActiveElement extends Entity {
     constructor (obj, scene) {
         super(obj, scene)
         this.activated = false

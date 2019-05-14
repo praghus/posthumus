@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Hammer from 'hammerjs'
-import { getKeyPressed } from '../lib/helpers'
+import { getKeyPressed } from '../lib/utils/helpers'
 import { INPUTS } from '../lib/constants'
 
 const propTypes = {

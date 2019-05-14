@@ -1,13 +1,16 @@
-import { ASSETS } from './constants'
-import Bat from './entities/bat'
-import Bullet from './entities/bullet'
-import DarkMask from './entities/dark-mask'
-import Particle from './entities/particle'
-import Player from './entities/player'
-import Slope from './entities/slope'
-import SpiderTrap from './entities/spider-trap'
-import Spikes from './entities/spikes'
-import Zombie from './entities/zombie'
+import { ASSETS } from './assets'
+import {
+    Bat,
+    Bullet,
+    DarkMask,
+    Item,
+    Particle,
+    Player,
+    Slope,
+    SpiderTrap,
+    Spikes,
+    Zombie
+} from '../entities'
 
 export const ENTITIES_FAMILY = {
     BULLETS: 'bullets',
@@ -22,6 +25,7 @@ export const ENTITIES_TYPE = {
     BAT: 'bat',
     BULLET: 'bullet',
     DARK_MASK: 'dark_mask',
+    ITEM: 'item',
     JUMP_THROUGH: 'jump_through',
     PARTICLE: 'particle',
     PLAYER: 'player',
@@ -36,6 +40,7 @@ export const ENTITIES = [
     { type: ENTITIES_TYPE.BULLET, family: ENTITIES_FAMILY.BULLETS, model: Bullet, asset: ASSETS.BULLET },
     { type: ENTITIES_TYPE.BAT, family: ENTITIES_FAMILY.ENEMIES, model: Bat, asset: ASSETS.BAT },
     { type: ENTITIES_TYPE.DARK_MASK, family: ENTITIES_FAMILY.MODIFIERS, model: DarkMask },
+    { type: ENTITIES_TYPE.ITEM, family: ENTITIES_FAMILY.ITEMS, model: Item, asset: ASSETS.ITEM },
     { type: ENTITIES_TYPE.PARTICLE, family: ENTITIES_FAMILY.PARTICLES, model: Particle },
     { type: ENTITIES_TYPE.SPIDER_TRAP, family: ENTITIES_FAMILY.TRAPS, model: SpiderTrap, asset: ASSETS.SPIDER_TRAP },
     { type: ENTITIES_TYPE.SPIKES, family: ENTITIES_FAMILY.TRAPS, model: Spikes },

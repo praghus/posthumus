@@ -1,6 +1,5 @@
 import ActiveElement from '../models/active-element'
-import { randomInt } from '../../lib/helpers'
-import { DIRECTIONS } from '../../lib/constants'
+import { DIRECTIONS, ENTITIES_FAMILY, PARTICLES } from '../../lib/constants'
 
 export default class Bullet extends ActiveElement {
     constructor (obj, scene) {
@@ -21,21 +20,12 @@ export default class Bullet extends ActiveElement {
     }
 
     collide (element) {
-        super.collide(element)
+        element.solid && element.hit(this.damage, this.force.x)
         if (element.solid) {
             this.dead = true
-            this.emitParticles(randomInt(10, 15), {
-                x: element.x, // this.direction === DIRECTIONS.RIGHT ? this.x + this.width : this.x,
-                y: this.y,
-                width: 1,
-                height: 1,
-                mass: 0.1,
-                force: {
-                    x: Math.cos(Math.random() * 2 * Math.PI) * 0.5 + Math.random(),
-                    y: -7
-                },
-                color: `rgb(${parseInt(128 + ((Math.random() * 32) * 4))}, 0, 0)`
-            })
+            if (element.family === ENTITIES_FAMILY.ENEMIES) {
+                this.emitParticles(PARTICLES.BLOOD, element.x, this.y, 10)
+            }
         }
     }
 
@@ -49,14 +39,12 @@ export default class Bullet extends ActiveElement {
 
             if (this.expectedX !== this.x) {
                 this.dead = true
-                this.emitParticles(randomInt(5, 10), {
-                    x: this.direction === DIRECTIONS.RIGHT ? this.x + this.width : this.x,
-                    y: this.y,
-                    width: 1,
-                    height: 1,
-                    mass: 0.1,
-                    color: '#333333'
-                })
+                this.emitParticles(
+                    PARTICLES.RUBBLE,
+                    this.direction === DIRECTIONS.RIGHT
+                        ? this.x + this.width - 1
+                        : this.x - 1,
+                    this.y, 5)
             }
         }
     }

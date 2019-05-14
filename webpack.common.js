@@ -2,16 +2,19 @@
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-const sourcePath = path.join(process.cwd(), 'src')
-const imgPath = path.join(sourcePath, 'assets/images')
-const audioPath = path.join(sourcePath, 'assets/sounds')
+const PATH = {
+    SOURCE: path.join(process.cwd(), 'src'),
+    IMAGES: path.join(process.cwd(), 'src/assets/images'),
+    LEVELS: path.join(process.cwd(), 'src/assets/levels'),
+    AUDIO:  path.join(process.cwd(), 'src/assets/sounds')
+}
 
 const inArray = (haystack) => (needle) => haystack.some((item) => needle.includes(item))
 // const dependencyPath = (...folders) => path.join('node_modules', ...folders)
 const localLink = (...folders) => path.join(process.cwd(), '..', ...folders)
 
 const jsEs6Source = inArray([
-    path.join(sourcePath, 'js'),
+    path.join(PATH.SOURCE, 'js'),
     localLink('tmx-platformer-lib', 'lib')
 ])
 
@@ -40,17 +43,18 @@ module.exports = {
             },
             {
                 test: /\.(png|gif|jpg|svg)$/,
-                include: imgPath,
+                include: PATH.IMAGES,
                 use: 'url-loader?limit=100&name=[name]-[hash].[ext]'
             },
             {
-                test: /\.(mp3|wav)$/,
-                include: audioPath,
-                loader: 'file-loader?name=[name]-[hash].[ext]'
+                test: /\.tmx$/,
+                include: PATH.LEVELS,
+                use: 'url-loader'
             },
             {
-                test: /\.tmx$/,
-                loader: 'xml-loader?explicitChildren=true&preserveChildrenOrder=true'
+                test: /\.(mp3|wav)$/,
+                include: PATH.AUDIO,
+                loader: 'file-loader?name=[name]-[hash].[ext]'
             }
         ]
     }

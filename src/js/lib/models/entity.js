@@ -1,9 +1,8 @@
-import { Entity } from 'tmx-platformer-lib'
-import { randomInt } from '../../lib/helpers'
-import { ENTITIES_TYPE } from '../../lib/entities'
-import { DIRECTIONS, LAYERS } from '../../lib/constants'
+import { Entity as GameEntity } from 'tmx-platformer-lib'
+import { randomInt } from '../../lib/utils/helpers'
+import { DIRECTIONS, LAYERS, ENTITIES_TYPE } from '../../lib/constants'
 
-export default class GameEntity extends Entity {
+export default class Entity extends GameEntity {
     constructor (obj, scene) {
         super(obj, scene)
         this.activated = false
@@ -11,28 +10,6 @@ export default class GameEntity extends Entity {
     }
 
     // @todo: entity state
-
-    hit (damage) {
-        if (!this.dead && !this.dying) {
-            this.force.x += -(this.force.x * 4)
-            this.force.y = -2
-            this.energy -= damage
-            if (this.energy <= 0) {
-                this.dying = true
-                // @todo: drop item here
-            }
-        }
-    }
-
-    collide (element) {
-        if (this.canHurt()) {
-            this.hit(element.damage)
-        }
-    }
-
-    canHurt () {
-        return this.energy > 0
-    }
 
     addItem (properties, x, y) {
         const { produce, produce_name, produce_gid } = properties
@@ -47,11 +24,14 @@ export default class GameEntity extends Entity {
         }, LAYERS.OBJECTS)
     }
 
-    emitParticles (count, properties) {
-        const particle_count = count || 10
-        for (let i = 0; i < particle_count; i++) {
-            const props = {...properties}
-            props.x = properties.x + randomInt(0, 8)
+    emitParticles (particle, x, y, count = 10, radius = 8) {
+        for (let i = 0; i < count; i++) {
+            const props = {
+                x: x - (radius / 2) + randomInt(0, radius),
+                y: y - (radius / 2) + randomInt(0, radius),
+                force: particle.forceVector(),
+                ...particle
+            }
             this._scene.world.addObject({
                 type: ENTITIES_TYPE.PARTICLE,
                 life: randomInt(60, 120),
@@ -69,7 +49,7 @@ export default class GameEntity extends Entity {
     }
 
     seesEntity (entity) {
-        const { world: { isSolidArea, spriteSize } } = this._scene
+        const { world } = this._scene
         const entityM = ((entity.y + entity.height) - (this.y + this.height)) / (entity.x - this.x)
 
         if (!entity.canHurt() ||
@@ -79,10 +59,15 @@ export default class GameEntity extends Entity {
         }
 
         if (entityM > -0.9 && entityM < 0.9) {
-            const steps = Math.abs(Math.floor(entity.x / spriteSize) - Math.floor(this.x / spriteSize))
-            const from = entity.x < this.x ? Math.floor(entity.x / spriteSize) : Math.floor(this.x / spriteSize)
+            const steps = Math.abs(
+                Math.floor(entity.x / world.spriteSize) - Math.floor(this.x / world.spriteSize)
+            )
+            const from = entity.x < this.x
+                ? Math.floor(entity.x / world.spriteSize)
+                : Math.floor(this.x / world.spriteSize)
+
             for (let X = from; X < from + steps; X++) {
-                if (isSolidArea(X, Math.round(this.y / spriteSize))) {
+                if (world.isSolidArea(X, Math.round(this.y / world.spriteSize))) {
                     return false
                 }
             }

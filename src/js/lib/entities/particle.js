@@ -1,9 +1,5 @@
 import ActiveElement from '../models/active-element'
-import {
-    overlap,
-    random,
-    randomInt
-} from '../../lib/helpers'
+import { overlap, random, randomInt } from '../../lib/utils/helpers'
 
 export default class Particle extends ActiveElement {
     constructor (obj, scene) {

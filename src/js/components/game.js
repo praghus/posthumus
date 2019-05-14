@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Canvas from './canvas'
 import Inputs from './inputs'
-import { SCENES } from '../lib/constants'
+import { INPUTS, SCENES } from '../lib/constants'
 import { IntroScene, GameScene } from '../lib/scenes'
 
 import {
@@ -20,7 +20,12 @@ const propTypes = {
     playSound: PropTypes.func.isRequired,
     startTicker: PropTypes.func.isRequired,
     ticker: tickerPropType.isRequired,
-    viewport: viewportPropType.isRequired
+    viewport: viewportPropType.isRequired,
+    mute: PropTypes.bool
+}
+
+const defaultProps = {
+    mute: false
 }
 
 export default class Game extends Component {
@@ -29,11 +34,13 @@ export default class Game extends Component {
         this.viewport = props.viewport
         this.ticker = props.ticker
         this.assets = props.assets
-        this.playSound = props.playSound.bind(this)
+        this.onKey = props.onKey
         this.wrapper = null
         this.assetsLoaded = false
         this.scene = null
         this.scenes = null
+
+        this.playSound = this.playSound.bind(this)
         this.setScene = this.setScene.bind(this)
     }
 
@@ -74,6 +81,12 @@ export default class Game extends Component {
     setScene (scene) {
         this.scene = this.scenes[scene] || null
     }
+
+    playSound (sound) {
+        const { playSound, mute } = this.props
+        return !mute && playSound(sound)
+    }
 }
 
 Game.propTypes = propTypes
+Game.defaultProps = defaultProps

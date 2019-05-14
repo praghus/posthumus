@@ -1,7 +1,7 @@
-import ActiveElement from '../models/active-element'
+import Character from '../models/character'
 import { COLORS } from '../constants'
 
-export default class SpiderTrap extends ActiveElement {
+export default class SpiderTrap extends Character {
     constructor (obj, scene) {
         super(obj, scene)
         this.damage = 1000
