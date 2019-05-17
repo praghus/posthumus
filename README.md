@@ -1,4 +1,4 @@
-# ![Posthumus](./src/assets/images/logo.png) [![Build Status](https://travis-ci.org/praghus/posthumus.svg?branch=master)](https://travis-ci.org/praghus/posthumus)
+# POSTHUMUS [![Build Status](https://travis-ci.org/praghus/posthumus.svg?branch=master)](https://travis-ci.org/praghus/posthumus)
 #### Canvas zombie shooter made with React and Redux
 
 ### Demo :video_game: 
@@ -10,3 +10,5 @@
 ### License
 
 Posthumus is [MIT licensed](./LICENSE).
+
+![Posthumus](./src/assets/images/logo.png)
