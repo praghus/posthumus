@@ -5,7 +5,10 @@
 
 ### Demo
 
+:video_game: **[Stable build on Sure](https://posthumus.surge.sh/)**
+
 :video_game: **[Latest build on Heroku](https://posthumus.herokuapp.com/)** - sometimes you have to wait a few moments before the heroku wakes up and starts the application from sleep
+
 
 ### License
 
