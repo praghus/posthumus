@@ -55,6 +55,10 @@ export default class GameScene extends Scene {
         this.player = this.world.getObjectByType(ENTITIES_TYPE.PLAYER, LAYERS.OBJECTS)
         this.world.addLayer(this.renderLightingEffect, 2)
         this.camera.setFollow(this.player)
+        this.camera.setMiddlePoint(
+            this.viewport.resolutionX / 3,
+            this.player.height
+        )
         if (this.dynamicLights) {
             this.light = createLamp(0, 0, 130, COLORS.TRANS_WHITE)
             this.lighting = new Lighting({light: this.light, objects: []})

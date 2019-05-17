@@ -5,12 +5,13 @@ import { configPropType } from '../lib/prop-types'
 
 const propTypes = {
     config: configPropType.isRequired,
-    onConfig: PropTypes.func.isRequired
+    onConfig: PropTypes.func.isRequired,
+    fps: PropTypes.number
 }
 
 export default class Debug extends Component {
     render () {
-        const { config, onConfig } = this.props
+        const { config, onConfig, fps } = this.props
         return (
             <div className='debug'>
                 <label>
@@ -41,6 +42,9 @@ export default class Debug extends Component {
                         }} />
                     Mute
                 </label>
+                <div className='fpsmeter'>
+                    {fps.toFixed(1)} FPS
+                </div>
             </div>
         )
     }
