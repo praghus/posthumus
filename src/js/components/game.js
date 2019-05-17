@@ -1,31 +1,35 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import Debug from './debug'
 import Canvas from './canvas'
 import Inputs from './inputs'
-import { INPUTS, SCENES } from '../lib/constants'
-import { IntroScene, GameScene } from '../lib/scenes'
-
+import {
+    CONFIG,
+    SCENES
+} from '../lib/constants'
+import {
+    IntroScene,
+    GameScene
+} from '../lib/scenes'
 import {
     assetPropType,
     inputPropType,
     tickerPropType,
-    viewportPropType
+    viewportPropType,
+    configPropType
 } from '../lib/prop-types'
 
 const propTypes = {
     assets: assetPropType.isRequired,
+    config: configPropType.isRequired,
     input: inputPropType.isRequired,
+    onConfig: PropTypes.func.isRequired,
     onKey: PropTypes.func.isRequired,
     onMouse: PropTypes.func.isRequired,
     playSound: PropTypes.func.isRequired,
     startTicker: PropTypes.func.isRequired,
     ticker: tickerPropType.isRequired,
-    viewport: viewportPropType.isRequired,
-    mute: PropTypes.bool
-}
-
-const defaultProps = {
-    mute: false
+    viewport: viewportPropType.isRequired
 }
 
 export default class Game extends Component {
@@ -68,12 +72,15 @@ export default class Game extends Component {
     }
 
     render () {
-        const { onKey, viewport } = this.props
-        const { width, height } = viewport
+        const {
+            config, onConfig, onKey, viewport: { width, height }
+        } = this.props
+
         return (
             <div ref={(ref) => { this.wrapper = ref }}>
                 <Canvas ref={(ref) => { this.canvas = ref }} {...{ width, height }} />
                 <Inputs {...{ onKey }} />
+                <Debug {...{ config, onConfig }} />
             </div>
         )
     }
@@ -83,10 +90,9 @@ export default class Game extends Component {
     }
 
     playSound (sound) {
-        const { playSound, mute } = this.props
-        return !mute && playSound(sound)
+        const { playSound, config } = this.props
+        return !config[CONFIG.DISABLE_SOUNDS] && playSound(sound)
     }
 }
 
 Game.propTypes = propTypes
-Game.defaultProps = defaultProps

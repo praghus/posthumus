@@ -1,7 +1,14 @@
 import Entity from './entity'
-import { randomInt, between } from '../../lib/utils/helpers'
 import {
-    ITEMS, STATES, ENTITIES_TYPE, LAYERS
+    randomInt,
+    between
+} from '../../lib/utils/helpers'
+import {
+    DIRECTIONS,
+    ITEMS,
+    STATES,
+    ENTITIES_TYPE,
+    LAYERS
 } from '../../lib/constants'
 
 export default class Character extends Entity {
@@ -27,6 +34,16 @@ export default class Character extends Entity {
             y: this.y,
             properties: { id }
         }, LAYERS.OBJECTS)
+    }
+
+    turnToPlayer () {
+        const { player } = this._scene
+        if (this.x < player.x) {
+            this.direction = DIRECTIONS.RIGHT
+        }
+        if (this.x > player.x) {
+            this.direction = DIRECTIONS.LEFT
+        }
     }
 
     hit (damage) {

@@ -15,7 +15,10 @@ export const ASSETS = {
     MOON: 'moon',
     PLAYER: 'player',
     ROCK: 'rock',
+    SPIDER: 'spider',
+    SPIDER_BULLET: 'spider_bullet',
     SPIDER_TRAP: 'spider_trap',
+    SPIDER_WEB: 'spider_web',
     TORCH: 'torches',
     TILES: 'tiles',
     ZOMBIE: 'zombie'

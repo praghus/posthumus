@@ -8,6 +8,6 @@ export const COLORS = {
     LIGHT_RED: '#F00',
     FLASH: 'rgba(255,255,255,0.6)',
     SPIDER_WEB: 'rgba(255,255,255,0.5)',
-    TRANS_WHITE: 'rgba(255,255,255,0.1)',
+    TRANS_WHITE: 'rgba(255,255,255,0.2)',
     WHITE: '#FFF'
 }

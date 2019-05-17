@@ -29,7 +29,7 @@ export default class IntroScene extends Scene {
         }
 
         ctx.drawImage(assets[ASSETS.BG1], 0, 0)
-        ctx.drawImage(assets[ASSETS.MOON], (resolutionX / 2) - 30, 16)
+        ctx.drawImage(assets[ASSETS.MOON], (resolutionX / 2) - 30, 10)
         ctx.drawImage(assets[ASSETS.BG2], this.scroll -= 0.1, -80)
         ctx.drawImage(assets[ASSETS.LOGO], (resolutionX / 2) - 106, (resolutionY / 2) - 44)
 

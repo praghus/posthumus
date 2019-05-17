@@ -1,25 +1,25 @@
 import Character from '../models/character'
-// import { playerJump, playerGet } from '../../actions/sounds'
 import {
-    DIRECTIONS, INPUTS, ITEMS, LAYERS, ENTITIES_FAMILY, ENTITIES_TYPE, SOUNDS
+    DIRECTIONS,
+    INPUTS,
+    ITEMS,
+    LAYERS,
+    ENTITIES_FAMILY,
+    ENTITIES_TYPE,
+    SOUNDS
 } from '../../lib/constants'
 
 export default class Player extends Character {
     constructor (obj, scene) {
         super(obj, scene)
         this.direction = DIRECTIONS.RIGHT
-        this.inDark = 0
-        this.canMove = true
-        this.energy = 20
+        this.energy = 30
         this.maxEnergy = 30
         this.maxSpeed = 2
         this.speed = 0.2
-        this.solid = true
-        this.ammo = 2
-        this.maxAmmo = 2
-        this.shootTimeout = null
-        this.shootDelay = 500
-        this.freezeTimeout = null
+        this.ammo = 4
+        this.maxAmmo = 4
+        this.inDark = 0
         this.countToReload = 0
         this.bounds = {
             x: 8,
@@ -43,53 +43,22 @@ export default class Player extends Character {
         this.animation = this.animations.STAND_RIGHT
     }
 
-    // draw (ctx) {
-    //     ctx.save()
-    //     if (!this.canHurt()) {
-    //         ctx.globalAlpha = 0.2
-    //     }
-    //     super.draw(ctx)
-    //     ctx.restore()
-    // }
+    draw () {
+        const { ctx } = this._scene
+        ctx.save()
+        if (!this.canHurt()) {
+            ctx.globalAlpha = 0.2
+        }
+        super.draw()
+        ctx.restore()
+    }
 
     update () {
-        const { input, world } = this._scene
-        if (!this.dead) {
-            if (this.canMove) {
-                if (input[INPUTS.INPUT_LEFT]) {
-                    this.force.x -= this.speed
-                    this.direction = DIRECTIONS.LEFT
-                }
-                if (input[INPUTS.INPUT_RIGHT]) {
-                    this.force.x += this.speed
-                    this.direction = DIRECTIONS.RIGHT
-                }
-                if (input[INPUTS.INPUT_UP] && this.canJump()) {
-                    this.jump = true
-                }
-            }
-            if (input[INPUTS.INPUT_ACTION]) {
-                this.shoot()
-            }
+        const { checkTimeout } = this._scene
 
-            // slow down
-            if (!input[INPUTS.INPUT_LEFT] && !input[INPUTS.INPUT_RIGHT] && this.force.x !== 0) {
-                this.force.x += this.direction === DIRECTIONS.RIGHT ? -this.speed : this.speed
-                if (this.direction === DIRECTIONS.LEFT && this.force.x > 0 ||
-                    this.direction === DIRECTIONS.RIGHT && this.force.x < 0) {
-                    this.force.x = 0
-                }
-            }
-        }
-
-        this.force.y += world.gravity
-        this.force.x === 0 && this.onFloor
-            ? this.countToReload++
-            : this.countToReload = 0
-
-        if (this.countToReload === 100) this.reload()
-
-        if (this.canMove) this.move()
+        this.input()
+        this.reload()
+        this.move()
 
         if (this.jump) {
             this.animate(this.direction === DIRECTIONS.RIGHT
@@ -99,10 +68,8 @@ export default class Player extends Character {
             if (this.animFrame === 0 && this.force.x !== 0) {
                 this.animFrame = 2
             }
-
             if (this.animFrame === 2) {
                 this.force.y = -7
-                this.jump = true
             }
             if (this.force.y >= 0) {
                 this.jump = false
@@ -120,10 +87,13 @@ export default class Player extends Character {
                 ? this.animations.RIGHT
                 : this.animations.LEFT)
         }
-        else if (this.shootTimeout && this.force.x === 0) {
+        else if (checkTimeout('player-shoot') && this.force.x === 0) {
             this.animate(this.direction === DIRECTIONS.RIGHT
                 ? this.animations.SHOOT_RIGHT
                 : this.animations.SHOOT_LEFT)
+        }
+        else if (checkTimeout('player-reloading')) {
+            this.animate(this.animations.RELOADING)
         }
         else if (this.countToReload >= 40 && this.ammo < this.maxAmmo) {
             this.animate(this.animations.RELOADING)
@@ -133,6 +103,42 @@ export default class Player extends Character {
                 ? this.animations.STAND_RIGHT
                 : this.animations.STAND_LEFT)
         }
+    }
+
+    input () {
+        const {
+            input,
+            world
+        } = this._scene
+
+        if (this.canMove()) {
+            if (input[INPUTS.INPUT_LEFT]) {
+                this.force.x -= this.speed
+                this.direction = DIRECTIONS.LEFT
+            }
+            if (input[INPUTS.INPUT_RIGHT]) {
+                this.force.x += this.speed
+                this.direction = DIRECTIONS.RIGHT
+            }
+            if (input[INPUTS.INPUT_UP] && this.canJump()) {
+                this.jump = true
+            }
+        }
+        else this.force.x = 0
+
+        if (input[INPUTS.INPUT_ACTION] && this.canShoot()) {
+            this.shoot()
+        }
+        if (!input[INPUTS.INPUT_LEFT] && !input[INPUTS.INPUT_RIGHT] && this.force.x !== 0) {
+            this.force.x += this.direction === DIRECTIONS.RIGHT
+                ? -this.speed
+                : this.speed
+            if (this.direction === DIRECTIONS.LEFT && this.force.x > 0 ||
+                this.direction === DIRECTIONS.RIGHT && this.force.x < 0) {
+                this.force.x = 0
+            }
+        }
+        this.force.y += world.gravity
     }
 
     collide (element) {
@@ -145,99 +151,123 @@ export default class Player extends Character {
     }
 
     hit (s) {
-        // im immortal in debug mode
-        if (!!this._scene.debug) return
+        const {
+            debug,
+            startTimeout
+        } = this._scene
 
-        this.maxEnergy -= s
-        this.maxEnergy <= 0
-            ? this.maxEnergy = 0
-            : this.force.y -= 3
+        if (!!debug) return
+
+        this.energy -= s
+
+        if (this.energy > 0) {
+            this.force.y -= 3
+            startTimeout('player-hurt', 1000)
+        }
+        else {
+            // game over
+            this.energy = 0
+        }
     }
 
     shoot () {
-        if (this.canShoot()) {
-            const { playSound, world } = this._scene
-            this.force.x = 0
-            this.ammo -= 1
-            this.animFrame = 0
-            this.countToReload = 0
+        const {
+            playSound,
+            startTimeout,
+            world
+        } = this._scene
 
-            world.addObject({
-                type: ENTITIES_TYPE.BULLET,
-                x: this.direction === DIRECTIONS.RIGHT
-                    ? this.x + this.width
-                    : this.x,
-                y: this.y + 26,
-                direction: this.direction
-            }, LAYERS.OBJECTS)
+        this.force.x = 0
+        this.ammo -= 1
+        this.animFrame = 0
+        this.countToReload = 0
 
-            this.flashTimeout = setTimeout(() => {
-                this.shootFlash = true
-                this.flashTimeout = null
-            }, 60)
+        world.addObject({
+            type: ENTITIES_TYPE.BULLET,
+            x: this.direction === DIRECTIONS.RIGHT
+                ? this.x + this.width
+                : this.x,
+            y: this.y + 26,
+            direction: this.direction
+        }, LAYERS.OBJECTS)
 
-            this.shootTimeout = setTimeout(() => {
-                this.shootTimeout = null
-            }, this.shootDelay)
-
-            playSound(SOUNDS.PLAYER_SHOOT)
-        }
+        startTimeout('player-shoot', 500)
+        startTimeout('player-shoot-flash', 60, () => {
+            this.shootFlash = true
+        })
+        playSound(SOUNDS.PLAYER_SHOOT)
     };
 
+    reload () {
+        const { playSound} = this._scene
+
+        this.force.x === 0 && this.onFloor
+            ? this.countToReload++
+            : this.countToReload = 0
+
+        if (this.countToReload === 100 && this.ammo < this.maxAmmo) {
+            this.ammo += 1
+            this.countToReload = 40
+            playSound(SOUNDS.PLAYER_RELOAD)
+        }
+    }
+
+    freeze (duration) {
+        const { startTimeout } = this._scene
+        this.canMove() && startTimeout('player-freeze', duration)
+    }
+
+    canMove () {
+        const { checkTimeout } = this._scene
+        return !checkTimeout('player-freeze')
+    }
+
     canShoot () {
-        return this.ammo > 0 && !this.shootTimeout && this.onFloor
+        const { checkTimeout } = this._scene
+        return this.ammo > 0 && !checkTimeout('player-shoot') && this.onFloor
     }
 
     canJump () {
-        return this.onFloor && !this.doJump && !this.jump
+        return this.onFloor && !this.jump
     }
 
     canHurt () {
-        return !this.hurtTimeout
-    }
-
-    freeze (delay) {
-        if (this.canMove) {
-            this.canMove = false
-            this.freezeTimeout = setTimeout(() => {
-                this.freezeTimeout = null
-                this.canMove = true
-            }, delay)
-        }
-    }
-
-    reload () {
-        const { playSound } = this._scene
-        if (this.ammo < this.maxAmmo) {
-            playSound(SOUNDS.PLAYER_RELOAD)
-            this.ammo += 1
-            this.reloading = false
-            this.countToReload = 40
-        }
+        const { checkTimeout } = this._scene
+        return !checkTimeout('player-hurt')
     }
 
     getItem (item) {
-        const { properties: { id }} = item
-        const { playSound } = this._scene
+        const {
+            checkTimeout,
+            startTimeout,
+            playSound
+        } = this._scene
 
-        switch (id) {
-        case ITEMS.AMMO:
-            this.ammo += 1
-            this.maxAmmo += 1
-            break
+        if (!checkTimeout('player-get')) {
+            const {
+                properties: { id }
+            } = item
 
-        case ITEMS.HEALTH:
-            if (this.energy < this.maxEnergy) {
+            switch (id) {
+            case ITEMS.AMMO:
+                this.ammo += 1
+                this.maxAmmo += 1
+                break
+            case ITEMS.HEALTH:
+                if (this.energy < this.maxEnergy) {
+                    this.energy += 10
+                }
+                break
+            case ITEMS.LIVE:
                 this.energy += 10
+                this.maxEnergy += 10
+                break
             }
-            break
 
-        case ITEMS.LIVE:
-            this.energy += 10
-            this.maxEnergy += 10
-            break
+            item.kill()
+
+            startTimeout('player-get', 500)
+            playSound(SOUNDS.POWER_UP)
         }
-        playSound(SOUNDS.POWER_UP)
-        item.kill()
     }
 }

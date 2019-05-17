@@ -9,7 +9,12 @@ export default class ActiveElement extends Entity {
 
     draw () {
         const {
-            addLightElement, addLightmaskElement, camera, debug, dynamicLights, overlay
+            addLightElement,
+            addLightmaskElement,
+            camera,
+            debug,
+            dynamicLights,
+            overlay
         } = this._scene
 
         if (dynamicLights && this.visible && this.onScreen()) {

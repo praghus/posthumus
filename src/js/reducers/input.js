@@ -11,8 +11,7 @@ const initialState = {
         [INPUTS.INPUT_LEFT]: false,
         [INPUTS.INPUT_RIGHT]: false,
         [INPUTS.INPUT_DOWN]: false,
-        [INPUTS.INPUT_UP]: false,
-        [INPUTS.INPUT_DEBUG]: false
+        [INPUTS.INPUT_UP]: false
     }
 }
 

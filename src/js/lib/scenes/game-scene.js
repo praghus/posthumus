@@ -1,6 +1,11 @@
 import Overlay from '../models/overlay'
 import tmxFile from '../../../assets/levels/map.tmx'
-import { Camera, Tmx, Scene, World } from 'tmx-platformer-lib'
+import {
+    Camera,
+    Tmx,
+    Scene,
+    World
+} from 'tmx-platformer-lib'
 import {
     isMobileDevice,
     createLamp,
@@ -10,17 +15,18 @@ import {
 import {
     ASSETS,
     COLORS,
+    CONFIG,
     ENTITIES,
     ENTITIES_TYPE,
-    INPUTS,
     JUMP_THROUGH_TILES,
     LAYERS,
     NON_COLLIDE_TILES
-    // SPECIAL_TILES_INDEX,
-    // TIMEOUTS
 } from '../../lib/constants'
 
-const { DarkMask, Lighting } = window.illuminated
+const {
+    DarkMask,
+    Lighting
+} = window.illuminated
 
 const worldConfig = {
     gravity: 0.5,
@@ -37,8 +43,7 @@ export default class GameScene extends Scene {
         this.onLoad = this.onLoad.bind(this)
         this.addLightElement = this.addLightElement.bind(this)
         this.addLightmaskElement = this.addLightmaskElement.bind(this)
-        this.saveGame = this.saveGame.bind(this)
-        this.loadGame = this.loadGame.bind(this)
+        this.renderLightingEffect = this.renderLightingEffect.bind(this)
         this.map = Tmx(tmxFile).then(this.onLoad)
     }
 
@@ -48,9 +53,10 @@ export default class GameScene extends Scene {
         this.overlay = new Overlay(this)
         this.camera = new Camera(this)
         this.player = this.world.getObjectByType(ENTITIES_TYPE.PLAYER, LAYERS.OBJECTS)
+        this.world.addLayer(this.renderLightingEffect, 2)
         this.camera.setFollow(this.player)
         if (this.dynamicLights) {
-            this.light = createLamp(0, 0, 96, COLORS.TRANS_WHITE)
+            this.light = createLamp(0, 0, 130, COLORS.TRANS_WHITE)
             this.lighting = new Lighting({light: this.light, objects: []})
             this.darkmask = new DarkMask({lights: [this.light]})
             this.lightmask = []
@@ -61,9 +67,7 @@ export default class GameScene extends Scene {
     }
 
     onUpdate () {
-        if (this.fetchInput(INPUTS.INPUT_DEBUG)) {
-            this.debug = !this.debug
-        }
+        this.debug = this.config[CONFIG.DEBUG_MODE]
     }
 
     tick () {
@@ -75,60 +79,89 @@ export default class GameScene extends Scene {
     render () {
         const { camera, player, overlay, world } = this
         this.renderBackground()
-        world.draw()
         if (camera.underground || player.underground || player.inDark > 0) {
             this.dynamicLights && this.calculateShadows()
-            this.renderLightingEffect()
         }
-        overlay.displayHUD()
+        world.draw()
         player.shootFlash = false
+        overlay.displayHUD()
         overlay.update()
     }
 
     renderBackground () {
-        const { ctx, camera, assets, viewport, player } = this
-        const { resolutionX, resolutionY } = viewport
+        const {
+            ctx,
+            camera,
+            assets,
+            player,
+            viewport: { resolutionX }
+        } = this
 
         if (!camera.underground) {
             ctx.drawImage(assets.bg1, 0, 0)
-            ctx.drawImage(assets.moon, resolutionX - 80, 16)
+            ctx.drawImage(assets.moon, resolutionX - 70, 10)
             ctx.drawImage(assets.bg2, (camera.x / 8), -50 + (camera.y / 16))
-            if (player.shootFlash) {
-                ctx.fillStyle = COLORS.FLASH
-                ctx.fillRect(0, 0, resolutionX, resolutionY)
+            if (player.shootFlash && !player.underground && !player.inDark) {
+                this.renderShootFlash()
             }
         }
     }
 
     renderLightingEffect () {
-        const { ctx, assets, camera: {follow, x, y}, viewport } = this
-        const { resolutionX, resolutionY } = viewport
+        const {
+            ctx,
+            assets,
+            dynamicLights,
+            camera: { x, y, follow, underground },
+            viewport: { resolutionX, resolutionY },
+            player
+        } = this
 
-        if (this.dynamicLights) {
-            this.light.position.x = follow.x + (follow.width / 2) + x
-            this.light.position.y = follow.y + (follow.height / 2) + y
-            this.lighting.light = this.light
-            this.lighting.objects = this.lightmask
-            this.lighting.compute(resolutionX, resolutionY)
-            this.darkmask.lights = [this.light].concat(this.lights)
-            this.darkmask.compute(resolutionX, resolutionY)
-            ctx.save()
-            ctx.globalCompositeOperation = 'lighter'
-            this.lighting.render(ctx)
-            ctx.globalCompositeOperation = 'source-over'
-            this.darkmask.render(ctx)
-            ctx.restore()
-        }
-        else {
-            ctx.drawImage(assets[ASSETS.LIGHTING],
-                -400 + (follow.x + x + follow.width / 2),
-                -400 + (follow.y + y + follow.height / 2)
-            )
+        if (underground || player.underground || player.inDark > 0) {
+            dynamicLights && this.calculateShadows()
+            if (dynamicLights) {
+                this.light.position.x = follow.x + (follow.width / 2) + x
+                this.light.position.y = follow.y + (follow.height / 2) + y
+                this.lighting.light = this.light
+                this.lighting.objects = this.lightmask
+                this.lighting.compute(resolutionX, resolutionY)
+                this.darkmask.lights = [this.light].concat(this.lights)
+                this.darkmask.compute(resolutionX, resolutionY)
+                ctx.save()
+                ctx.globalCompositeOperation = 'lighter'
+                this.lighting.render(ctx)
+                ctx.globalCompositeOperation = 'source-over'
+                this.darkmask.render(ctx)
+                ctx.restore()
+            }
+            else {
+                ctx.drawImage(assets[ASSETS.LIGHTING],
+                    -400 + (follow.x + x + follow.width / 2),
+                    -400 + (follow.y + y + follow.height / 2)
+                )
+            }
+            player.shootFlash && this.renderShootFlash()
         }
     }
 
+    renderShootFlash () {
+        const {
+            ctx,
+            viewport: { resolutionX, resolutionY }
+        } = this
+
+        ctx.fillStyle = COLORS.FLASH
+        ctx.fillRect(0, 0, resolutionX, resolutionY)
+    }
+
     calculateShadows () {
-        const { camera, player, viewport: { resolutionX, resolutionY }, world } = this
+        const {
+            camera,
+            player,
+            viewport: { resolutionX, resolutionY },
+            world
+        } = this
+
         const { spriteSize } = world
         const castingShadows = camera.underground || player.underground || player.inDark > 0
         const shouldCreateLightmask = this.dynamicLights && castingShadows
@@ -156,7 +189,12 @@ export default class GameScene extends Scene {
     }
 
     generateShadowCasters () {
-        const { width, height, spriteSize } = this.world
+        const {
+            width,
+            height,
+            spriteSize
+        } = this.world
+
         this.shadowCasters = [...Array(width).keys()].map(() => Array(height))
         for (let y = 0; y < height; y++) {
             for (let x = 0; x < width; x++) {
@@ -204,43 +242,5 @@ export default class GameScene extends Scene {
         if (world.isSolidTile(tile) && layer === LAYERS.MAIN) {
             this.addShadowCaster(x, y)
         }
-    }
-
-    loadGame () {
-        // const loadedData = atob(localStorage.getItem('savedData'))
-        // const { objects, modifiers, player, lastCheckpointId, time } = JSON.parse(loadedData)
-        // this.timer = moment().subtract(time)
-        // this.world.setObjects(objects)
-        // this.lastCheckpointId = lastCheckpointId
-        // this.elements = new Elements(gameElementsOrdered(this.world.getObjects()), this)
-        // this.player = this.elements.create(player)
-        // this.player.items = player.items.map((id) => this.elements.getByProperties('id', id))
-        // this.player.mapPieces = player.mapPieces
-        // this.camera.setFollow(this.player)
-        // // restore map and set modifiers
-        // this.world = new World(levelData, worldConfig)
-        // modifiers.map(({layer, x, y, value}) => this.world.put(layer, x, y, value))
-    }
-
-    saveGame (lastCheckpointId) {
-        // const { world: { modifiers }, elements, player: { items, mapPieces } } = this
-        // const objects = elements.objects.map((element) => getElementProperties(element))
-        // const player = getElementProperties(this.player)
-        // const time = moment().diff(moment(this.timer))
-
-        // player.items = items.map((item) => item && item.properties.id)
-        // player.mapPieces = mapPieces.map((mapPiece) => getElementProperties(mapPiece))
-
-        // this.lastCheckpointId = lastCheckpointId
-
-        // const savedData = JSON.stringify({
-        //     lastCheckpointId,
-        //     modifiers,
-        //     objects,
-        //     player,
-        //     time
-        // })
-
-        // localStorage.setItem('savedData', btoa(savedData))
     }
 }

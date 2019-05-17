@@ -1,16 +1,19 @@
 import Character from '../models/character'
 import { randomInt } from '../../lib/utils/helpers'
-import { DIRECTIONS, PARTICLES, SOUNDS, STATES } from '../../lib/constants'
+import {
+    DIRECTIONS,
+    PARTICLES,
+    SOUNDS,
+    STATES
+} from '../../lib/constants'
 
 export default class Zombie extends Character {
     constructor (obj, scene) {
         super(obj, scene)
-        this.direction = DIRECTIONS.LEFT
         this.maxSpeed = 0.5
         this.speed = 0.05
         this.energy = 20
-        this.maxEnergy = 20
-        this.solid = true
+        this.damage = 0
         this.bounds = {
             x: 12,
             y: 8,
@@ -37,23 +40,25 @@ export default class Zombie extends Character {
 
     hit (damage) {
         super.hit(damage)
-        const { player } = this._scene
-        if (this.x < player.x && this.direction === DIRECTIONS.LEFT) {
-            this.direction = DIRECTIONS.RIGHT
-        }
-        if (this.x > player.x && this.direction === DIRECTIONS.RIGHT) {
-            this.direction = DIRECTIONS.LEFT
-        }
+        this.turnToPlayer()
     }
 
     update () {
-        const { player, playSound, startTimeout, world } = this._scene
+        const {
+            player,
+            playSound,
+            startTimeout,
+            world
+        } = this._scene
 
         switch (this.state) {
         case STATES.IDLE:
             if (this.onScreen() && !this.activated) {
                 this.activated = true
-                startTimeout(`zombie-${this.id}-awake`, 500, () => this.setState(STATES.RISING))
+                startTimeout(`zombie-${this.id}-awake`, 500, () => {
+                    this.setState(STATES.RISING)
+                    playSound(SOUNDS.ZOMBIE_GROAN)
+                })
             }
             break
 
@@ -69,12 +74,13 @@ export default class Zombie extends Character {
                 )
             }
             if (this.animFrame === 8) {
-                playSound(SOUNDS.ZOMBIE_GROAN)
+                this.turnToPlayer()
                 this.setState(STATES.WALKING)
             }
             break
 
         case STATES.WALKING:
+            this.damage = 10
             this.force.y += world.gravity
             this.force.x += this.direction === DIRECTIONS.RIGHT ? this.speed : -this.speed
 
@@ -92,8 +98,8 @@ export default class Zombie extends Character {
 
         case STATES.DYING:
             this.animate(this.animations.DEAD)
+            this.damage = 0
             if (this.animFrame === 6) {
-                // playSound(SOUNDS.ZOMBIE_GROAN)
                 this.kill()
             }
             break

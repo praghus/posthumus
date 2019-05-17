@@ -1,3 +1,8 @@
+export const CONFIG = {
+    DEBUG_MODE: 'debugMode',
+    DISABLE_SOUNDS: 'disableSounds'
+}
+
 export const LAYERS = {
     BACKGROUND: 1,
     MAIN: 2,
@@ -6,8 +11,8 @@ export const LAYERS = {
 }
 
 export const SCENES = {
-    INTRO: 'INTRO',
-    GAME: 'GAME'
+    INTRO: 'intro',
+    GAME: 'game'
 }
 
 export const DIRECTIONS = {

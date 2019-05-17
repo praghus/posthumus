@@ -10,8 +10,8 @@ export default class Item extends ActiveElement {
         this.y -= this.height
         this.animations = {
             [ITEMS.AMMO]: {x: 16, y: 0, w: 16, h: 16, frames: 1, fps: 0, loop: false},
-            [ITEMS.LIVE]: {x: 48, y: 0, w: 16, h: 16, frames: 1, fps: 0, loop: false},
-            [ITEMS.HEALTH]: {x: 64, y: 0, w: 16, h: 16, frames: 1, fps: 0, loop: false}
+            [ITEMS.HEALTH]: {x: 32, y: 0, w: 16, h: 16, frames: 1, fps: 0, loop: false},
+            [ITEMS.LIVE]: {x: 48, y: 0, w: 16, h: 16, frames: 1, fps: 0, loop: false}
         }
     }
 

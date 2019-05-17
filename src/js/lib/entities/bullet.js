@@ -1,5 +1,9 @@
 import ActiveElement from '../models/active-element'
-import { DIRECTIONS, ENTITIES_FAMILY, PARTICLES } from '../../lib/constants'
+import {
+    DIRECTIONS,
+    ENTITIES_FAMILY,
+    PARTICLES
+} from '../../lib/constants'
 
 export default class Bullet extends ActiveElement {
     constructor (obj, scene) {

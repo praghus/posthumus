@@ -6,6 +6,7 @@ export {
     COLORS
 } from './colors'
 export {
+    CONFIG,
     DIRECTIONS,
     LAYERS,
     SCENES

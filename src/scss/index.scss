@@ -57,3 +57,26 @@ canvas {
         width: 50%;
     }
 }
+
+.debug {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    bottom: 0;
+    right: 0;
+    margin: 10px 20px;
+
+    label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    input {
+        width: 20px;
+        height: 20px;
+        margin: 10px 10px 10px 20px;
+    }
+}

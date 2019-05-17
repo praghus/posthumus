@@ -1,27 +1,33 @@
 import Character from '../models/character'
-import { COLORS } from '../constants'
+import {
+    COLORS,
+    PARTICLES,
+    STATES
+} from '../constants'
 
 export default class SpiderTrap extends Character {
     constructor (obj, scene) {
         super(obj, scene)
-        this.damage = 1000
-        this.fall = false
-        this.rise = false
-        this.solid = true
+        this.damage = 10
+        this.energy = 30
         this.startX = this.x + (this.width / 2)
         this.startY = this.y
-        this.fallDelay = 800// parseInt(this.properties.delay) || 1000
-        this.fallTimeout = setTimeout(() => {
-            this.fall = true
-        }, this.fallDelay)
+        this.states = [
+            STATES.IDLE,
+            STATES.WAITING,
+            STATES.RISING,
+            STATES.FALLING,
+            STATES.DYING
+        ]
         this.animation = {x: 0, y: 0, w: 16, h: 23, frames: 2, fps: 4, loop: true}
+        this.setState(STATES.IDLE)
     }
 
     draw () {
         const { camera, ctx, assets } = this._scene
         if (this.onScreen()) {
             ctx.beginPath()
-            ctx.strokeStyle = COLORS.SPIDER_WEB
+            ctx.strokeStyle = COLORS.BLACK
             ctx.moveTo(this.startX + camera.x, this.startY + camera.y)
             ctx.lineTo(this.startX + camera.x, this.y + camera.y)
             ctx.stroke()
@@ -34,16 +40,50 @@ export default class SpiderTrap extends Character {
         }
     }
 
+    hit (damage) {
+        super.hit(damage)
+    }
+
+    wait () {
+        const { startTimeout } = this._scene
+        this.rise = false
+        this.fall = false
+        startTimeout(`spider-${this.id}-wait`, 800, () => {
+            this.fall = true
+        })
+    }
+
     update () {
+        const {
+            startTimeout,
+            stopTimeout,
+            world
+        } = this._scene
+
         if (this.onScreen()) {
-            if (this.rise) {
-                this.force.y -= 0.005
-            }
-            else if (this.fall) {
-                this.force.y += this._scene.world.gravity
-            }
-            else {
+            switch (this.state) {
+            case STATES.IDLE:
                 this.force.y = 0
+                startTimeout(`spider-trap-${this.id}-wait`, 800, () => {
+                    this.setState(STATES.FALLING)
+                })
+                break
+            case STATES.FALLING:
+                this.force.y += world.gravity
+                break
+            case STATES.RISING:
+                this.force.y -= 0.005
+                break
+            case STATES.DYING:
+                this.emitParticles(
+                    PARTICLES.DIRT,
+                    this.x + this.width / 2,
+                    this.y,
+                    10,
+                    this.width
+                )
+                this.kill()
+                break
             }
 
             this.move()
@@ -51,19 +91,14 @@ export default class SpiderTrap extends Character {
 
             if (this.onFloor) {
                 this.force.y = 0
-                this.fall = false
-                this.rise = true
+                this.setState(STATES.RISING)
             }
             if (this.y <= this.startY || this.onCeiling) {
-                this.rise = false
-                this.fall = false
-                this.fallTimeout = setTimeout(() => {
-                    this.fall = true
-                }, this.fallDelay)
+                this.setState(STATES.IDLE)
             }
         }
         else {
-            this.fallTimeout = null
+            stopTimeout(`spider-trap-${this.id}-wait`)
         }
     }
 }

@@ -3,8 +3,7 @@ export const INPUTS = {
     INPUT_RIGHT: 'right',
     INPUT_DOWN: 'down',
     INPUT_LEFT: 'left',
-    INPUT_ACTION: 'shot',
-    INPUT_DEBUG: 'debug'
+    INPUT_ACTION: 'shot'
 }
 
 export const INPUT_KEYS = {
@@ -12,6 +11,5 @@ export const INPUT_KEYS = {
     [INPUTS.INPUT_RIGHT]: ['KeyD', 'ArrowRight'],
     [INPUTS.INPUT_DOWN]: ['KeyS', 'ArrowDown'],
     [INPUTS.INPUT_LEFT]: ['KeyA', 'ArrowLeft'],
-    [INPUTS.INPUT_ACTION]: ['Space'],
-    [INPUTS.INPUT_DEBUG]: ['KeyI']
+    [INPUTS.INPUT_ACTION]: ['Space']
 }
