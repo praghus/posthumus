@@ -8021,8 +8021,8 @@ tmp@^0.0.33:
     os-tmpdir "~1.0.2"
 
 tmx-platformer-lib@praghus/tmx-platformer-lib:
-  version "0.1.2"
-  resolved "https://codeload.github.com/praghus/tmx-platformer-lib/tar.gz/e95da707e234494386eef8f9baba1d9fc1e6571a"
+  version "1.0.3"
+  resolved "https://codeload.github.com/praghus/tmx-platformer-lib/tar.gz/a9a187fd8b37f8f6fa4c7bcc456c45362d51ce27"
 
 to-arraybuffer@^1.0.0:
   version "1.0.1"

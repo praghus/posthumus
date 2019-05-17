@@ -3,7 +3,7 @@ import { UPDATE_CONFIG } from '../actions'
 
 const initialState = {
     [CONFIG.DEBUG_MODE]: false,
-    [CONFIG.DISABLE_SOUNDS]: true
+    [CONFIG.DISABLE_SOUNDS]: false
 }
 
 const actionsMap = {

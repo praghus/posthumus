@@ -6,16 +6,16 @@ const PATH = {
     SOURCE: path.join(process.cwd(), 'src'),
     IMAGES: path.join(process.cwd(), 'src/assets/images'),
     LEVELS: path.join(process.cwd(), 'src/assets/levels'),
-    AUDIO:  path.join(process.cwd(), 'src/assets/sounds')
+    AUDIO: path.join(process.cwd(), 'src/assets/sounds')
 }
 
 const inArray = (haystack) => (needle) => haystack.some((item) => needle.includes(item))
 // const dependencyPath = (...folders) => path.join('node_modules', ...folders)
-const localLink = (...folders) => path.join(process.cwd(), '..', ...folders)
+// const localLink = (...folders) => path.join(process.cwd(), '..', ...folders)
 
 const jsEs6Source = inArray([
-    path.join(PATH.SOURCE, 'js'),
-    localLink('tmx-platformer-lib', 'lib')
+    path.join(PATH.SOURCE, 'js')
+    // localLink('tmx-platformer-lib', 'lib')
 ])
 
 module.exports = {
