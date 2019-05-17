@@ -11,15 +11,17 @@ const initialState = {
 
 const actionsMap = {
     [TICKER_STARTED]: (state, action) => {
-        return Object.assign({}, state, {
+        return {
+            ...state,
             tickerStarted: true,
             lastFrameTime: action.timestamp
-        })
+        }
     },
     [TIME_TICK]: (state, action) => {
-        return Object.assign({}, state, {
+        return {
+            ...state,
             lastFrameTime: action.timestamp
-        })
+        }
     }
 }
 

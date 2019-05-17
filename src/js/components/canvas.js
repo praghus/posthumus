@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { findDOMNode } from 'react-dom'
 
 const propTypes = {
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired
+    height: PropTypes.number.isRequired,
+    width: PropTypes.number.isRequired
 }
 
 export default class Canvas extends Component {
@@ -16,16 +16,15 @@ export default class Canvas extends Component {
 
     componentDidMount () {
         const canvas = findDOMNode(this.canvas)
-        const ctx = canvas.getContext('2d')
-        this.context = ctx
+        this.context = canvas.getContext('2d')
+        this.context.imageSmoothingEnabled = false
     }
 
     render () {
         const { width, height } = this.props
+        const style = {width: `${width}px`, height: `${height}px`}
         return (
-            <canvas
-                ref={(ref) => { this.canvas = ref }}
-                width={width + 'px'} height={height + 'px'} />
+            <canvas ref={(ref) => { this.canvas = ref }} {...style} />
         )
     };
 }

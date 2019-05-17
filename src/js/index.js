@@ -2,14 +2,13 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
-import { soundsData } from './lib/sounds'
+import { soundsData } from './lib/constants'
 import { resizeScreen } from './actions'
 import thunk from 'redux-thunk'
 import soundsMiddleware from 'redux-sounds'
 import rootReducer from './reducers'
 import App from './views'
 
-import 'babel-polyfill'
 import '../scss/index.scss'
 
 let store = null
