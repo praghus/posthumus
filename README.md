@@ -1,7 +1,7 @@
 # ![Posthumus](./src/assets/images/logo.png) [![Build Status](https://travis-ci.org/praghus/posthumus.svg?branch=master)](https://travis-ci.org/praghus/posthumus)
 #### Canvas zombie shooter made with React and Redux
 
-### :video_game: Demo
+### Demo :video_game: 
 
 * **[Stable build on Surge](https://posthumus.surge.sh/)**
 
