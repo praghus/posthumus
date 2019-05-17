@@ -10,5 +10,3 @@
 ### License
 
 Posthumus is [MIT licensed](./LICENSE).
-
-![Posthumus](./src/assets/images/logo.png)
