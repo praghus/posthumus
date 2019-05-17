@@ -4,7 +4,11 @@ import { findDOMNode } from 'react-dom'
 
 const propTypes = {
     height: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired
+    width: PropTypes.number.isRequired,
+    fakeCrt: PropTypes.bool
+}
+const defaultProps = {
+    fakeCrt: false
 }
 
 export default class Canvas extends Component {
@@ -30,3 +34,4 @@ export default class Canvas extends Component {
 }
 
 Canvas.propTypes = propTypes
+Canvas.defaultProps = defaultProps

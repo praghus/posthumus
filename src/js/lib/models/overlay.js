@@ -69,13 +69,13 @@ export default class Overlay {
 
         // lives and energy
         ctx.drawImage(assets[ASSETS.LIVE],
-            0, 10,
-            Math.round(maxEnergy / 10) * 11, 10, 2, 2,
-            Math.round(maxEnergy / 10) * 11, 10
+            0, 10, (maxEnergy / 10) * 11, 10,
+            2, 2, (maxEnergy / 10) * 11, 10
         )
         ctx.drawImage(assets[ASSETS.LIVE],
-            0, 0,
-            (energy / 10) * 11, 10, 2, 2, (energy / 10) * 11, 10)
+            0, 0, (energy / 10) * 11, 10,
+            2, 2, (energy / 10) * 11, 10
+        )
 
         // ammo
         this.displayText('AMMO', 2, resolutionY - 7)

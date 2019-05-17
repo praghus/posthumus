@@ -49,7 +49,6 @@
   <properties>
    <property name="collide" type="bool" value="true"/>
   </properties>
-  <object id="2" name="zombie" type="zombie" x="272" y="960" width="32" height="48"/>
   <object id="3" name="zombie" type="zombie" x="1280" y="944" width="32" height="48"/>
   <object id="4" name="zombie" type="zombie" x="880" y="944" width="32" height="48"/>
   <object id="5" name="zombie" type="zombie" x="656" y="944" width="32" height="48"/>
@@ -109,7 +108,7 @@
     <property name="delay" value="800"/>
    </properties>
   </object>
-  <object id="102" name="Spider trap" type="spider_trap" x="2416" y="880" width="16" height="23">
+  <object id="102" name="Spider trap" type="spider_trap" x="2416" y="889" width="16" height="23">
    <properties>
     <property name="delay" value="800"/>
    </properties>
@@ -193,7 +192,7 @@
   <object id="146" type="slope" x="3304" y="832">
    <polygon points="64,64 -32,-32 -72,-32 -72,64"/>
   </object>
-  <object id="148" name="zombie" type="zombie" x="144" y="960" width="32" height="48"/>
+  <object id="148" name="zombie" type="zombie" x="128" y="960" width="32" height="48"/>
   <object id="150" name="bat" type="bat" x="1376" y="912" width="28" height="28"/>
   <object id="155" name="spider" type="spider" x="5648" y="960" width="24" height="24"/>
   <object id="156" name="spider" type="spider" x="5424" y="944" width="24" height="24"/>
