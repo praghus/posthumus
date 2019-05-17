@@ -5,7 +5,7 @@
 
 :video_game: **[Stable build on Surge](https://posthumus.surge.sh/)**
 
-:video_game: **[Latest build on Heroku](https://posthumus.herokuapp.com/)** - sometimes you have to wait a few moments before the heroku wakes up and starts the application from sleep
+:video_game: **[Latest build on Heroku](https://posthumus.herokuapp.com/)** - sometimes you have to wait a few moments before the Heroku wakes up the application from sleep
 
 ### License
 
