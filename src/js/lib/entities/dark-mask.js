@@ -2,8 +2,8 @@ import ActiveElement from '../models/active-element'
 import { overlap } from '../../lib/utils/helpers'
 
 export default class DarkMask extends ActiveElement {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.solid = false
         this.active = false
         this.activated = false
@@ -11,7 +11,7 @@ export default class DarkMask extends ActiveElement {
     }
 
     update () {
-        const { player, world } = this._scene
+        const { player, world } = this.game
         if (this.onScreen()) {
             if (overlap(player, this)) {
                 this.active = true
@@ -34,7 +34,7 @@ export default class DarkMask extends ActiveElement {
     }
 
     deactivate () {
-        const { player } = this._scene
+        const { player } = this.game
         if (this.active) {
             player.inDark -= 1
             this.activated = false

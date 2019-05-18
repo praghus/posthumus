@@ -1,8 +1,8 @@
 import ActiveElement from '../models/active-element'
 
 export default class Slope extends ActiveElement {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.solid = false
         this.visible = false
         const [minX, minY, maxX, maxY] = [
@@ -21,9 +21,6 @@ export default class Slope extends ActiveElement {
 
     collide (element) {
         if (!this.dead && element.solid) {
-            // if (element.family === ENTITIES_FAMILY.ENEMIES) {
-            //     return element.bounce()
-            // }
             const posX = Math.ceil(element.x + (element.width / 2))
             // @todo: array.reduce instead of regular iteration
             for (let p = 0; p < this.points.length - 1; p++) {
@@ -60,27 +57,5 @@ export default class Slope extends ActiveElement {
                 }
             }
         }
-        // if (!this.dead && element.solid) {
-        //     if (element.family === ENTITIES_FAMILY.ENEMIES) {
-        //         return element.bounce()
-        //     }
-        //     const { x, width } = element.getBounds()
-        //     const [ calculatedX, calculatedY ] = [element.x + x, this.y - element.height]
-        //     const delta = this.height / this.width
-        //     const expectedY = this.type === ENTITIES_TYPE.SLOPE_RIGHT
-        //         ? calculatedY + this.height - (calculatedX + width - this.x) * delta
-        //         : calculatedY + (calculatedX - this.x) * delta
-        //     if (expectedY + element.height > element.y - element.height) {
-        //         if (element.y >= expectedY && !element.jump) {
-        //             element.y = expectedY
-        //             element.force.y = 0
-        //             element.fall = false
-        //             element.onFloor = true
-        //         }
-        //     }
-        //     else if (element.force.y === 0) {
-        //         element.force.y += 1
-        //     }
-        // }
     }
 }

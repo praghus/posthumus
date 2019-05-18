@@ -8,8 +8,8 @@ import {
 } from '../../lib/constants'
 
 export default class Zombie extends Character {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.maxSpeed = 0.5
         this.speed = 0.05
         this.energy = 20
@@ -46,10 +46,10 @@ export default class Zombie extends Character {
     update () {
         const {
             player,
-            playSound,
             startTimeout,
-            world
-        } = this._scene
+            world,
+            props: { playSound }
+        } = this.game
 
         switch (this.state) {
         case STATES.IDLE:

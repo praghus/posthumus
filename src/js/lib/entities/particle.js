@@ -2,8 +2,8 @@ import ActiveElement from '../models/active-element'
 import { overlap, random, randomInt } from '../../lib/utils/helpers'
 
 export default class Particle extends ActiveElement {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         const dir = random(0, 2) * Math.PI
         this.maxSpeed = random(0.5, 1)
         this.force = obj.force || {
@@ -40,7 +40,7 @@ export default class Particle extends ActiveElement {
     }
 
     draw () {
-        const { ctx, camera } = this._scene
+        const { ctx, camera } = this.game
         ctx.save()
         ctx.fillStyle = this.color
         ctx.beginPath()

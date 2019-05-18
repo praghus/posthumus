@@ -7,7 +7,6 @@ import Canvas from './canvas'
 import Inputs from './inputs'
 import {
     ASSETS,
-    CONFIG,
     SCENES
 } from '../lib/constants'
 import {
@@ -30,6 +29,7 @@ const propTypes = {
     onKey: PropTypes.func.isRequired,
     onMouse: PropTypes.func.isRequired,
     playSound: PropTypes.func.isRequired,
+    setScene: PropTypes.func.isRequired,
     startTicker: PropTypes.func.isRequired,
     ticker: tickerPropType.isRequired,
     viewport: viewportPropType.isRequired
@@ -38,10 +38,6 @@ const propTypes = {
 export default class Game extends Component {
     constructor (props) {
         super(props)
-        this.viewport = props.viewport
-        this.ticker = props.ticker
-        this.assets = props.assets
-        this.onKey = props.onKey
         this.assetsLoaded = false
         this.wrapper = null
         this.scene = null
@@ -50,27 +46,25 @@ export default class Game extends Component {
         this.source = null
         this.texture = null
         this.ctx = null
-        this.setOpenGlEffects = this.setOpenGlEffects.bind(this)
-        this.playSound = this.playSound.bind(this)
-        this.setScene = this.setScene.bind(this)
     }
 
     componentDidMount () {
         const { startTicker } = this.props
         this.ctx = this.canvas.context
         this.scenes = {
-            [SCENES.INTRO]: new IntroScene(this),
-            [SCENES.GAME]: new GameScene(this)
+            [SCENES.INTRO]: new IntroScene(this.ctx, this.props),
+            [SCENES.GAME]: new GameScene(this.ctx, this.props)
         }
-        this.setScene(SCENES.INTRO)
         // this.setOpenGlEffects()
         startTicker()
     }
 
     componentWillReceiveProps (nextProps) {
-        if (this.scene) {
-            this.scene.update(nextProps)
+        const { config: { scene } } = nextProps
+        if (this.scene !== scene) {
+            this.scene = this.scenes[scene] || null
         }
+        this.scene && this.scene.update(nextProps)
     }
 
     componentDidUpdate () {
@@ -81,7 +75,7 @@ export default class Game extends Component {
 
         if (this.ctx && this.scene) {
             this.scene.draw()
-            // create CRT scanlines effect
+            /** Experimental: create CRT scanlines effect */
             if (this.glcanvas) {
                 this.ctx.drawImage(assets[ASSETS.SCANLINES], 0, 0, width, height)
                 this.texture.loadContentsOf(this.source)
@@ -116,15 +110,7 @@ export default class Game extends Component {
         )
     }
 
-    setScene (scene) {
-        this.scene = this.scenes[scene] || null
-    }
-
-    playSound (sound) {
-        const { playSound, config } = this.props
-        return !config[CONFIG.DISABLE_SOUNDS] && playSound(sound)
-    }
-
+    /** Experimental */
     setOpenGlEffects () {
         try {
             this.source = findDOMNode(this.canvas)

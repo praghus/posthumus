@@ -1,8 +1,8 @@
 import Entity from './entity'
 
 export default class ActiveElement extends Entity {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.activated = false
         this.visible = true
     }
@@ -15,7 +15,7 @@ export default class ActiveElement extends Entity {
             debug,
             dynamicLights,
             overlay
-        } = this._scene
+        } = this.game
 
         if (dynamicLights && this.visible && this.onScreen()) {
             const [ posX, posY ] = [

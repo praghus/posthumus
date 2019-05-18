@@ -3,7 +3,7 @@ import tmxFile from '../../../assets/levels/map.tmx'
 import {
     Camera,
     Tmx,
-    Scene,
+    Game,
     World
 } from 'tmx-platformer-lib'
 import {
@@ -35,10 +35,11 @@ const worldConfig = {
     oneWayTiles: JUMP_THROUGH_TILES
 }
 
-export default class GameScene extends Scene {
-    constructor (game) {
-        super(game)
+export default class GameScene extends Game {
+    constructor (ctx, props) {
+        super(ctx, props)
         this.debug = false
+
         this.dynamicLights = !isMobileDevice()
         this.onLoad = this.onLoad.bind(this)
         this.addLightElement = this.addLightElement.bind(this)
@@ -48,15 +49,16 @@ export default class GameScene extends Scene {
     }
 
     onLoad (data) {
-        this.loaded = true
         this.world = new World(data, worldConfig, this)
         this.overlay = new Overlay(this)
         this.camera = new Camera(this)
+
         this.player = this.world.getObjectByType(ENTITIES_TYPE.PLAYER, LAYERS.OBJECTS)
+
         this.world.addLayer(this.renderLightingEffect, 2)
         this.camera.setFollow(this.player)
         this.camera.setMiddlePoint(
-            this.viewport.resolutionX / 3,
+            this.props.viewport.resolutionX / 3,
             this.player.height
         )
         if (this.dynamicLights) {
@@ -67,11 +69,12 @@ export default class GameScene extends Scene {
             this.lights = []
             this.generateShadowCasters()
         }
+        this.loaded = true
         this.overlay.fadeIn()
     }
 
     onUpdate () {
-        this.debug = this.config[CONFIG.DEBUG_MODE]
+        this.debug = this.props.config[CONFIG.DEBUG_MODE]
     }
 
     tick () {
@@ -96,9 +99,11 @@ export default class GameScene extends Scene {
         const {
             ctx,
             camera,
-            assets,
             player,
-            viewport: { resolutionX }
+            props: {
+                assets,
+                viewport: { resolutionX }
+            }
         } = this
 
         if (!camera.underground) {
@@ -116,8 +121,12 @@ export default class GameScene extends Scene {
             ctx,
             assets,
             dynamicLights,
-            camera: { x, y, follow, underground },
-            viewport: { resolutionX, resolutionY },
+            camera: {
+                x, y, follow, underground
+            },
+            props: {
+                viewport: { resolutionX, resolutionY }
+            },
             player
         } = this
 
@@ -151,7 +160,9 @@ export default class GameScene extends Scene {
     renderShootFlash () {
         const {
             ctx,
-            viewport: { resolutionX, resolutionY }
+            props: {
+                viewport: { resolutionX, resolutionY }
+            }
         } = this
 
         ctx.fillStyle = COLORS.FLASH
@@ -162,7 +173,9 @@ export default class GameScene extends Scene {
         const {
             camera,
             player,
-            viewport: { resolutionX, resolutionY },
+            props: {
+                viewport: { resolutionX, resolutionY }
+            },
             world
         } = this
 
@@ -241,9 +254,8 @@ export default class GameScene extends Scene {
     }
 
     addTile (x, y, tile, layer) {
-        const { world } = this
-        world.putTile(x, y, tile, layer)
-        if (world.isSolidTile(tile) && layer === LAYERS.MAIN) {
+        this.world.putTile(x, y, tile, layer)
+        if (this.world.isSolidTile(tile) && layer === LAYERS.MAIN) {
             this.addShadowCaster(x, y)
         }
     }

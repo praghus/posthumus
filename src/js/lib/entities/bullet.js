@@ -6,8 +6,8 @@ import {
 } from '../../lib/constants'
 
 export default class Bullet extends ActiveElement {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.width = 8
         this.height = 1
         this.speed = 10
@@ -16,7 +16,7 @@ export default class Bullet extends ActiveElement {
     }
 
     draw () {
-        const { ctx, camera } = this._scene
+        const { ctx, camera } = this.game
         ctx.save()
         ctx.fillStyle = this.color
         ctx.fillRect(this.x + camera.x, this.y + camera.y, this.width, this.height)

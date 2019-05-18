@@ -2,8 +2,8 @@ import ActiveElement from '../models/active-element'
 import { ENTITIES_TYPE, ITEMS } from '../../lib/constants'
 
 export default class Item extends ActiveElement {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.width = 16
         this.height = 16
         this.solid = true
@@ -16,14 +16,14 @@ export default class Item extends ActiveElement {
     }
 
     collide (element) {
-        const { player } = this._scene
+        const { player } = this.game
         if (element.type === ENTITIES_TYPE.PLAYER) {
             player.getItem(this)
         }
     }
 
     update () {
-        const { gravity } = this._scene.world
+        const { world: { gravity } } = this.game
         if (this.onScreen()) {
             if (this.onFloor) this.force.y *= -0.5
             this.force.y += gravity

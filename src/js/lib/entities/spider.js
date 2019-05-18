@@ -7,8 +7,8 @@ import {
 } from '../../lib/constants'
 
 export default class Spider extends Character {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.maxSpeed = 0.5
         this.speed = 0.05
         this.energy = 20
@@ -49,7 +49,7 @@ export default class Spider extends Character {
             player,
             startTimeout,
             world
-        } = this._scene
+        } = this.game
 
         switch (this.state) {
         case STATES.IDLE:
@@ -137,7 +137,7 @@ export default class Spider extends Character {
             const {
                 startTimeout,
                 world
-            } = this._scene
+            } = this.game
 
             world.addObject({
                 type: ENTITIES_TYPE.SPIDER_BULLET,

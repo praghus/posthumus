@@ -6,8 +6,8 @@ import {
 } from '../constants'
 
 export default class SpiderTrap extends Character {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.damage = 10
         this.energy = 30
         this.startX = this.x + (this.width / 2)
@@ -24,7 +24,7 @@ export default class SpiderTrap extends Character {
     }
 
     draw () {
-        const { camera, ctx, assets } = this._scene
+        const { camera, ctx, props: { assets } } = this.game
         if (this.onScreen()) {
             ctx.beginPath()
             ctx.strokeStyle = COLORS.BLACK
@@ -45,7 +45,7 @@ export default class SpiderTrap extends Character {
     }
 
     wait () {
-        const { startTimeout } = this._scene
+        const { startTimeout } = this.game
         this.rise = false
         this.fall = false
         startTimeout(`spider-${this.id}-wait`, 800, () => {
@@ -58,7 +58,7 @@ export default class SpiderTrap extends Character {
             startTimeout,
             stopTimeout,
             world
-        } = this._scene
+        } = this.game
 
         if (this.onScreen()) {
             switch (this.state) {

@@ -7,8 +7,8 @@ import {
 } from '../../lib/constants'
 
 export default class SpiderBullet extends ActiveElement {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.width = 8
         this.height = 8
         this.speed = 1
@@ -17,7 +17,7 @@ export default class SpiderBullet extends ActiveElement {
     }
 
     collide (element) {
-        const { player, world } = this._scene
+        const { player, world } = this.game
         if (element.solid && element.type !== ENTITIES_TYPE.SPIDER) {
             this.kill()
             this.emitParticles(PARTICLES.SPIT, this.x, this.y, 10)
@@ -33,7 +33,7 @@ export default class SpiderBullet extends ActiveElement {
 
     update () {
         if (!this.dead) {
-            const { world } = this._scene
+            const { world } = this.game
             this.force.y += world.gravity
             this.force.x += this.direction === DIRECTIONS.RIGHT
                 ? this.speed

@@ -2,14 +2,14 @@ import ActiveElement from '../models/active-element'
 import { ENTITIES_TYPE } from '../constants'
 
 export default class SpiderWeb extends ActiveElement {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.width = 32
         this.height = 48
     }
 
     collide (element) {
-        const { player, startTimeout } = this._scene
+        const { player, startTimeout } = this.game
         if (element.type === ENTITIES_TYPE.PLAYER) {
             if (!this.activated) {
                 this.activated = true

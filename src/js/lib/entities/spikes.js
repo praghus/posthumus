@@ -1,8 +1,8 @@
 import ActiveElement from '../models/active-element'
 
 export default class Spikes extends ActiveElement {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.damage = 1000
         this.canAnimate = true
         this.shineDelay = 2000
@@ -12,7 +12,7 @@ export default class Spikes extends ActiveElement {
     }
 
     draw () {
-        const { assets, ctx, camera } = this._scene
+        const { ctx, camera, props: { assets } } = this.game
         ctx.drawImage(assets.shine,
             this.animation.x + this.animFrame * this.animation.w, this.animation.y,
             this.animation.w, this.animation.h,
