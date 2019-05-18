@@ -12,21 +12,21 @@ import {
 } from '../../lib/constants'
 
 export default class Character extends Entity {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.solid = true
         this.visible = true
     }
 
     draw () {
         super.draw()
-        const { debug, overlay } = this._scene
+        const { debug, overlay } = this.game
         this.hint && overlay.addHint(this)
         this.onScreen() && debug && overlay.displayDebug(this)
     }
 
     produceItem (id) {
-        const { world } = this._scene
+        const { world } = this.game
         world.addObject({
             id,
             type: ENTITIES_TYPE.ITEM,
@@ -37,7 +37,7 @@ export default class Character extends Entity {
     }
 
     turnToPlayer () {
-        const { player } = this._scene
+        const { player } = this.game
         if (this.x < player.x) {
             this.direction = DIRECTIONS.RIGHT
         }

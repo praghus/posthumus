@@ -3,8 +3,8 @@ import { randomInt } from '../../lib/utils/helpers'
 import { DIRECTIONS, LAYERS, ENTITIES_TYPE } from '../../lib/constants'
 
 export default class Entity extends GameEntity {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.activated = false
         this.visible = true
     }
@@ -13,7 +13,7 @@ export default class Entity extends GameEntity {
 
     addItem (properties, x, y) {
         const { produce, produce_name, produce_gid } = properties
-        this._scene.world.addObject({
+        this.game.world.addObject({
             type: ENTITIES_TYPE.ITEM,
             visible: true,
             gid: produce_gid || null,
@@ -32,7 +32,7 @@ export default class Entity extends GameEntity {
                 force: particle.forceVector(),
                 ...particle
             }
-            this._scene.world.addObject({
+            this.game.world.addObject({
                 type: ENTITIES_TYPE.PARTICLE,
                 life: randomInt(60, 120),
                 dead: false,
@@ -49,7 +49,7 @@ export default class Entity extends GameEntity {
     }
 
     seesEntity (entity) {
-        const { world } = this._scene
+        const { world } = this.game
         const entityM = ((entity.y + entity.height) - (this.y + this.height)) / (entity.x - this.x)
 
         if (!entity.canHurt() ||

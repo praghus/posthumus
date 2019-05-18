@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="512" height="128" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="160">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="512" height="128" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="161">
  <properties>
   <property name="gravity" value="0.5"/>
   <property name="surfaceLevel" value="64"/>

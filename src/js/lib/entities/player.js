@@ -10,8 +10,8 @@ import {
 } from '../../lib/constants'
 
 export default class Player extends Character {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.direction = DIRECTIONS.RIGHT
         this.energy = 30
         this.maxEnergy = 30
@@ -44,7 +44,7 @@ export default class Player extends Character {
     }
 
     draw () {
-        const { ctx } = this._scene
+        const { ctx } = this.game
         ctx.save()
         if (!this.canHurt()) {
             ctx.globalAlpha = 0.2
@@ -54,7 +54,7 @@ export default class Player extends Character {
     }
 
     update () {
-        const { checkTimeout } = this._scene
+        const { checkTimeout } = this.game
 
         this.input()
         this.reload()
@@ -107,29 +107,28 @@ export default class Player extends Character {
 
     input () {
         const {
-            input,
-            world
-        } = this._scene
+            props: { input }, world
+        } = this.game
 
         if (this.canMove()) {
-            if (input[INPUTS.INPUT_LEFT]) {
+            if (input.keyPressed[INPUTS.INPUT_LEFT]) {
                 this.force.x -= this.speed
                 this.direction = DIRECTIONS.LEFT
             }
-            if (input[INPUTS.INPUT_RIGHT]) {
+            if (input.keyPressed[INPUTS.INPUT_RIGHT]) {
                 this.force.x += this.speed
                 this.direction = DIRECTIONS.RIGHT
             }
-            if (input[INPUTS.INPUT_UP] && this.canJump()) {
+            if (input.keyPressed[INPUTS.INPUT_UP] && this.canJump()) {
                 this.jump = true
             }
         }
         else this.force.x = 0
 
-        if (input[INPUTS.INPUT_ACTION] && this.canShoot()) {
+        if (input.keyPressed[INPUTS.INPUT_ACTION] && this.canShoot()) {
             this.shoot()
         }
-        if (!input[INPUTS.INPUT_LEFT] && !input[INPUTS.INPUT_RIGHT] && this.force.x !== 0) {
+        if (!input.keyPressed[INPUTS.INPUT_LEFT] && !input.keyPressed[INPUTS.INPUT_RIGHT] && this.force.x !== 0) {
             this.force.x += this.direction === DIRECTIONS.RIGHT
                 ? -this.speed
                 : this.speed
@@ -154,7 +153,7 @@ export default class Player extends Character {
         const {
             debug,
             startTimeout
-        } = this._scene
+        } = this.game
 
         if (!!debug) return
 
@@ -172,10 +171,10 @@ export default class Player extends Character {
 
     shoot () {
         const {
-            playSound,
+            props: { playSound },
             startTimeout,
             world
-        } = this._scene
+        } = this.game
 
         this.force.x = 0
         this.ammo -= 1
@@ -199,7 +198,7 @@ export default class Player extends Character {
     };
 
     reload () {
-        const { playSound} = this._scene
+        const { props: { playSound } } = this.game
 
         this.force.x === 0 && this.onFloor
             ? this.countToReload++
@@ -213,17 +212,17 @@ export default class Player extends Character {
     }
 
     freeze (duration) {
-        const { startTimeout } = this._scene
+        const { startTimeout } = this.game
         this.canMove() && startTimeout('player-freeze', duration)
     }
 
     canMove () {
-        const { checkTimeout } = this._scene
+        const { checkTimeout } = this.game
         return !checkTimeout('player-freeze')
     }
 
     canShoot () {
-        const { checkTimeout } = this._scene
+        const { checkTimeout } = this.game
         return this.ammo > 0 && !checkTimeout('player-shoot') && this.onFloor
     }
 
@@ -232,7 +231,7 @@ export default class Player extends Character {
     }
 
     canHurt () {
-        const { checkTimeout } = this._scene
+        const { checkTimeout } = this.game
         return !checkTimeout('player-hurt')
     }
 
@@ -240,8 +239,8 @@ export default class Player extends Character {
         const {
             checkTimeout,
             startTimeout,
-            playSound
-        } = this._scene
+            props: { playSound }
+        } = this.game
 
         if (!checkTimeout('player-get')) {
             const {

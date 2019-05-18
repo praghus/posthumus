@@ -16,6 +16,7 @@ import {
     updateMousePos,
     playSound
 } from '../actions'
+import { CONFIG } from '../lib/constants'
 
 const allImages = require.context('../../assets/images', true, /.*\.png/)
 const images = requireAll(allImages).reduce(
@@ -103,7 +104,8 @@ const mapDispatchToProps = (dispatch) => {
         playSound: (type) => dispatch(playSound(type)),
         tickerStart: () => dispatch(startTicker(performance.now())),
         tickerTick: () => dispatch(tickTime(performance.now())),
-        onConfig: (key, value) => dispatch(updateConfig(key, value))
+        onConfig: (key, value) => dispatch(updateConfig(key, value)),
+        setScene: (scene) => dispatch(updateConfig(CONFIG.SCENE, scene))
     }
 }
 

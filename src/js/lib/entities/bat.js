@@ -8,8 +8,8 @@ import {
 } from '../../lib/constants'
 
 export default class Bat extends Character {
-    constructor (obj, scene) {
-        super(obj, scene)
+    constructor (obj, game) {
+        super(obj, game)
         this.direction = DIRECTIONS.LEFT
         this.speed = 0.2
         this.maxSpeed = 1
@@ -38,7 +38,7 @@ export default class Bat extends Character {
         const {
             checkTimeout,
             startTimeout
-        } = this._scene
+        } = this.game
 
         if (
             element.type === ENTITIES_TYPE.PLAYER &&
@@ -56,7 +56,7 @@ export default class Bat extends Character {
             player,
             checkTimeout,
             startTimeout
-        } = this._scene
+        } = this.game
 
         switch (this.state) {
         case STATES.IDLE:

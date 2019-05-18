@@ -1,8 +1,8 @@
 import { ASSETS, COLORS, FONTS } from '../constants'
 
 export default class Overlay {
-    constructor (scene) {
-        this._scene = scene
+    constructor (game) {
+        this.game = game
         this.blackOverlay = 0
         this.hints = []
         this.fade = {
@@ -30,8 +30,15 @@ export default class Overlay {
 
     update () {
         if (this.blackOverlay > 0) {
-            const { ctx, viewport } = this._scene
-            const { resolutionX, resolutionY } = viewport
+            const {
+                ctx,
+                props: {
+                    viewport: {
+                        resolutionX,
+                        resolutionY
+                    }
+                }
+            } = this.game
 
             ctx.globalAlpha = this.blackOverlay
             ctx.fillStyle = COLORS.BLACK
@@ -54,11 +61,21 @@ export default class Overlay {
     }
 
     displayHUD () {
-        const { ctx, camera, assets, debug, fps, player, viewport, countTime } = this._scene
-        const { resolutionX, resolutionY } = viewport
-        const { energy, maxEnergy } = player
+        const {
+            ctx,
+            camera,
+            countTime,
+            debug,
+            fps,
+            player,
+            props
+        } = this.game
+
+        const { assets, viewport: {resolutionX, resolutionY } } = props
+        const { ammo, energy, maxAmmo, maxEnergy } = player
         const fpsIndicator = `FPS:${Math.round(fps)}`
         const time = countTime()
+
         this.displayText(time, resolutionX - (3 + time.length * 5), 3)
 
         // FPS meter
@@ -79,13 +96,13 @@ export default class Overlay {
 
         // ammo
         this.displayText('AMMO', 2, resolutionY - 7)
-        for (let i = 0; i < player.maxAmmo; i++) {
-            ctx.drawImage(assets[ASSETS.AMMO], i < player.ammo ? 0 : 3, 0, 3, 7, 22 + (i * 3), resolutionY - 9, 3, 7)
+        for (let i = 0; i < maxAmmo; i++) {
+            ctx.drawImage(assets[ASSETS.AMMO], i < ammo ? 0 : 3, 0, 3, 7, 22 + (i * 3), resolutionY - 9, 3, 7)
         }
     }
 
     displayText (text, x, y, font = FONTS.FONT_SMALL) {
-        const { assets, ctx } = this._scene
+        const { ctx, props: { assets } } = this.game
         text.split('\n').reverse().map((output, index) => {
             for (let i = 0; i < output.length; i++) {
                 const chr = output.charCodeAt(i)
@@ -100,7 +117,7 @@ export default class Overlay {
     }
 
     displayDebug (entity) {
-        const { ctx, camera } = this._scene
+        const { ctx, camera } = this.game
         const { bounds, width, height, name, type, visible, force } = entity
         const [ posX, posY ] = [
             Math.floor(entity.x + camera.x),
@@ -205,7 +222,7 @@ export default class Overlay {
     }
 
     outline (x, y, width, height, color) {
-        const { ctx } = this._scene
+        const { ctx } = this.game
         ctx.save()
         ctx.strokeStyle = color
         ctx.beginPath()

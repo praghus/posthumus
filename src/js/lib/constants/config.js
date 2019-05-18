@@ -1,4 +1,5 @@
 export const CONFIG = {
+    SCENE: 'scene',
     DEBUG_MODE: 'debugMode',
     DISABLE_SOUNDS: 'disableSounds'
 }
