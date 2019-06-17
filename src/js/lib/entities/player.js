@@ -107,15 +107,29 @@ export default class Player extends Character {
 
     input () {
         const {
-            props: { input }, world
+            camera,
+            props: { input, viewport },
+            world
         } = this.game
 
         if (this.canMove()) {
             if (input.keyPressed[INPUTS.INPUT_LEFT]) {
+                if (this.direction === DIRECTIONS.RIGHT) {
+                    camera.setMiddlePoint(
+                        viewport.resolutionX - viewport.resolutionX / 3,
+                        this.height
+                    )
+                }
                 this.force.x -= this.speed
                 this.direction = DIRECTIONS.LEFT
             }
             if (input.keyPressed[INPUTS.INPUT_RIGHT]) {
+                if (this.direction === DIRECTIONS.LEFT) {
+                    camera.setMiddlePoint(
+                        viewport.resolutionX / 3,
+                        this.height
+                    )
+                }
                 this.force.x += this.speed
                 this.direction = DIRECTIONS.RIGHT
             }
