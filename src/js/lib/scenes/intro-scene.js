@@ -1,5 +1,5 @@
 import Overlay from '../models/overlay'
-import { Game } from 'tmx-platformer-lib'
+import { Game } from 'tiled-platformer-lib'
 import { isMobileDevice } from '../../lib/utils/helpers'
 import { ASSETS, INPUTS, SCENES } from '../../lib/constants'
 

@@ -1,11 +1,7 @@
 import Overlay from '../models/overlay'
 import tmxFile from '../../../assets/levels/map.tmx'
-import {
-    Camera,
-    Tmx,
-    Game,
-    World
-} from 'tmx-platformer-lib'
+import { tmxParser } from 'tmx-tiledmap'
+import { Game, World } from 'tiled-platformer-lib'
 import {
     isMobileDevice,
     createLamp,
@@ -45,17 +41,17 @@ export default class GameScene extends Game {
         this.addLightElement = this.addLightElement.bind(this)
         this.addLightmaskElement = this.addLightmaskElement.bind(this)
         this.renderLightingEffect = this.renderLightingEffect.bind(this)
-        this.map = Tmx(tmxFile).then(this.onLoad)
+        tmxParser(tmxFile).then(this.onLoad)
     }
 
     onLoad (data) {
         this.world = new World(data, worldConfig, this)
         this.overlay = new Overlay(this)
-        this.camera = new Camera(this)
 
         this.player = this.world.getObjectByType(ENTITIES_TYPE.PLAYER, LAYERS.OBJECTS)
 
         this.world.addLayer(this.renderLightingEffect, 2)
+        this.camera.setSurfaceLevel(this.world.getProperty('surfaceLevel'))
         this.camera.setFollow(this.player)
         this.camera.setMiddlePoint(
             this.props.viewport.resolutionX / 3,
