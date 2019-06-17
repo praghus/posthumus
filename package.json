@@ -31,8 +31,8 @@
     "redux-logger": "^3.0.6",
     "redux-sounds": "^3.0.1",
     "redux-thunk": "^2.3.0",
-    "tiled-platformer-lib": "^1.2.0",
-    "tmx-tiledmap": "^1.0.1"
+    "tiled-platformer-lib": "^1.3.1",
+    "tmx-tiledmap": "^1.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",
