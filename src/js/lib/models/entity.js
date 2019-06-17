@@ -1,4 +1,4 @@
-import { Entity as GameEntity } from 'tmx-platformer-lib'
+import { Entity as GameEntity } from 'tiled-platformer-lib'
 import { randomInt } from '../../lib/utils/helpers'
 import { DIRECTIONS, LAYERS, ENTITIES_TYPE } from '../../lib/constants'
 

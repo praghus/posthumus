@@ -11,11 +11,11 @@ const PATH = {
 
 const inArray = (haystack) => (needle) => haystack.some((item) => needle.includes(item))
 // const dependencyPath = (...folders) => path.join('node_modules', ...folders)
-// const localLink = (...folders) => path.join(process.cwd(), '..', ...folders)
+const localLink = (...folders) => path.join(process.cwd(), '..', ...folders)
 
 const jsEs6Source = inArray([
-    path.join(PATH.SOURCE, 'js')
-    // localLink('tmx-platformer-lib', 'lib')
+    path.join(PATH.SOURCE, 'js'),
+    localLink('tiled-platformer-lib', 'lib')
 ])
 
 module.exports = {
