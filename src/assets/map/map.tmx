@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="256" height="48" tilewidth="16" tileheight="16" infinite="0" nextlayerid="13" nextobjectid="213">
+ <properties>
+  <property name="gravity" value="0.5"/>
+  <property name="surfaceLevel" value="64"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="1024" columns="32">
+  <image source="../images/tiles.png" width="512" height="512"/>
+  <terraintypes>
+   <terrain name="Nowy Teren" tile="236"/>
+  </terraintypes>
+  <tile id="2" type="slope">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0.0917826" y="15.0982">
+     <polygon points="-0.0917826,0.901764 15.9082,-9.09824 15.9082,0.901764"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="3" type="slope">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="6">
+     <polygon points="0,0 16,-6 16,10 0,10"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="4" type="slope">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,6 16,16 0,16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="5" type="slope">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="7">
+     <polygon points="0,0 16,9 0,9"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="6" type="slope">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="16">
+     <polygon points="0,0 16,-7 16,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="7" type="slope">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="9">
+     <polygon points="0,0 16,-6 16,7 0,7"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="8" type="slope">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="3">
+     <polygon points="0,0 16,-3 16,13 0,13"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="9" type="slope">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,3 16,16 0,16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="10" type="slope">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="3">
+     <polygon points="0,0 16,6 16,13 0,13"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="11" type="slope">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="9">
+     <polygon points="0,0 16,7 0,7"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="24" type="one_way"/>
+  <tile id="25" type="one_way"/>
+  <tile id="26" type="one_way"/>
+  <tile id="56" type="one_way"/>
+  <tile id="57" type="one_way"/>
+  <tile id="58" type="one_way"/>
+  <tile id="99">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="16">
+     <polygon points="0,0 16,-8 16,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="100">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="7">
+     <polygon points="0,1 16,-7 16,9 0,9"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="107">
+   <animation>
+    <frame tileid="107" duration="500"/>
+    <frame tileid="139" duration="500"/>
+    <frame tileid="171" duration="500"/>
+    <frame tileid="139" duration="500"/>
+   </animation>
+  </tile>
+  <tile id="113" type="one_way"/>
+  <tile id="139">
+   <animation>
+    <frame tileid="139" duration="300"/>
+    <frame tileid="171" duration="300"/>
+    <frame tileid="107" duration="300"/>
+   </animation>
+  </tile>
+  <tile id="145" type="no_collide"/>
+  <tile id="146" type="no_collide"/>
+  <tile id="171">
+   <animation>
+    <frame tileid="171" duration="300"/>
+    <frame tileid="107" duration="300"/>
+    <frame tileid="139" duration="300"/>
+   </animation>
+  </tile>
+  <tile id="174">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,16 0,16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="175">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="16">
+     <polygon points="0,0 16,-16 16,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="201">
+   <animation>
+    <frame tileid="201" duration="50"/>
+    <frame tileid="202" duration="50"/>
+    <frame tileid="203" duration="50"/>
+    <frame tileid="204" duration="50"/>
+    <frame tileid="205" duration="50"/>
+    <frame tileid="206" duration="50"/>
+    <frame tileid="207" duration="50"/>
+    <frame tileid="208" duration="50"/>
+    <frame tileid="209" duration="50"/>
+    <frame tileid="233" duration="50"/>
+   </animation>
+  </tile>
+  <tile id="236">
+   <objectgroup draworder="index" id="2">
+    <object id="3" x="16" y="0">
+     <polygon points="0,0 -16,16 0,16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="237">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,16 0,16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="243" type="no_collide"/>
+  <tile id="244" type="no_collide"/>
+  <tile id="245" type="no_collide"/>
+  <tile id="246" type="no_collide"/>
+  <tile id="247" type="no_collide"/>
+  <tile id="248" type="no_collide"/>
+  <tile id="249" type="no_collide"/>
+  <tile id="250">
+   <animation>
+    <frame tileid="250" duration="100"/>
+    <frame tileid="251" duration="100"/>
+    <frame tileid="252" duration="100"/>
+    <frame tileid="253" duration="100"/>
+    <frame tileid="254" duration="100"/>
+    <frame tileid="255" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="263" type="one_way"/>
+  <tile id="264" type="one_way"/>
+  <tile id="275" terrain=",0,0,0"/>
+  <tile id="276" terrain="0,0,0,0"/>
+  <tile id="277" terrain="0,,0,0"/>
+  <tile id="280">
+   <animation>
+    <frame tileid="280" duration="100"/>
+    <frame tileid="281" duration="100"/>
+    <frame tileid="282" duration="100"/>
+    <frame tileid="283" duration="100"/>
+    <frame tileid="284" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="295" type="no_collide"/>
+  <tile id="296" type="no_collide"/>
+  <tile id="307" terrain="0,0,0,0"/>
+  <tile id="309" terrain="0,0,0,0"/>
+  <tile id="327" type="no_collide"/>
+  <tile id="328" type="no_collide"/>
+  <tile id="339" terrain="0,0,,0"/>
+  <tile id="340" terrain="0,0,0,0"/>
+  <tile id="341" terrain="0,0,0,"/>
+ </tileset>
+ <layer id="1" name="background" width="256" height="48">
+  <properties>
+   <property name="collide" type="bool" value="false"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eAHtm0uPVEUUx5sPMIyEh2zM7GDF8BQ3mklc8AzDG0UXuEVUZuSdQIjugPCaQCA8wg4WRCJooiTwHYws/Bp+BP4n6ZOcVKq6b/e09u2+v0r+3KpTpx7nd+v0vXR6Wi0KBCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAASqEfhKbl9Xc8ULAhAYMwKfKx4TBQIQaA6Biwr1kkT+N+eeEykEIoHHapD/kQh1CDSLAPnfrPtNtBCIBDz/p6KROgQg0AgCnv8zjYiWICEAgUjA8z/aqEMAAs0gQP434z4TJQScwCde0ZX8DzCoQmBMCXwU4vpC9S+loxL5H8BQhcAYEvhUMX2WxHVe7QtSlfznN8IJPJoQGDEClue5UiX/q/jk5sYGAQjUgwD5X4/7wC4gMAwCdcj/+B3EMBiwJgSaSuC/yP+HPcDMfQfRw3BcIQCBRRBI87+Xv/+zsel420rO1mmLvfp3mos+CECgOoFc7nX6+78qvxHIzdlpR+b/pJMDfRCoCYEHNdnHoLZRyj2z5/LYfyNg67tPmru5ceZv7HL/Nyj52xgKBIZNIH3mDXs/i12/Sjye28e02DfJgt1+I1DK59KcJf9kWZoQGAoBf+b57+L62cRyDVohrZRW9TPBAMd4PDZlKfc8Vy93WNd93CV+d+C2eHV/n7Obfxy7mPqEBi+VJqUPpGUSBQK9EIjPvNwzsdtcm+WwRfpY2trN+X/oj/HklvNczfW5Lefj3x1MuVO4dvIPbgOvrtOM09J6aYO0UdokjUup07NlXJiW4rAz7M+vkk/OflDGQ9Jh6UjOYUg2iydXcrma+pV8zD6TOqvdyT/j3non47eZjuMZm5lOtO3fJf171J6V9kr7pP3SASlX5pa0WvPSj9KolPhsGZU9j+o+7Qz3U05p0GnpjHRWOifVoZTiKeVq3HPJp9c5S/621tX2gs/CwldCPVavxUaof6/6D9JJaU6al0rllvL+trQwQvlvsdTx2TIhhkulyRFjWTobZi+d1fSZY75r7J9Q7qh+V7I57kn3pWGXUjxmL/XZnl+3+83njRlCKY0rzVnyXwhzPm3Xoy10t8z+PBii33XZb0g3pVvSbalUftVZfSm9GrEzW8dnyzoxnJbWF1iWzkPp3gzb/lYbsD0/knLvpb4/6zNta1+t/pv0u+Qx/6H6n5IVe5+1d9fcZ4j1dyvp50w3/9ifyz2P02P9UANWS/3uL65XtW5rxRz2cTmb9aX22P5F/S8kZ/9S9VeSl8jvr/ZZ/btwZn1M3a7ps6XK/mLcVfyjz+7YKNT/kX1WHPf2yNLywXPIr4UlBmL+SbP8LPl1IJMucpI07u2ab0cy58522z5nYtkVG6pXuVfJkNo17UxYXJbXxsbazmRt265LXyXy+7fHs9rXggMcZPe29Gzx81FaLsbtLEu+2CEAgfEmYJ8H9h5KgQAEmkfA33/92jwCRAwBCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAIHBEXgPxf6HTg==
+  </data>
+ </layer>
+ <layer id="2" name="main" width="256" height="48">
+  <properties>
+   <property name="collide" type="bool" value="true"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eAHt2t9OwjAUB+CJfwD12kR9Erz0kXwwn9GziyUNKQ0jtNX6LTkRN1jpd37dVJwmGwECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAwOgCbzHB99EnaX4ECBAgQIAAAQIECGQFXmPv/DuBjQABAgQIEBhLYLnHn3uf9zfCsfpvNgQIECAwvsB8717qWp/zLT8/jK9nhgQIECBAgAABAgQI5AQOuZ32ESBAgAABAgQIECAwvID/Fxi+xSZIgAABAgSuIvARZ/mKmr+mtexLB8k9N/e89DUeE/gLArubadpH2QgQ+F0C23g7u6h91CbqMeop6jlq1O02JnYX9Vmp7uO8D1G2sQTStXIqO6Xe18rdS+be+h30p95j7f21riHn+Nee2yXnL2XieIWszciacx+P9R++X+t5SX+9pt+1hj37UgY2cZFTDGSgTwZKa7PFMX3v03fu3OcMtFjjpTHkUA5loF8GSmuzxTG979d79uxbrPHSGDIogzLQLwOltdnimN736z179i3WeGkMGZRBGeiXgdLabHFM7/v1nj37FmvcGP0/Z9EDPZABGZABGUgz8AN3eTb4
+  </data>
+ </layer>
+ <objectgroup id="3" name="objects">
+  <properties>
+   <property name="collide" type="bool" value="true"/>
+  </properties>
+  <object id="159" name="Player" type="player" x="176" y="544" width="53" height="53"/>
+  <object id="20" name="bat" type="bat" x="2404" y="491" width="28" height="28"/>
+  <object id="30" name="Bat" type="bat" x="3415" y="497" width="28" height="28"/>
+  <object id="69" name="Spikes" type="spikes" x="1440" y="576" width="64" height="16"/>
+  <object id="101" name="Spider trap" type="spider_trap" x="1568" y="480" width="16" height="23">
+   <properties>
+    <property name="delay" value="800"/>
+   </properties>
+  </object>
+  <object id="102" name="Spider trap" type="spider_trap" x="2928" y="473" width="16" height="23">
+   <properties>
+    <property name="delay" value="800"/>
+   </properties>
+  </object>
+  <object id="150" name="bat" type="bat" x="1888" y="496" width="28" height="28"/>
+  <object id="165" name="bat" type="bat" x="914" y="495" width="28" height="28"/>
+  <object id="171" name="Box" type="box" gid="43" x="1296" y="575" width="16" height="16"/>
+  <object id="175" name="Zombie emitter" type="emitter" x="32" y="616" width="96" height="16">
+   <properties>
+    <property name="max" type="int" value="3"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="177" name="Zombie emitter" type="emitter" x="576" y="600" width="96" height="16">
+   <properties>
+    <property name="max" type="int" value="4"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="178" name="Zombie emitter" type="emitter" x="2096" y="600" width="224" height="16">
+   <properties>
+    <property name="max" type="int" value="6"/>
+    <property name="volume" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="179" name="Zombie emitter" type="emitter" x="2736" y="568" width="224" height="16">
+   <properties>
+    <property name="max" type="int" value="6"/>
+    <property name="volume" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="180" name="Zombie emitter" type="emitter" x="3152" y="600" width="96" height="16">
+   <properties>
+    <property name="max" type="int" value="3"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="181" name="Zombie emitter" type="emitter" x="2432" y="584" width="176" height="16">
+   <properties>
+    <property name="max" type="int" value="4"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="182" name="Zombie emitter" type="emitter" x="3504" y="600" width="128" height="16">
+   <properties>
+    <property name="max" type="int" value="3"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="183" name="Zombie emitter" type="emitter" x="992" y="600" width="80" height="16">
+   <properties>
+    <property name="max" type="int" value="4"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="184" name="Zombie emitter" type="emitter" x="1152" y="584" width="80" height="16">
+   <properties>
+    <property name="max" type="int" value="2"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="185" name="Zombie emitter" type="emitter" x="1328" y="584" width="80" height="16">
+   <properties>
+    <property name="max" type="int" value="2"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="186" name="Zombie emitter" type="emitter" x="272" y="616" width="64" height="16">
+   <properties>
+    <property name="max" type="int" value="6"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="187" name="Zombie emitter" type="emitter" x="1536" y="584" width="112" height="16">
+   <properties>
+    <property name="max" type="int" value="2"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="188" name="Zombie emitter" type="emitter" x="1792" y="584" width="192" height="16">
+   <properties>
+    <property name="max" type="int" value="2"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="191" name="Zombie emitter" type="emitter" x="432" y="616" width="64" height="16">
+   <properties>
+    <property name="max" type="int" value="6"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="208" type="health" gid="281" x="2520" y="288" width="16" height="16"/>
+  <object id="209" type="ammo" gid="251" x="144" y="576" width="16" height="16"/>
+  <object id="210" type="ammo" gid="251" x="2400" y="400" width="16" height="16"/>
+  <object id="211" type="coin" gid="202" x="288" y="576" width="16" height="16"/>
+  <object id="212" type="ammo" gid="251" x="2664" y="368" width="16" height="16"/>
+ </objectgroup>
+ <layer id="4" name="foreground" width="256" height="48">
+  <properties>
+   <property name="collide" type="bool" value="false"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eAHt11luFDEUBdDwBx8hYRcMSgIsgS8QSgLsAhQgLIRpIYxbYVwO10glWaadrhJJQ6rPk266ynYNPrJbnY0NRYAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECKyLwGYmejnZSraTK4kiQGA9BHYyzd1kL7mZ3EpuJ4oAgfkL7GeKB8lh8iB5mDxKFAEC8xd4mik+S54nx8mLZN1q80L+B0q2EkVgjgK9Nf4yk32VvE7eJG+Tdaud7PvdZG/J/r+Y/ktLxvwPdl/yEl+Tb8n35EfyM6nb6+MybtH4NKuZCPTW+LvM733yIfmYfEo+J2OqXkPDOmvX0ZPcaEjp6/UfnfDAx53rTrjkj67yDr3az54+SA6X7O2r6b+2ZEzvGb32wbD4lSp7td23vzsm/LmTsaeRCY9cOHSYWz2fhQM1jhYo67jda+2eas/L+LFrfPSLZOBprLH6Hr1n12N6x39z7dh73s3ev5fcaHK9OS/9i9rup718l9XVe3bbXl9zno6nzqNdu/V3R31cfs+sssqz23frnbft5Tt9aCufw3G9j4e29nMYM8y19fwX58O7rMvnWRifV7spFlPnOOXeZewqa+q7ncX4Vc7XswgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAwBwEfgHBTp9W
+  </data>
+ </layer>
+</map>

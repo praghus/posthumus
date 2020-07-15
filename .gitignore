@@ -2,4 +2,11 @@
 .vscode
 node_modules
 dist
-npm-debug.log
+test
+src/**.js
+
+coverage
+.nyc_output
+*.log
+
+package-lock.json
