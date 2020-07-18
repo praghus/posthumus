@@ -1,26 +1,76 @@
 import { Layer } from 'tiled-platformer-lib'
-import { ENTITIES_TYPE, IMAGES, LAYERS } from '../constants'
+import { COLORS, ENTITIES_TYPE, IMAGES, LAYERS } from '../constants'
 
 export default class Overlay extends Layer {
     public id = LAYERS.CUSTOM_OVERLAY
+    public showLogo = true
+    public showHUD = false
+    public logoAlpha = 0
+    public darkOverlay = 0
+    public fadeSpeed = 1
+    public fadeTo = 0
+    
+    update (scene: TPL.Scene, delta: number) {
+        super.update(scene, delta)
+        const d = this.darkOverlay
+        const a = this.logoAlpha
+        if (d !== 0 && (d < 0 && d + delta < 0 || d > 0 && d - delta > 0)) {
+            this.darkOverlay += delta * this.fadeSpeed * (d < 0 ? 1 : -1)
+        }        
+        if ((!this.showLogo && a > 0) || (this.showLogo && a < 1)) {
+            this.logoAlpha += this.showLogo ? delta : -delta
+        }
+    }
 
     draw (ctx: CanvasRenderingContext2D, scene: TPL.Scene): void {
         const { images, viewport: { resolutionX, resolutionY }} = scene
         const player: any = scene.getObjectByType(ENTITIES_TYPE.PLAYER, LAYERS.OBJECTS)
-        const write = this.text(ctx, images[IMAGES.FONT_SMALL], 5)
+        const write = this.text(ctx, images[IMAGES.FONT], 5)
+
+        if (this.showHUD) {
+            // Energy indicator
+            const energy = (player.energy[0] / 10) * 4
+            ctx.drawImage(images[IMAGES.ENERGY_STRIP], 2, 2)
+            ctx.drawImage(images[IMAGES.ENERGY], 0, 0, energy, 4, 18, 5, energy, 4)
         
-        const energy = (player.energy[0] / 10) * 4
-        ctx.drawImage(images[IMAGES.ENERGY_STRIP], 2, 2)
-        ctx.drawImage(images[IMAGES.ENERGY], 0, 0, energy, 4, 18, 5, energy, 4)
-        
-        const [ammo, maxAmmo] = player.ammo
-        write('AMMO', resolutionX - 25 - (maxAmmo * 3), resolutionY - 9)
-        for (let i = 0; i < maxAmmo; i++) {
-            ctx.drawImage(
-                images[IMAGES.AMMO], i < ammo ? 0 : 3, 0, 4, 8, 
-                resolutionX - 7 - (i * 3), resolutionY - 11, 4, 8
-            )
+            // Ammo indicator
+            const [ammo, maxAmmo] = player.ammo
+            write('AMMO', resolutionX - 25 - (maxAmmo * 3), resolutionY - 9)
+            for (let i = 0; i < maxAmmo; i++) {
+                ctx.drawImage(
+                    images[IMAGES.AMMO], i < ammo ? 0 : 3, 0, 4, 8, 
+                    resolutionX - 7 - (i * 3), resolutionY - 11, 4, 8
+                )
+            }
         }
+
+        ctx.fillStyle = COLORS.BLACK
+
+        if (Math.abs(this.darkOverlay) !== this.fadeTo) {
+            ctx.save()
+            ctx.globalAlpha = (this.darkOverlay < 0 ? 1 : 0) + this.darkOverlay
+            ctx.fillRect(0, 0, resolutionX, resolutionY)
+            ctx.restore()
+        }
+        
+        if (this.logoAlpha > 0) {
+            this.showLogo && ctx.fillRect(0, 0, resolutionX, resolutionY)
+            ctx.save()
+            ctx.globalAlpha = this.logoAlpha
+            ctx.fillRect(0, 0, resolutionX, resolutionY)
+            ctx.drawImage(images[IMAGES.LOGO], resolutionX / 2 - 106, 20 + (this.logoAlpha - 1) * 100)
+            ctx.restore()
+        }
+    }
+
+    fadeIn () {
+        this.darkOverlay = 1
+        this.fadeTo = 0
+    }
+    
+    fadeOut () {
+        this.darkOverlay = -1
+        this.fadeTo = 1
     }
 
     text = (

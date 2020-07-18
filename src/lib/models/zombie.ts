@@ -1,8 +1,8 @@
 import { Entity } from 'tiled-platformer-lib'
 import { approach } from '../helpers'
 import { IMAGES, DIRECTIONS, ENTITIES_TYPE, LAYERS, ENTITIES_FAMILY } from '../constants'
+import { createItem } from './item'
 import ANIMATIONS from '../animations/zombie'
-
 
 const { LEFT, RIGHT } = DIRECTIONS
 
@@ -11,11 +11,12 @@ export class Zombie extends Entity {
     public family = ENTITIES_FAMILY.ENEMIES
     public animations = ANIMATIONS
     public collisionLayers = [LAYERS.MAIN]
-    public direction = RIGHT
+    public direction = LEFT
     public damage = 0
     public energy = [20, 20]
-    public speed = { a: 0.05, d: 0.02, m: 0.3 }
-    
+    public speed = { a: 10, d: 5, m: 20 }
+    public solid = true
+
     private states = { RISE: 0, IDLE: 1, WALK: 2, RUN: 3, ATTACK: 4, HURT: 5, DEFEAT: 6 }
     private state: number
 
@@ -36,7 +37,7 @@ export class Zombie extends Entity {
     }
 
     public hit (damage: number): void {
-        if (this.activated && this.state !== this.states.HURT) {
+        if (this.state !== this.states.HURT) {
             super.hit(damage)
         }
         this.sprite.animFrame = 0
@@ -44,69 +45,68 @@ export class Zombie extends Entity {
     }
 
     public collide (obj: TPL.Entity) {
-        if (this.activated  && obj.type === ENTITIES_TYPE.PLAYER) {
+        if (this.activated && obj.type === ENTITIES_TYPE.PLAYER && obj.visible) {
             this.state = this.states.ATTACK
-            this.damage = this.sprite.animFrame === 3 ? 10 : 5
+            this.damage = this.sprite.animFrame === 3 ? 20 : 10
         }
     }
 
-    public update (scene: TPL.Scene): void {
+    public dropItem (scene: TPL.Scene) {
+        const probability = [0, 0, 0, 0, 0, 0, 1, 1, 1, 2]
+        const idx = Math.floor(Math.random() * probability.length)
+        const item = [null, ENTITIES_TYPE.AMMO, ENTITIES_TYPE.HEALTH][probability[idx]]
+        item && scene.addObject(createItem(this.x + 25, this.y, item))
+    }
+
+    public update (scene: TPL.Scene, delta: number): void {
         super.update(scene)
         const { a, d, m } = this.speed
-        const { properties: { gravity } } = scene
+        const { RISE, IDLE, WALK, RUN, ATTACK, HURT, DEFEAT } = this.states
         const player = scene.getObjectByType(ENTITIES_TYPE.PLAYER, LAYERS.OBJECTS)
+        const gravity = scene.getProperty('gravity') * delta
 
         let animation: TPL.Animation
 
-        if (!this.onGround) this.force.y += this.force.y > 0 ? gravity : gravity / 2
-        else if (Math.abs(this.force.y) <= 0.2) this.force.y = 0
-
-        this.force.x = approach(this.force.x, 0, d)
-
         switch (this.state) {
-        // RISE
-        case this.states.RISE:
+        case RISE:
             animation = ANIMATIONS.RISE
+            this.direction = this.x > player.x ? LEFT : RIGHT
             if (scene.onScreen(this) && this.sprite.animFrame === animation.strip.frames - 1) {
-                this.state = this.states.IDLE
+                this.activated = true
+                this.state = IDLE
             }
             break
-        // IDLE
-        case this.states.IDLE:
+
+        case IDLE:
             animation = ANIMATIONS.IDLE
             if (scene.onScreen(this)) {
-                this.activated = true
-                this.solid = true
-                scene.startTimeout(`zombie-${this.id}-awake`, 1500, () => this.state = this.states.WALK)
+                scene.startTimeout(`zombie-${this.id}-awake`, 1500, () => this.state = WALK)
             }
             break
-        // WALK
-        case this.states.WALK:
+
+        case WALK:
             animation = ANIMATIONS.WALK
-            this.solid = true
-            this.force.x = approach(this.force.x, this.direction === LEFT ? -m : m, a)
-            scene.startTimeout(`zombie-${this.id}-run`, 3000, () => {
+            this.speed.m = 20
+            scene.startTimeout(`zombie-${this.id}-run`, 2000, () => {
                 if (scene.onScreen(this) && this.facingPlayer(player)) {
-                    this.state = this.states.RUN
+                    this.state = RUN
                 }
             })
             break
-        // RUN
-        case this.states.RUN:
+
+        case RUN:
             animation = ANIMATIONS.RUN
-            this.solid = true
-            this.force.x = approach(this.force.x, this.direction === LEFT ? -m * 2 : m * 2, a)
-            if (!this.facingPlayer(player)) this.state = this.states.WALK
+            this.speed.m = 80
+            if (!this.facingPlayer(player)) this.state = WALK
             break
-        // ATTACK
-        case this.states.ATTACK:
+
+        case ATTACK:
             animation = ANIMATIONS.ATTACK
-            this.solid = true
             this.direction = this.x > player.x ? LEFT : RIGHT
-            scene.startTimeout(`zombie-${this.id}-run`, 1000, () => this.state = this.states.WALK)
+            scene.startTimeout(`zombie-${this.id}-run`, 1000, () => this.state = WALK)
             break
-        // HURT
-        case this.states.HURT:
+
+        case HURT:
             const dead = this.energy[0] <= 0 
             this.solid = false
             scene.stopTimeout(`zombie-${this.id}-awake`)
@@ -115,24 +115,33 @@ export class Zombie extends Entity {
                 ? ANIMATIONS.HURT1 
                 : ANIMATIONS.HURT2
             if (dead && this.sprite.animFrame === 5) {
-                this.state = this.states.DEFEAT
+                this.state = DEFEAT
+                this.dropItem(scene)
             }
             else if (this.sprite.animFrame === animation.strip.frames - 1) {
                 !this.facingPlayer(player) && this.turnAround()
-                this.state = this.states.RUN
+                this.state = RUN
+                this.solid = true
             }
             break
-        // DEFEAT
-        case this.states.DEFEAT:
-            this.solid = false
-            this.activated = false
+
+        case DEFEAT:
             scene.startTimeout(`zombie-${this.id}-defeat`, 1000, () => this.kill())
+            this.activated = false
             break
         }
+
+        if (!this.onGround) this.force.y += this.force.y > 0 ? gravity : gravity / 2
+        else if (Math.abs(this.force.y) <= 0.2) this.force.y = 0
+
+        this.force.x = this.state === WALK || this.state === RUN 
+            ? approach(this.force.x, this.direction === LEFT ? -m : m, a, delta)
+            : approach(this.force.x, 0, d, delta)
+
         // turn around on obstackle
         this.expectedPos.x !== this.x && this.turnAround()
         this.sprite.flipH = this.direction === LEFT
-        if (this.state !== this.states.DEFEAT) {
+        if (this.state !== DEFEAT) {
             this.sprite.animate(animation)
         }
     }

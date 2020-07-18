@@ -14,7 +14,7 @@ const game = new Game(ctx)
 tmx(tiledMap).then((data: any) => {
     let loadedCount = 0
     const loadedImages: TPL.StringTMap<HTMLImageElement> = {}
-    const onLoad = () => ++loadedCount === Object.keys(IMG_FILES).length && game.init(data, loadedImages)
+    const onLoad = () => ++loadedCount === Object.keys(IMG_FILES).length && game.onLoad(data, loadedImages)
     Object.keys(IMG_FILES).map((key) => {
         loadedImages[key] = new Image()
         loadedImages[key].src = IMG_FILES[key]

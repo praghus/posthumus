@@ -1,5 +1,6 @@
 import { Entity } from 'tiled-platformer-lib'
-import { ENTITIES_TYPE, LAYERS, SOUNDS } from '../constants'
+import { ENTITIES_TYPE, ITEMS_GIDS, LAYERS, SOUNDS } from '../constants'
+
 
 export class Item extends Entity {
     public collisionLayers = [LAYERS.MAIN]
@@ -49,17 +50,28 @@ export class Item extends Entity {
         }
     }
 
-    public update (scene: TPL.Scene): void {
+    public update (scene: TPL.Scene, delta: number): void {
         super.update(scene)
         if (!this.onGround) {
-            const gravity = scene.getProperty('gravity')
-
+            const gravity = scene.getProperty('gravity') * delta
             this.force.y += this.force.y > 0
                 ? gravity
                 : gravity / 2
         }
-        else {
-            this.force.y *= -0.8
+        else if (Math.abs(this.force.y) > 0.1) {
+            this.force.y *= -0.95 
         }
     }
+}
+
+export function createItem (x: number, y: number, type: string) {
+    return new Item({
+        x, y,
+        type,
+        gid: ITEMS_GIDS[type],
+        width: 16,
+        height: 16,
+        dead: false,
+        layerId: LAYERS.OBJECTS
+    })
 }

@@ -6,7 +6,7 @@ export default {
         loop: true
     },
     WALK: {
-        strip: { x: 212, y: 0, frames: 8, duration: 60 },
+        strip: { x: 212, y: 0, frames: 8, duration: 80 },
         width: 53,
         height: 53,
         loop: true

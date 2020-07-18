@@ -8,7 +8,6 @@
     "downlevelIteration": true,
     "outDir": "dist",
     "lib": ["es2018", "dom"],
-    // "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "removeComments": true,
     "resolveJsonModule": true,

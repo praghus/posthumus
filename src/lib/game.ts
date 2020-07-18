@@ -11,35 +11,70 @@ export class Game {
     public lastFrameTime = 0
     public lastLoop = 0
     public then = getPerformance()
-    public viewport = new Viewport(248, 160)
+    public data: any
+    public gui: dat
+    public images: StringTMap<HTMLImageElement>
+    public viewport = new Viewport(248, 148)
     public input = new Input(INPUTS, INPUT_KEYS)
     public scene: TPL.Scene
     public player: TPL.Entity
-
-    public zombiesCount = 0
+    public overlay: any
+    public animationFrame: any
 
     constructor (public ctx: CanvasRenderingContext2D) {
+        this.init = this.init.bind(this)
         this.frame = this.frame.bind(this)
+        this.restart = this.restart.bind(this)
     }
 
-    init (data: any, images: StringTMap<HTMLImageElement>) {
-        this.scene = new Scene(images, this.viewport) 
-        this.scene.addTmxMap(data, ENTITIES)
+    onLoad (data: any, images: StringTMap<HTMLImageElement>) {
+        this.data = data
+        this.images = images
+        this.init()
+    }
+
+    init () {
+        this.scene = new Scene(this.images, this.viewport)
+
+        this.scene.setProperty('gravity', 18)
+        this.scene.createTmxMap(this.data, ENTITIES)
         this.scene.createCustomLayer(Background, 0)
         this.scene.createCustomLayer(Flash, 2)
-        this.scene.createCustomLayer(Lightmask)
-        this.scene.createCustomLayer(Overlay)
-        this.scene.setProperty('gravity', 0.7)
+        this.scene.createCustomLayer(Lightmask) 
+    
+        this.overlay = this.scene.createCustomLayer(Overlay)
         this.player = this.scene.getObjectByType(ENTITIES_TYPE.PLAYER, LAYERS.OBJECTS)
-        this.scene.focus(this.player)
-        //this.scene.setProperty('inDark', true)
+
+        this.scene.startTimeout('logo-hide', 2500, () => {
+            this.overlay.showLogo = false
+        })
+        this.scene.startTimeout('game-start', 3000, () => {
+            this.scene.camera.moveTo(0, 0)
+            this.scene.camera.setFollow(this.player, false)
+            // this.overlay.fadeIn()
+
+            this.overlay.showHUD = true
+        })
+
+
+        this.animationFrame = requestAnimationFrame(this.frame)
         !isProduction && this.debug()
-        requestAnimationFrame(this.frame)
     }
 
-    loop (delta: number)  {
+    restart () {
+        cancelAnimationFrame(this.animationFrame)
+        this.init()
+    }
+
+    loop (delta: number) {
         this.scene.update(delta, this.input)
-        this.scene.draw(this.ctx)    
+        this.scene.draw(this.ctx)
+        // Respawn
+        if (this.player.energy[0] <= 0) {
+            this.player.visible && this.overlay.fadeOut()
+            this.player.visible = false
+            this.scene.startTimeout('player-respawn', 3000, this.restart)
+        }
     }
     
     frame (time: number) {
@@ -49,7 +84,7 @@ export class Game {
             this.countFPS()
         }
         this.lastFrameTime = time
-        requestAnimationFrame(this.frame)
+        this.animationFrame = requestAnimationFrame(this.frame)
     }
 
     countFPS () {
@@ -63,16 +98,32 @@ export class Game {
         this.viewport.calculateSize()
         this.scene && this.scene.resize(this.viewport)
     }
-
+    
     debug () {
-        const gui = new dat.GUI()
-        const player: any = this.player
-        gui.add(this, 'fps').listen()
-        gui.add(this.scene.properties, 'gravity', 0, 1).listen()
-        gui.add(this.scene, 'debug').listen()
+        if (this.gui) this.gui.destroy()
         
-        const f1 = gui.addFolder('Player')
+        this.gui = new dat.GUI()
+
+        const player: any = this.player
+        const viewport: Viewport = this.viewport
+        const f1 = this.gui.addFolder('Player')
+        const f2 = this.gui.addFolder('Viewport')
+        const f3 = this.gui.addFolder('Overlay')
+        
+        this.gui.add(this, 'fps').listen()
+        this.gui.add(this.scene.properties, 'gravity', 0, 10).listen()
+        this.gui.add(this.scene, 'debug').listen()
+
         f1.add(player.energy, 0).name('Energy').min(0).max(100).listen()
         f1.add(player.ammo, 1).name('Max ammo').min(1).max(16).listen()
+        f1.add(player, 'invincible')
+
+        f2.add(viewport, 'resolutionX')
+        f2.add(viewport, 'resolutionY')
+        f2.add(viewport, 'scale').min(1).max(100).listen()
+
+        f3.add(this.overlay, 'fadeIn')
+        f3.add(this.overlay, 'fadeOut')
+        f3.add(this.overlay, 'darkOverlay').listen()
     }
 }

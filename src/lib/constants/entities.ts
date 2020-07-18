@@ -37,3 +37,9 @@ export const ENTITIES = {
     [ENTITIES_TYPE.TORCH]: Torch,
     [ENTITIES_TYPE.ZOMBIE]: Zombie
 }
+
+export const ITEMS_GIDS = {
+    [ENTITIES_TYPE.AMMO]: 251,
+    [ENTITIES_TYPE.COIN]: 202,
+    [ENTITIES_TYPE.HEALTH]: 281
+}
