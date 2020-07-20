@@ -51,8 +51,6 @@ export class Game {
         this.scene.startTimeout('game-start', 3000, () => {
             this.scene.camera.moveTo(0, 0)
             this.scene.camera.setFollow(this.player, false)
-            // this.overlay.fadeIn()
-
             this.overlay.showHUD = true
         })
 

@@ -10,7 +10,8 @@ export const SOUND_FILES = requireAll(allSounds).reduce(extractFiles, {})
 
 export enum IMAGES {
     AMMO = 'ammo',
-    BACKGROUND = 'background',
+    BG1 = 'bg1',
+    BG2 = 'bg2',
     BAT = 'bat',
     BULLET = 'bullet',
     CLOUDS = 'clouds',
