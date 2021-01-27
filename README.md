@@ -6,7 +6,7 @@
 ![Gameplay](./src/assets/images/capture.gif) 
 
 
-* **[Stable build on Surge](https://posthumus.surge.sh/)**
+* **[Build on Surge](https://posthumus.surge.sh/)**
 
 ## License
 
