@@ -1,6 +1,5 @@
 import * as dat from 'dat.gui'
-import { StringTMap } from 'posthumous'
-import { Input, Scene, Viewport } from 'tiled-platformer-lib'
+import { Entity, Input, Scene, Viewport } from 'tiled-platformer-lib'
 import { ENTITIES, ENTITIES_TYPE, INPUTS, INPUT_KEYS, LAYERS } from './constants'
 import { Background, Flash, Overlay, Lightmask } from './layers'
 import { isProduction, getPerformance } from './helpers'
@@ -16,8 +15,8 @@ export class Game {
     public images: StringTMap<HTMLImageElement>
     public viewport = new Viewport(248, 148)
     public input = new Input(INPUTS, INPUT_KEYS)
-    public scene: TPL.Scene
-    public player: TPL.Entity
+    public scene: Scene
+    public player: Entity
     public overlay: any
     public animationFrame: any
 
@@ -27,13 +26,14 @@ export class Game {
         this.restart = this.restart.bind(this)
     }
 
-    onLoad (data: any, images: StringTMap<HTMLImageElement>) {
+    onLoad (data: any, images: StringTMap<HTMLImageElement>): void {
+        document.getElementById('preloader').style.display = 'none'
         this.data = data
         this.images = images
         this.init()
     }
 
-    init () {
+    init (): void {
         this.scene = new Scene(this.images, this.viewport)
 
         this.scene.setProperty('gravity', 18)
@@ -45,26 +45,20 @@ export class Game {
         this.overlay = this.scene.createCustomLayer(Overlay)
         this.player = this.scene.getObjectByType(ENTITIES_TYPE.PLAYER, LAYERS.OBJECTS)
 
-        this.scene.startTimeout('logo-hide', 2500, () => {
-            this.overlay.showLogo = false
-        })
-        this.scene.startTimeout('game-start', 3000, () => {
-            this.scene.camera.moveTo(0, 0)
-            this.scene.camera.setFollow(this.player, false)
-            this.overlay.showHUD = true
-        })
-
+        this.scene.camera.moveTo(0, 0)
+        this.scene.camera.setFollow(this.player, false)
+        this.overlay.showHUD = true
 
         this.animationFrame = requestAnimationFrame(this.frame)
         !isProduction && this.debug()
     }
 
-    restart () {
+    restart (): void {
         cancelAnimationFrame(this.animationFrame)
         this.init()
     }
 
-    loop (delta: number) {
+    loop (delta: number): void {
         this.scene.update(delta, this.input)
         this.scene.draw(this.ctx)
         // Respawn
@@ -75,7 +69,7 @@ export class Game {
         }
     }
     
-    frame (time: number) {
+    frame (time: number): void {
         const delta = (time - this.lastFrameTime) / 1000
         if (delta < 0.2) {
             this.loop(delta)
@@ -85,19 +79,20 @@ export class Game {
         this.animationFrame = requestAnimationFrame(this.frame)
     }
 
-    countFPS () {
+    countFPS (): void {
         const now = getPerformance()
         this.frameTime += (now - this.lastLoop - this.frameTime) / 100
         this.fps = 1000 / this.frameTime
         this.lastLoop = now
     }
 
-    onResize () {
+    onResize (): Viewport {
         this.viewport.calculateSize()
         this.scene && this.scene.resize(this.viewport)
+        return this.viewport
     }
     
-    debug () {
+    debug (): void {
         if (this.gui) this.gui.destroy()
         
         this.gui = new dat.GUI()

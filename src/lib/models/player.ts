@@ -1,4 +1,4 @@
-import { Entity } from 'tiled-platformer-lib'
+import { Animation, Entity, Scene } from 'tiled-platformer-lib'
 import { COLORS, IMAGES, DIRECTIONS, ENTITIES_FAMILY, INPUTS, PARTICLES, LAYERS, SOUNDS } from '../constants'
 import { createParticles } from './particle'
 import { createBullet } from './bullet'
@@ -20,39 +20,39 @@ export class Player extends Entity {
     public ammo = [5, 5] // current, max
     public speed = { a: 10, d: 5, m: 80 } // a: acceleration, d: deceleration, m: maximum
     public jump = false
-    public lives = 3
+    public lives = 3 
 
-    constructor (obj: TPL.StringTMap<any>) {
+    constructor (obj: StringTMap<any>) {
         super(obj)
         this.addLightSource(COLORS.TRANS_WHITE, 90, 8)
         this.setBoundingBox(18, 16, this.width - 35, this.height - 16)
     }
 
     private canJump = () => this.onGround && !this.jump
-    private canMove = (scene: TPL.Scene) => this.energy[0] > 0 && !scene.checkTimeout('player-shoot')
-    private canShoot = (scene: TPL.Scene) => this.ammo[0] > 0 && !scene.checkTimeout('player-shoot') && this.onGround
-    private canHurt = (scene: TPL.Scene) => !scene.checkTimeout('player-hurt')
+    private canMove = (scene: Scene) => this.energy[0] > 0 && !scene.checkTimeout('player-shoot')
+    private canShoot = (scene: Scene) => this.ammo[0] > 0 && !scene.checkTimeout('player-shoot') && this.onGround
+    private canHurt = (scene: Scene) => !scene.checkTimeout('player-hurt')
 
-    private cameraFollow (scene: TPL.Scene): void {
+    private cameraFollow (scene: Scene): void {
         const { camera, viewport: { resolutionX, resolutionY } } = scene
         this.direction === LEFT
             ? camera.setFocusPoint(resolutionX - resolutionX / 3, resolutionY / 2)
             : camera.setFocusPoint(resolutionX / 3, resolutionY / 2)
     }
 
-    private dust (scene: TPL.Scene, direction: string): void {
+    private dust (scene: Scene, direction: string): void {
         scene.addObject(
             createDust(direction === RIGHT ? this.x : this.x + this.width - 16, this.y + this.height - 16, direction)
         )
     }
 
-    private bullet (scene: TPL.Scene, direction: string): void {
+    private bullet (scene: Scene, direction: string): void {
         scene.addObject(
             createBullet(direction === RIGHT ? this.x + this.width - 8 : this.x + 8, this.y + 31, direction)
         )
     }
 
-    private shoot (scene: TPL.Scene): void {
+    private shoot (scene: Scene): void {
         this.force.x = 0
         this.ammo[0] -= 1
         this.sprite.animFrame = 0
@@ -63,7 +63,7 @@ export class Player extends Entity {
         SOUNDS.SHOOT.play()
     }
 
-    private reload (scene: TPL.Scene): void {
+    private reload (scene: Scene): void {
         this.force.x === 0 && this.onGround && this.ammo[0] < this.ammo[1]
             ? scene.startTimeout('player-reload', 1000, () => {
                 this.ammo[0] += 1
@@ -72,7 +72,7 @@ export class Player extends Entity {
             : scene.stopTimeout('player-reload')
     }
 
-    public collide (obj: TPL.Entity, scene: TPL.Scene) {
+    public collide (obj: Entity, scene: Scene) {
         if (this.canHurt(scene) && obj.damage > 0 && (
             obj.family === ENTITIES_FAMILY.ENEMIES ||
             obj.family === ENTITIES_FAMILY.TRAPS
@@ -93,7 +93,7 @@ export class Player extends Entity {
         }
     }
 
-    public input (scene: TPL.Scene, delta: number): void {
+    public input (scene: Scene, delta: number): void {
         const { input: { states } } = scene
         const { a, d, m } = this.speed
         
@@ -128,14 +128,14 @@ export class Player extends Entity {
         }
     }
 
-    public update (scene: TPL.Scene, delta: number): void {
+    public update (scene: Scene, delta: number): void {
         this.input(scene, delta)
         this.reload(scene)
         super.update(scene)
     
         const { IDLE, WALK, JUMP, FALL, HURT, RELOAD, SHOOT } = this.animations
       
-        let animation: TPL.Animation
+        let animation: Animation
 
         if (scene.checkTimeout('player-hurt')) animation = HURT 
         else if (this.jump) animation = this.force.y <= 0 ? JUMP : FALL

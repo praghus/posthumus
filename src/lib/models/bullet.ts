@@ -1,4 +1,4 @@
-import { Entity } from 'tiled-platformer-lib'
+import { Entity, Scene } from 'tiled-platformer-lib'
 import { createParticles } from './particle'
 import { DIRECTIONS, IMAGES, ENTITIES_TYPE, ENTITIES_FAMILY, LAYERS, PARTICLES } from '../constants'
 import { approach } from '../helpers'
@@ -13,7 +13,7 @@ export class Bullet extends Entity {
 
     private particle: any = PARTICLES.RUBBLE
 
-    public collide (obj: TPL.Entity) {
+    public collide (obj: Entity) {
         if (obj.solid) {
             obj.hit(this.damage)
             if (!this.dead) {
@@ -25,7 +25,7 @@ export class Bullet extends Entity {
         }
     }
 
-    public update (scene: TPL.Scene) {
+    public update (scene: Scene) {
         super.update(scene)
         const { a, m } = this.speed
         if (this.expectedPos.x !== this.x || !scene.onScreen(this)) this.kill()        

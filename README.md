@@ -6,6 +6,14 @@
 
 * **[Stable build on Surge](https://posthumus.surge.sh/)**
 
+## Local build
+```
+$ yarn install
+$ yarn start
+```
+
+
+
 ## License
 
 Posthumus is [MIT licensed](./LICENSE).

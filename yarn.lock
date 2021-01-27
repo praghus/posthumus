@@ -4127,6 +4127,11 @@ safe-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
+sat@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/sat/-/sat-0.8.0.tgz#eae1e36c96551f7b2fb884eee8ffb4d0e895a667"
+  integrity sha512-W0iWln+43pb+74lxcYW24BrueFMMefdqHvHxGQ/W0NemnyBXrV0oE23kGNjPRgwIoTuodYIH3ul2jqLrf4VGSA==
+
 sax@>=0.6.0:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
@@ -4668,10 +4673,13 @@ thunky@^1.0.2:
   resolved "https://registry.yarnpkg.com/thunky/-/thunky-1.1.0.tgz#5abaf714a9405db0504732bbccd2cedd9ef9537d"
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
 
-tiled-platformer-lib@^1.8.1:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/tiled-platformer-lib/-/tiled-platformer-lib-1.8.1.tgz#f91d033fcdd8b423292d31c8caf6e591eb4a066d"
-  integrity sha512-yCIsp40iKk3vBN3jLU2MJbKu6bfuCc9JcYjbKJlXO52fj4Tq2k43PN5pbcHnfe3Z3/GgJ4d7JXIqfHy4vIl2jw==
+tiled-platformer-lib@1.8.7:
+  version "1.8.7"
+  resolved "https://registry.yarnpkg.com/tiled-platformer-lib/-/tiled-platformer-lib-1.8.7.tgz#68d0da8f9806d0da40a970ef9697961f7438e8d7"
+  integrity sha512-tQN+HZMcDfRWiCNMxrPrE/cXlAM0/tgCq1QGzoCh3K77nf0rb7Mf1CVs7uZ8LddTmPuRw3d0lBCE8GegH2I+0w==
+  dependencies:
+    lucendi "^1.0.9"
+    sat "^0.8.0"
 
 timers-browserify@^2.0.4:
   version "2.0.11"
@@ -4680,10 +4688,10 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
-tmx-tiledmap@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/tmx-tiledmap/-/tmx-tiledmap-1.2.0.tgz#325218a2c736507b1b6b85ad73fff595573a802d"
-  integrity sha512-QmvnkxAgcns/w5Q2UyPH3vpHFAx08H3DoScLZVOVzU0hm7rppNlrdD1SHlr8LaNePOYwZu3j/ioBijqCMcvcrA==
+tmx-tiledmap@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/tmx-tiledmap/-/tmx-tiledmap-1.2.1.tgz#41f27ed13a0c2110174383f2801b8db0fcc5cf76"
+  integrity sha512-L1J0IAw9J/atBrk4FL2hJhcgqa61d07E33oFhe4kbOQ5ggRruam0HYo6tTacgdZB0vk4tCja6diMKbDeWtEHQg==
   dependencies:
     xml2js "^0.4.22"
     zlib "^1.0.5"

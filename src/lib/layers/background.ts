@@ -1,10 +1,10 @@
-import { Layer } from 'tiled-platformer-lib'
+import { Layer, Scene } from 'tiled-platformer-lib'
 import { IMAGES, LAYERS } from '../constants'
 
 export default class Background extends Layer {
     public id = LAYERS.CUSTOM_BACKGROUND
 
-    draw (ctx: CanvasRenderingContext2D, scene: TPL.Scene): void {
+    draw (ctx: CanvasRenderingContext2D, scene: Scene): void {
         const { images, camera, viewport: { resolutionX }} = scene
 
         ctx.drawImage(images[IMAGES.BG1], 0, -16 + camera.y / 16)
