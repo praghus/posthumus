@@ -1,11 +1,11 @@
-import { Layer } from 'tiled-platformer-lib'
+import { Layer, Scene } from 'tiled-platformer-lib'
 import { Circle, Polygon, Point, DarkMask, LineOfSight } from 'lucendi'
 import { LAYERS } from '../constants'
 
 export default class Lightmask extends Layer {
     public id = LAYERS.CUSTOM_LIGHT
 
-    draw (ctx: CanvasRenderingContext2D, scene: TPL.Scene): void {
+    draw (ctx: CanvasRenderingContext2D, scene: Scene): void {
         if (scene.getProperty('inDark')) {
             const { resolutionX, resolutionY } = scene.viewport
             const boundaries = []

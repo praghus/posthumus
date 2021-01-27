@@ -1,4 +1,4 @@
-import { Entity } from 'tiled-platformer-lib'
+import { Animation, Entity, Scene } from 'tiled-platformer-lib'
 import { approach } from '../helpers'
 import { IMAGES, DIRECTIONS, ENTITIES_TYPE, LAYERS, ENTITIES_FAMILY } from '../constants'
 import { createItem } from './item'
@@ -20,7 +20,7 @@ export class Zombie extends Entity {
     private states = { RISE: 0, IDLE: 1, WALK: 2, RUN: 3, ATTACK: 4, HURT: 5, DEFEAT: 6 }
     private state: number
 
-    private facingPlayer = (player: TPL.Entity) => (
+    private facingPlayer = (player: Entity) => (
         this.direction === LEFT && this.x > player.x ||
         this.direction === RIGHT && this.x < player.x
     )
@@ -30,7 +30,7 @@ export class Zombie extends Entity {
         this.force.x *= -0.6
     }
 
-    constructor (obj: TPL.StringTMap<any>) {
+    constructor (obj: StringTMap<any>) {
         super(obj)
         this.state = this.states.RISE
         this.setBoundingBox(24, 12, this.width - 48, this.height - 16)
@@ -44,28 +44,28 @@ export class Zombie extends Entity {
         this.state = this.states.HURT
     }
 
-    public collide (obj: TPL.Entity) {
+    public collide (obj: Entity) {
         if (this.activated && obj.type === ENTITIES_TYPE.PLAYER && obj.visible) {
             this.state = this.states.ATTACK
             this.damage = this.sprite.animFrame === 3 ? 20 : 10
         }
     }
 
-    public dropItem (scene: TPL.Scene) {
+    public dropItem (scene: Scene) {
         const probability = [0, 0, 0, 0, 0, 0, 1, 1, 1, 2]
         const idx = Math.floor(Math.random() * probability.length)
         const item = [null, ENTITIES_TYPE.AMMO, ENTITIES_TYPE.HEALTH][probability[idx]]
         item && scene.addObject(createItem(this.x + 25, this.y, item))
     }
 
-    public update (scene: TPL.Scene, delta: number): void {
+    public update (scene: Scene, delta: number): void {
         super.update(scene)
         const { a, d, m } = this.speed
         const { RISE, IDLE, WALK, RUN, ATTACK, HURT, DEFEAT } = this.states
         const player = scene.getObjectByType(ENTITIES_TYPE.PLAYER, LAYERS.OBJECTS)
         const gravity = scene.getProperty('gravity') * delta
 
-        let animation: TPL.Animation
+        let animation: Animation
 
         switch (this.state) {
         case RISE:

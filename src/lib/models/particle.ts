@@ -1,4 +1,4 @@
-import { Entity } from 'tiled-platformer-lib'
+import { Entity, Scene } from 'tiled-platformer-lib'
 import { randomInt } from '../helpers'
 import { ENTITIES_FAMILY, LAYERS } from '../constants'
 
@@ -9,7 +9,7 @@ export class Particle extends Entity {
     private mass: number
     private life = randomInt(60, 120)
 
-    constructor (obj: TPL.StringTMap<any>) {
+    constructor (obj: StringTMap<any>) {
         super(obj)
         const dir = randomInt(0, 2) * Math.PI
         const maxSpeed = randomInt(0.5, 1)
@@ -20,7 +20,7 @@ export class Particle extends Entity {
         }
     }
 
-    public update (scene: TPL.Scene): void {
+    public update (scene: Scene): void {
         if (!this.dead) {
             super.update(scene)
             if (
@@ -37,7 +37,7 @@ export class Particle extends Entity {
     }
 }
 
-export function createParticles (scene: TPL.Scene, config: any, x: number, y: number) {
+export function createParticles (scene: Scene, config: any, x: number, y: number) {
     const { count, radius } = config
     for (let i = 0; i < count; i++) {
         scene.addObject(new Particle({

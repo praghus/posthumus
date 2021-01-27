@@ -1,16 +1,17 @@
-import { Entity } from 'tiled-platformer-lib'
+
+import { Entity, Scene } from 'tiled-platformer-lib'
 import { ENTITIES_TYPE, ITEMS_GIDS, LAYERS, SOUNDS } from '../constants'
 
 
 export class Item extends Entity {
     public collisionLayers = [LAYERS.MAIN]
 
-    constructor (obj: TPL.StringTMap<any>) {
+    constructor (obj: StringTMap<any>) {
         super(obj)
         this.y -= obj.height
     }
 
-    public collide (obj: TPL.Entity, scene: TPL.Scene, response: SAT.Response) {
+    public collide (obj: Entity, scene: Scene, response: any) {
         const overlap = response.overlapV
         const { map: { tilewidth, tileheight } } = scene
         if (obj.type === ENTITIES_TYPE.PLAYER) {
@@ -50,7 +51,7 @@ export class Item extends Entity {
         }
     }
 
-    public update (scene: TPL.Scene, delta: number): void {
+    public update (scene: Scene, delta: number): void {
         super.update(scene)
         if (!this.onGround) {
             const gravity = scene.getProperty('gravity') * delta

@@ -13,7 +13,7 @@ const game = new Game(ctx)
  */
 tmx(tiledMap).then((data: any) => {
     let loadedCount = 0
-    const loadedImages: TPL.StringTMap<HTMLImageElement> = {}
+    const loadedImages: StringTMap<HTMLImageElement> = {}
     const onLoad = () => ++loadedCount === Object.keys(IMG_FILES).length && game.onLoad(data, loadedImages)
     Object.keys(IMG_FILES).map((key) => {
         loadedImages[key] = new Image()
@@ -23,8 +23,7 @@ tmx(tiledMap).then((data: any) => {
 })
 
 const onResize = () => {
-    game.onResize()
-    const { width, height } = game.viewport
+    const { width, height } = game.onResize()
     Object.assign(canvas, { width, height })
     Object.assign(container.style, {
         width: `${width}px`,

@@ -11,7 +11,6 @@ declare namespace Posthumous {
     }
 }
 
-
 declare module '*.tmx' {
     const value: any
     export default value

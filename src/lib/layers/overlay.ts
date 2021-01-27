@@ -1,28 +1,24 @@
-import { Layer } from 'tiled-platformer-lib'
+import { Layer, Scene } from 'tiled-platformer-lib'
 import { COLORS, ENTITIES_TYPE, IMAGES, LAYERS } from '../constants'
 
 export default class Overlay extends Layer {
     public id = LAYERS.CUSTOM_OVERLAY
-    public showLogo = true
+    public showLogo = false
     public showHUD = false
     public logoAlpha = 0
     public darkOverlay = 0
     public fadeSpeed = 1
     public fadeTo = 0
     
-    update (scene: TPL.Scene, delta: number) {
+    update (scene: Scene, delta: number) {
         super.update(scene, delta)
         const d = this.darkOverlay
-        const a = this.logoAlpha
         if (d !== 0 && (d < 0 && d + delta < 0 || d > 0 && d - delta > 0)) {
             this.darkOverlay += delta * this.fadeSpeed * (d < 0 ? 1 : -1)
         }        
-        if ((!this.showLogo && a > 0) || (this.showLogo && a < 1)) {
-            this.logoAlpha += this.showLogo ? delta : -delta
-        }
     }
 
-    draw (ctx: CanvasRenderingContext2D, scene: TPL.Scene): void {
+    draw (ctx: CanvasRenderingContext2D, scene: Scene): void {
         const { images, viewport: { resolutionX, resolutionY }} = scene
         const player: any = scene.getObjectByType(ENTITIES_TYPE.PLAYER, LAYERS.OBJECTS)
         const write = this.text(ctx, images[IMAGES.FONT], 5)
@@ -50,15 +46,6 @@ export default class Overlay extends Layer {
             ctx.save()
             ctx.globalAlpha = (this.darkOverlay < 0 ? 1 : 0) + this.darkOverlay
             ctx.fillRect(0, 0, resolutionX, resolutionY)
-            ctx.restore()
-        }
-        
-        if (this.logoAlpha > 0) {
-            this.showLogo && ctx.fillRect(0, 0, resolutionX, resolutionY)
-            ctx.save()
-            ctx.globalAlpha = this.logoAlpha
-            ctx.fillRect(0, 0, resolutionX, resolutionY)
-            ctx.drawImage(images[IMAGES.LOGO], resolutionX / 2 - 106, 20 + (this.logoAlpha - 1) * 100)
             ctx.restore()
         }
     }

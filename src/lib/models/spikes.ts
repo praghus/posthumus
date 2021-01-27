@@ -1,4 +1,4 @@
-import { Entity } from 'tiled-platformer-lib'
+import { Entity, Scene } from 'tiled-platformer-lib'
 import { randomInt } from '../helpers'
 import { ENTITIES_FAMILY, IMAGES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/shine'
@@ -13,12 +13,12 @@ export class Spikes extends Entity {
     private canAnimate = true
     private shineX = 0
 
-    constructor (obj: TPL.StringTMap<any>) {
+    constructor (obj: StringTMap<any>) {
         super(obj)
         this.setBoundingBox(0, 8, this.width, this.height)
     }
 
-    public draw (ctx: CanvasRenderingContext2D, scene: TPL.Scene): void {
+    public draw (ctx: CanvasRenderingContext2D, scene: Scene): void {
         if (scene.onScreen(this)) {
             const { width, height, strip: { x, y } } = this.animation
             const { camera, images } = scene
@@ -29,7 +29,7 @@ export class Spikes extends Entity {
         }
     }
 
-    public update (scene: TPL.Scene): void {
+    public update (scene: Scene): void {
         if (scene.onScreen(this)) {
             if (this.canAnimate && this.sprite.animFrame === this.animation.strip.frames - 1) {
                 this.canAnimate = false

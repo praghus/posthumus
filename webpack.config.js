@@ -11,7 +11,7 @@ const plugins = [
         }
     }),
     new HtmlWebpackPlugin({
-        title: 'POSTHUMOUS',
+        title: 'POSTHUMUS',
         template: '!!ejs-loader!src/index.html'
     }),
     new webpack.LoaderOptionsPlugin({

@@ -1,4 +1,4 @@
-import { Entity } from 'tiled-platformer-lib'
+import { Entity, Scene } from 'tiled-platformer-lib'
 import { approach } from '../helpers'
 import { IMAGES, DIRECTIONS, ENTITIES_TYPE, LAYERS, ENTITIES_FAMILY } from '../constants'
 import ANIMATIONS from '../animations/bat'
@@ -20,7 +20,7 @@ export class Bat extends Entity {
     private states = { IDLE: 0, FLYING: 1, HURT: 2, FALL: 3 }
     private state: number
 
-    constructor (obj: TPL.StringTMap<any>) {
+    constructor (obj: StringTMap<any>) {
         super(obj)
         this.state = this.states.IDLE
         this.setBoundingBox(5, 0, this.width - 10, this.height - 14)
@@ -34,7 +34,7 @@ export class Bat extends Entity {
     }
 
 
-    public collide (obj: TPL.Entity, scene: TPL.Scene) {
+    public collide (obj: Entity, scene: Scene) {
         if (!scene.checkTimeout(`bat-${this.id}-bounce`)) {
             const { a, m } = this.speed
             const bounce = -approach(this.force.x, this.direction === LEFT ? -m : m, a)
@@ -44,7 +44,7 @@ export class Bat extends Entity {
         }
     }
 
-    public update (scene: TPL.Scene): void {
+    public update (scene: Scene): void {
         super.update(scene)
         const { a, d, m } = this.speed
         const { camera } = scene
