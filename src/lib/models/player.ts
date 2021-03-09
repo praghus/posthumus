@@ -1,4 +1,5 @@
 import { Animation, Entity, Scene } from 'tiled-platformer-lib'
+import { StringTMap } from '../types'
 import { COLORS, IMAGES, DIRECTIONS, ENTITIES_FAMILY, INPUTS, PARTICLES, LAYERS, SOUNDS } from '../constants'
 import { createParticles } from './particle'
 import { createBullet } from './bullet'

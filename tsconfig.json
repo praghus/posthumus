@@ -12,7 +12,10 @@
     "removeComments": true,
     "resolveJsonModule": true,
     "esModuleInterop": true ,
-    "typeRoots": ["node_modules/@types", "src/@types"]
+    "typeRoots": [
+      "node_modules/@types",
+      "./src/declerations.d.ts"
+    ]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]

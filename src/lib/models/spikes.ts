@@ -1,4 +1,5 @@
 import { Entity, Scene } from 'tiled-platformer-lib'
+import { StringTMap } from '../types'
 import { randomInt } from '../helpers'
 import { ENTITIES_FAMILY, IMAGES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/shine'

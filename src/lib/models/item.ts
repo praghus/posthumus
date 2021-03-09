@@ -1,5 +1,6 @@
 
 import { Entity, Scene } from 'tiled-platformer-lib'
+import { StringTMap } from '../types'
 import { ENTITIES_TYPE, ITEMS_GIDS, LAYERS, SOUNDS } from '../constants'
 
 

@@ -1,5 +1,6 @@
 import * as dat from 'dat.gui'
 import { Entity, Input, Scene, Viewport } from 'tiled-platformer-lib'
+import { StringTMap } from './types'
 import { ENTITIES, ENTITIES_TYPE, INPUTS, INPUT_KEYS, LAYERS } from './constants'
 import { Background, Flash, Overlay, Lightmask } from './layers'
 import { isProduction, getPerformance } from './helpers'

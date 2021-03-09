@@ -32,7 +32,7 @@
     "rimraf": "^2.6.1",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.22.1",
-    "typescript": "^3.0.1",
+    "typescript": "^4.2.3",
     "url-loader": "^3.0.0",
     "webpack": "^4.41.0",
     "webpack-cli": "^3.3.9",
@@ -40,11 +40,11 @@
   },
   "dependencies": {
     "dat.gui": "^0.7.7",
-    "file-loader": "^6.0.0",
-    "howler": "^2.2.0",
+    "file-loader": "^6.2.0",
+    "howler": "^2.2.1",
     "lucendi": "^1.0.9",
     "sat": "^0.8.0",
-    "tiled-platformer-lib": "1.8.7",
+    "tiled-platformer-lib": "1.8.9",
     "tmx-tiledmap": "^1.2.1"
   }
 }

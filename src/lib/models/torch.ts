@@ -1,4 +1,5 @@
 import { Entity } from 'tiled-platformer-lib'
+import { StringTMap } from '../types'
 import { COLORS, IMAGES } from '../constants'
 
 export class Torch extends Entity {

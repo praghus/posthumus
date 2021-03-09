@@ -1,4 +1,5 @@
 import { tmx } from 'tmx-tiledmap'
+import { StringTMap } from './lib/types'
 import { IMG_FILES } from './lib/constants'
 import { Game } from './lib/game'
 import tiledMap from './assets/map/map.tmx'

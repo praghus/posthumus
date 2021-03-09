@@ -1,4 +1,5 @@
 import { Animation, Entity, Scene } from 'tiled-platformer-lib'
+import { StringTMap } from '../types'
 import { approach } from '../helpers'
 import { IMAGES, DIRECTIONS, ENTITIES_TYPE, LAYERS, ENTITIES_FAMILY } from '../constants'
 import { createItem } from './item'
