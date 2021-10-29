@@ -3,7 +3,7 @@
 #### Zombie survival shooter in TypeScript
 
 ## :video_game: [Demo](https://posthumus.surge.sh/)
-![Gameplay](./src/assets/images/capture.gif) 
+[![Gameplay](./src/assets/images/capture.gif)](https://posthumus.surge.sh/)
 
 
 * **[Build on Surge](https://posthumus.surge.sh/)**
