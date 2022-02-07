@@ -1,14 +1,16 @@
-import { Layer, Scene } from 'tiled-platformer-lib'
+import { Game, Layer } from 'platfuse'
 import { COLORS, LAYERS } from '../constants'
+import MainScene from '../scenes/main'
 
 export default class Flash extends Layer {
-    public id = LAYERS.FLASH
+    id = LAYERS.FLASH
 
-    draw (ctx: CanvasRenderingContext2D, scene: Scene): void {
-        const { viewport: { resolutionX, resolutionY }} = scene
-        if (scene.checkTimeout('player-shoot-flash')) {
+    draw(game: Game): void {
+        const { ctx, resolution } = game
+        const scene = game.getCurrentScene() as MainScene
+        if (scene.flash) {
             ctx.fillStyle = COLORS.FLASH
-            ctx.fillRect(0, 0, resolutionX, resolutionY)
+            ctx.fillRect(0, 0, resolution.x, resolution.y)
         }
     }
 }

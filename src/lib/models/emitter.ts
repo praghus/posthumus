@@ -1,33 +1,30 @@
-import { Entity, Scene } from 'tiled-platformer-lib'
-import { randomInt } from '../helpers'
-import { ENTITIES_TYPE, LAYERS } from '../constants'
-import { createZombie } from './zombie'
+import { Game, Entity, Scene } from 'platfuse'
+import { randomInt } from '../utils'
+import { ENTITY_FAMILY, ENTITY_TYPES } from '../constants'
+import Zombie from './zombie'
 
-export class Emitter extends Entity {
-    private count = 0
-    private emitted = 0
+export default class Emitter extends Entity {
+    family = ENTITY_FAMILY.ENEMIES
+    count = 0
+    emitted = 0
 
-    private emit (scene: Scene) {
-        const randomX = randomInt(0, (this.width - 50) / 50) * 50 
-        scene.addObject(createZombie(this.x + randomX, this.y - 52, this.id))
+    emit = (game: Game) => {
+        const scene = game.getCurrentScene()
+        const randomX = randomInt(0, (this.width - 50) / 50) * 50
+        scene.addObject(new Zombie({ x: this.pos.x + randomX, y: this.pos.y - 52, pid: this.id }))
         this.emitted++
     }
-    
-    public update (scene: Scene): void {
-        super.update(scene)
-        
-        this.count = scene
-            .getObjectsByType(
-                ENTITIES_TYPE.ZOMBIE, 
-                LAYERS.OBJECTS
-            ).filter(
-                (obj: Entity) => obj.pid === this.id
-            ).length
+
+    update(game: Game): void {
+        super.update(game)
+        const scene = game.getCurrentScene()
+        const zombies = scene.getObjectsByType(ENTITY_TYPES.ZOMBIE) as Zombie[]
+
+        this.count = zombies ? zombies.filter(obj => obj.pid === this.id).length : 0
 
         if (this.emitted >= this.properties.max) this.kill()
-        
-        if (scene.onScreen(this) && this.count < this.properties.volume) {
-            scene.startTimeout(`emmiter-${this.id}`, 1000, () => this.emit(scene))
+        if (this.onScreen(game) && this.count < this.properties.volume) {
+            game.wait(`emmiter--${this.id}`, this.emit, 1000)
         }
     }
 }

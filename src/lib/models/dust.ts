@@ -1,31 +1,24 @@
-import { Entity } from 'tiled-platformer-lib'
-import { IMAGES, DIRECTIONS, ENTITIES_TYPE, LAYERS } from '../constants'
+import { Entity } from 'platfuse'
+import { DIRECTIONS, ENTITY_TYPES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/dust'
+import { StringTMap } from '../types'
 
-export class Dust extends Entity {
-    public image = IMAGES.DUST
-    public animations = ANIMATIONS
+export default class Dust extends Entity {
+    image = 'dust.png'
+    layerId = LAYERS.OBJECTS
+    type = ENTITY_TYPES.DUST
+    direction = DIRECTIONS.RIGHT
+    width = 16
+    height = 16
 
-    update () {
-        if (!this.dead) {
-            this.sprite.animate(
-                this.direction === DIRECTIONS.RIGHT
-                    ? this.animations.RIGHT
-                    : this.animations.LEFT
-            )
-            if (this.sprite.animFrame === 8) {
-                this.kill()
-            }
-        }
+    constructor(obj: StringTMap<any>) {
+        super(obj)
+        this.direction = obj.direction
     }
-}
 
-export function createDust (x: number, y: number, direction: string) {
-    return new Dust({
-        x, y, direction,
-        width: 16,
-        height: 16,
-        layerId: LAYERS.OBJECTS,
-        type: ENTITIES_TYPE.DUST
-    })
+    update() {
+        this.animate(ANIMATIONS.DUST, { H: this.direction === DIRECTIONS.LEFT }, (frame: number) => {
+            if (frame === 8) this.kill()
+        })
+    }
 }

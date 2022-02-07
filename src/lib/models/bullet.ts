@@ -1,46 +1,49 @@
-import { Entity, Scene } from 'tiled-platformer-lib'
-import { createParticles } from './particle'
-import { DIRECTIONS, IMAGES, ENTITIES_TYPE, ENTITIES_FAMILY, LAYERS, PARTICLES } from '../constants'
-import { approach } from '../helpers'
+import { Entity, Game, Scene } from 'platfuse'
+import { createParticles, PARTICLES } from './particle'
+import { DIRECTIONS, ENTITY_TYPES, ENTITY_FAMILY, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/dust'
+import MainScene from '../scenes/main'
+import { StringTMap } from '../types'
 
-export class Bullet extends Entity {
-    public image = IMAGES.BULLET
-    public animations = ANIMATIONS
-    public collisionLayers = [LAYERS.MAIN]
-    public damage = 10
-    public speed = { a: 5, d: 1, m: 10 }
+export default class Bullet extends Entity {
+    image = 'bullet.png'
+    animations = ANIMATIONS
+    direction = DIRECTIONS.RIGHT
+    type = ENTITY_TYPES.BULLET
+    layerId = LAYERS.OBJECTS
+    particle = PARTICLES.RUBBLE
+    collisionLayers = [LAYERS.MAIN, LAYERS.OBJECTS]
+    collisions = true
+    width = 8
+    height = 8
+    damage = 10
 
-    private particle: any = PARTICLES.RUBBLE
+    constructor(obj: StringTMap<any>) {
+        super(obj)
+        this.direction = obj.direction
+    }
 
-    public collide (obj: Entity) {
-        if (obj.solid) {
-            obj.hit(this.damage)
-            if (!this.dead) {
-                this.kill()
-                if (obj.family === ENTITIES_FAMILY.ENEMIES) {
-                    this.particle = PARTICLES.BLOOD
-                }
+    collide(obj: Entity, game: Game) {
+        if (obj.collisions) {
+            if (obj.family === ENTITY_FAMILY.ENEMIES) {
+                this.particle = PARTICLES.BLOOD
+                this.explode(game)
             }
         }
     }
 
-    public update (scene: Scene) {
-        super.update(scene)
-        const { a, m } = this.speed
-        if (this.expectedPos.x !== this.x || !scene.onScreen(this)) this.kill()        
-        this.dead 
-            ? createParticles (scene, this.particle, this.x, this.y) 
-            : this.force.x = approach(this.force.x, this.direction === DIRECTIONS.LEFT ? -m : m, a)
+    explode(game: Game): void {
+        const scene = game.getCurrentScene() as MainScene
+        createParticles(scene, this.pos, this.particle)
+        this.kill()
     }
-}
 
-export function createBullet (x: number, y: number, direction: string) {
-    return new Bullet({
-        x, y, direction,
-        width: 8,
-        height: 8,
-        layerId: LAYERS.OBJECTS,
-        type: ENTITIES_TYPE.BULLET
-    })
+    update(game: Game) {
+        super.update(game)
+        if (!this.onScreen(game) || this.pos.x !== this.expectedPos.x) {
+            this.explode(game)
+        }
+        this.force.x = this.approach(this.force.x, this.direction === DIRECTIONS.LEFT ? -10 : 10, 5)
+        this.flips = { H: this.direction === DIRECTIONS.LEFT }
+    }
 }

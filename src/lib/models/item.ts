@@ -1,79 +1,57 @@
-
-import { Entity, Scene } from 'tiled-platformer-lib'
+import { Entity, Game, Scene, Vec2 } from 'platfuse'
 import { StringTMap } from '../types'
-import { ENTITIES_TYPE, ITEMS_GIDS, LAYERS, SOUNDS } from '../constants'
+import { ENTITY_TYPES, LAYERS } from '../constants'
+import Player from './player'
 
+export const GIDS = {
+    AMMO: 187,
+    COIN: 182,
+    HEALTH: 177
+}
 
-export class Item extends Entity {
-    public collisionLayers = [LAYERS.MAIN]
+export default class Item extends Entity {
+    layerId = LAYERS.OBJECTS
+    collisionLayers = [LAYERS.MAIN, LAYERS.OBJECTS]
+    collisions = true
 
-    constructor (obj: StringTMap<any>) {
-        super(obj)
-        this.y -= obj.height
+    constructor(obj: StringTMap<any>) {
+        super({ ...obj, width: 16, height: 16 })
     }
 
-    public collide (obj: Entity, scene: Scene, response: any) {
-        const overlap = response.overlapV
-        const { map: { tilewidth, tileheight } } = scene
-        if (obj.type === ENTITIES_TYPE.PLAYER) {
-            const player: any = obj
-            switch (this.type) {
-            case ENTITIES_TYPE.BOX:
-                if (overlap.y !== 0) {
-                    obj.force.y = 0
-                    obj.y -= overlap.y
-                    obj.onGround = true
-                }
-                else if (overlap.x !== 0) {
-                    if (!scene.isSolidArea(
-                        Math.floor((this.x + overlap.x) / tilewidth),
-                        Math.floor(this.y / tileheight),
-                        this.collisionLayers
-                    )) {
-                        this.x += overlap.x
-                        this.onGround = false
-                    }
-                }
-                break
-            case ENTITIES_TYPE.AMMO:
-                player.ammo[1]++
-                break
-            case ENTITIES_TYPE.COIN:
-                player.points += 100
-                break
-            case ENTITIES_TYPE.HEALTH:
-                player.energy[0] = player.energy[1]
-                break
+    public collide(obj: Entity, game: Game) {
+        if (obj.type === ENTITY_TYPES.PLAYER) {
+            const player = obj as Player
+            switch (this.gid) {
+                case GIDS.AMMO:
+                    player.ammo[1]++
+                    break
+                case GIDS.COIN:
+                    player.points += 100
+                    break
+                case GIDS.HEALTH:
+                    player.energy[0] = player.energy[1]
+                    break
             }
-            if (this.type !== ENTITIES_TYPE.BOX) {
-                SOUNDS.POWERUP.play()
-                this.kill()
-            }
+            game.playSound('powerup.mp3')
+            this.kill()
         }
     }
 
-    public update (scene: Scene, delta: number): void {
-        super.update(scene)
-        if (!this.onGround) {
-            const gravity = scene.getProperty('gravity') * delta
-            this.force.y += this.force.y > 0
-                ? gravity
-                : gravity / 2
+    public update(game: Game): void {
+        super.update(game)
+        if (!this.onGround()) {
+            const { gravity } = game.getCurrentScene()
+            this.force.y += this.force.y > 0 ? gravity : gravity / 2
+        } else if (Math.abs(this.force.y) > 0.1) {
+            this.force.y *= -0.6
         }
-        else if (Math.abs(this.force.y) > 0.1) {
-            this.force.y *= -0.95 
-        }
+        this.force.x = this.approach(this.force.x, 0, 0.2)
     }
 }
 
-export function createItem (x: number, y: number, type: string) {
-    return new Item({
-        x, y,
-        type,
-        gid: ITEMS_GIDS[type],
-        width: 16,
-        height: 16,
-        dead: false,
-        layerId: LAYERS.OBJECTS
-    })
+export function dropItem(scene: Scene, pos: Vec2) {
+    const probability = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2]
+    const idx = Math.floor(Math.random() * probability.length)
+    const gid = [GIDS.COIN, GIDS.AMMO, GIDS.HEALTH][probability[idx]]
+    scene.addObject(new Item({ x: pos.x, y: pos.y, gid }))
 }
