@@ -19,7 +19,7 @@ export default class Item extends Entity {
     }
 
     public collide(obj: Entity, game: Game) {
-        if (obj.type === ENTITY_TYPES.PLAYER) {
+        if (obj.type === ENTITY_TYPES.PLAYER && !this.dead) {
             const player = obj as Player
             switch (this.gid) {
                 case GIDS.AMMO:
@@ -53,5 +53,5 @@ export function dropItem(scene: Scene, pos: Vec2) {
     const probability = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2]
     const idx = Math.floor(Math.random() * probability.length)
     const gid = [GIDS.COIN, GIDS.AMMO, GIDS.HEALTH][probability[idx]]
-    scene.addObject(new Item({ x: pos.x, y: pos.y, gid }))
+    scene.addObject(new Item({ x: pos.x, y: pos.y, gid: GIDS.AMMO }))
 }
