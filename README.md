@@ -7,7 +7,3 @@
 
 
 * **[Build on Surge](https://posthumus.surge.sh/)**
-
-## License
-
-Posthumus is [MIT licensed](./LICENSE).
