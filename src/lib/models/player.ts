@@ -1,153 +1,151 @@
-import { Animation, Entity, Scene } from 'tiled-platformer-lib'
-import { StringTMap } from '../types'
-import { COLORS, IMAGES, DIRECTIONS, ENTITIES_FAMILY, INPUTS, PARTICLES, LAYERS, SOUNDS } from '../constants'
-import { createParticles } from './particle'
-import { createBullet } from './bullet'
-import { createDust } from './dust'
-import { approach } from '../helpers'
+import { Game, Entity, Scene, Vec2 } from 'platfuse'
+import { createParticles, PARTICLES } from './particle'
+import { DIRECTIONS, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/player'
+import MainScene from '../scenes/main'
+import Dust from './dust'
+import Bullet from './bullet'
+import Overlay from '../layers/overlay'
 
-const { LEFT, RIGHT } = DIRECTIONS
+const { UP, LEFT, RIGHT } = DIRECTIONS
 
-export class Player extends Entity {
-    public image = IMAGES.PLAYER
-    public animations = ANIMATIONS
-    public collisionLayers = [LAYERS.MAIN]
-    public direction = RIGHT
-    public activated = true
-    public invincible = false
-    public points = 0
-    public energy = [100, 100] // current, max
-    public ammo = [5, 5] // current, max
-    public speed = { a: 10, d: 5, m: 80 } // a: acceleration, d: deceleration, m: maximum
-    public jump = false
-    public lives = 3 
+export default class Player extends Entity {
+    image = 'player.png'
+    collisionLayers = [LAYERS.MAIN, LAYERS.OBJECTS]
+    facing = RIGHT
+    energy = [100, 100]
+    ammo = [5, 5]
+    points = 0
+    collisions = true
+    invincible = false
+    isJumping = false
+    isShooting = false
+    isReloading = false
+    isHurt = false
 
-    constructor (obj: StringTMap<any>) {
-        super(obj)
-        this.addLightSource(COLORS.TRANS_WHITE, 90, 8)
-        this.setBoundingBox(18, 16, this.width - 35, this.height - 16)
+    update(game: Game) {
+        super.update(game)
+        if (this.isJumping && this.onGround()) {
+            this.isJumping = false
+            this.dust(game, LEFT)
+            this.dust(game, RIGHT)
+        }
+        if (!this.onGround()) this.force.y += this.force.y > 0 ? 0.5 : 0.5 / 2
+
+        if (this.energy[0] > 0 && !this.isShooting) {
+            if (this.force.x !== 0) this.force.x = this.approach(this.force.x, 0, 0.2)
+            this.force.x === 0 && !this.isJumping && this.ammo[0] < this.ammo[1]
+                ? game.wait('countToReload', this.countToReload, 1000)
+                : this.cancelReloading(game)
+        }
+
+        let animation = ANIMATIONS.IDLE
+        if (this.isHurt) animation = ANIMATIONS.HURT
+        else if (this.isJumping) animation = this.force.y <= 0 ? ANIMATIONS.JUMP : ANIMATIONS.FALL
+        else if (this.isShooting) animation = ANIMATIONS.SHOOT
+        else if (Math.abs(this.force.x) > 0) animation = ANIMATIONS.WALK
+        else if (this.isReloading) animation = ANIMATIONS.RELOAD
+        this.animate(animation, { H: this.facing === LEFT })
     }
-
-    private canJump = () => this.onGround && !this.jump
-    private canMove = (scene: Scene) => this.energy[0] > 0 && !scene.checkTimeout('player-shoot')
-    private canShoot = (scene: Scene) => this.ammo[0] > 0 && !scene.checkTimeout('player-shoot') && this.onGround
-    private canHurt = (scene: Scene) => !scene.checkTimeout('player-hurt')
-
-    private cameraFollow (scene: Scene): void {
-        const { camera, viewport: { resolutionX, resolutionY } } = scene
-        this.direction === LEFT
-            ? camera.setFocusPoint(resolutionX - resolutionX / 3, resolutionY / 2)
-            : camera.setFocusPoint(resolutionX / 3, resolutionY / 2)
-    }
-
-    private dust (scene: Scene, direction: string): void {
-        scene.addObject(
-            createDust(direction === RIGHT ? this.x : this.x + this.width - 16, this.y + this.height - 16, direction)
-        )
-    }
-
-    private bullet (scene: Scene, direction: string): void {
-        scene.addObject(
-            createBullet(direction === RIGHT ? this.x + this.width - 8 : this.x + 8, this.y + 31, direction)
-        )
-    }
-
-    private shoot (scene: Scene): void {
-        this.force.x = 0
-        this.ammo[0] -= 1
-        this.sprite.animFrame = 0
-        this.bullet(scene, this.direction)
-        scene.stopTimeout('player-reload')
-        scene.startTimeout('player-shoot', 500)
-        scene.startTimeout('player-shoot-delay', 60, () => scene.startTimeout('player-shoot-flash', 100))
-        SOUNDS.SHOOT.play()
-    }
-
-    private reload (scene: Scene): void {
-        this.force.x === 0 && this.onGround && this.ammo[0] < this.ammo[1]
-            ? scene.startTimeout('player-reload', 1000, () => {
-                this.ammo[0] += 1
-                SOUNDS.RELOAD.play()
-            })
-            : scene.stopTimeout('player-reload')
-    }
-
-    public collide (obj: Entity, scene: Scene) {
-        if (this.canHurt(scene) && obj.damage > 0 && (
-            obj.family === ENTITIES_FAMILY.ENEMIES ||
-            obj.family === ENTITIES_FAMILY.TRAPS
-        )) {
-            if (this.invincible) return
-            scene.startTimeout('player-hurt', 500)
-            scene.stopTimeout('player-reload')
-            if (this.canMove(scene)) {
-                createParticles (scene, PARTICLES.BLOOD, this.x + this.width / 2, this.y + 18) 
-                this.hit(obj.damage)
+    move(game: Game, direction: DIRECTIONS) {
+        if (!this.isShooting) {
+            switch (direction) {
+                case UP:
+                    if (!this.isJumping && this.onGround()) {
+                        this.isJumping = true
+                        this.force.y = -6
+                    }
+                    break
+                case LEFT:
+                case RIGHT:
+                    direction !== this.facing && this.onGround && this.dust(game, direction)
+                    this.force.x = this.approach(this.force.x, direction === RIGHT ? 2 : -2, 0.3)
+                    this.facing = direction
+                    this.cameraFollow(game)
+                    break
             }
         }
     }
-
-    public hit (damage: number) {
-        if (this.energy[0] > 0) {
-            this.energy[0] -= damage
+    shoot(game: Game): void {
+        if (!this.isShooting && !this.isHurt && this.ammo[0] > 0 && this.onGround()) {
+            const scene = game.getCurrentScene() as MainScene
+            this.ammo[0] -= 1
+            this.force.x = 0
+            this.isShooting = true
+            this.bullet(scene)
+            this.cancelReloading(game)
+            game.wait('shoot', () => (this.isShooting = false), 500)
+            game.wait(
+                'shootDelay',
+                () => {
+                    scene.flash = true
+                    game.wait('shootFlash', () => (scene.flash = false), 60)
+                },
+                30
+            )
+            this.setAnimationFrame(0)
+            game.playSound('shoot.mp3')
         }
     }
-
-    public input (scene: Scene, delta: number): void {
-        const { input: { states } } = scene
-        const { a, d, m } = this.speed
-        
-        const gravity = scene.getProperty('gravity') * delta
-
-        if (!this.onGround) this.force.y += (this.force.y > 0 ? gravity : gravity / 2) 
-        else if (Math.abs(this.force.y) <= 0.2) this.force.y = 0
-        
-        if (this.canMove(scene)) {
-            if ((states[INPUTS.LEFT] || states[INPUTS.RIGHT])) {
-                const newDirection = states[INPUTS.LEFT] ? LEFT : RIGHT
-                if (newDirection !== this.direction && this.onGround) this.dust(scene, newDirection)
-                this.force.x = approach(this.force.x, states[INPUTS.LEFT] ? -m : m, a, delta) 
-                this.direction = newDirection
-                this.cameraFollow(scene)
-            }
-            else this.force.x = approach(this.force.x, 0, d, delta)
-
-            if (states[INPUTS.ACTION] && this.canShoot(scene)) {
-                this.shoot(scene)
-            }
-        
-            if (states[INPUTS.UP] && this.canJump()) {
-                this.jump = true
-                this.force.y = -4
-            }
-            else if (this.jump && this.onGround) {
-                this.jump = false 
-                this.dust(scene, LEFT)
-                this.dust(scene, RIGHT)
-            }
+    reloading = (game: Game) => {
+        this.isReloading = true
+        this.ammo[0] += 1
+        game.playSound('reload.mp3')
+    }
+    countToReload = (game: Game) => {
+        this.isReloading = true
+        game.wait('reloading', this.reloading, 600)
+    }
+    cancelReloading(game: Game) {
+        game.cancelWait('countToReload')
+        game.cancelWait('reloading')
+        this.isReloading = false
+    }
+    bullet(scene: Scene): void {
+        const x = this.facing === RIGHT ? this.pos.x + this.width - 4 : this.pos.x + 8
+        const y = this.pos.y + 31
+        scene.addObject(new Bullet({ x, y, direction: this.facing }))
+    }
+    dust(game: Game, direction: string): void {
+        if (this.onGround()) {
+            const scene = game.getCurrentScene()
+            const x = direction === RIGHT ? this.pos.x + 8 : this.pos.x + this.width - 24
+            const y = this.pos.y + this.height - 16
+            scene.addObject(new Dust({ x, y, direction }))
         }
     }
-
-    public update (scene: Scene, delta: number): void {
-        this.input(scene, delta)
-        this.reload(scene)
-        super.update(scene)
-    
-        const { IDLE, WALK, JUMP, FALL, HURT, RELOAD, SHOOT } = this.animations
-      
-        let animation: Animation
-
-        if (scene.checkTimeout('player-hurt')) animation = HURT 
-        else if (this.jump) animation = this.force.y <= 0 ? JUMP : FALL
-        else if (scene.checkTimeout('player-shoot')) animation = SHOOT 
-        else if (Math.abs(this.force.x) > 0) animation = WALK 
-        else if (scene.checkTimeout('player-reload')) animation = RELOAD
-        else animation = IDLE
-
-        animation.strip.y = this.invincible ? 53 : 0
-        
-        this.sprite.flipH = this.direction === LEFT
-        this.sprite.animate(animation)
+    cameraFollow(game: Game): void {
+        const scene = game.getCurrentScene()
+        this.facing === LEFT
+            ? scene.camera.setFocusPoint(game.resolution.x - game.resolution.x / 3, game.resolution.y / 2)
+            : scene.camera.setFocusPoint(game.resolution.x / 3, game.resolution.y / 2)
+    }
+    respawn = (game: Game) => {
+        const scene = game.getCurrentScene() as MainScene
+        const overlay = scene.getLayer(LAYERS.CUSTOM_OVERLAY) as Overlay
+        this.isHurt = false
+        this.visible = true
+        this.energy[0] = this.energy[1]
+        overlay.fadeIn()
+    }
+    hit(damage: number, game: Game) {
+        const scene = game.getCurrentScene() as MainScene
+        const overlay = scene.getLayer(LAYERS.CUSTOM_OVERLAY) as Overlay
+        if (this.energy[0] > 0 && !this.isHurt) {
+            if (!this.invincible) {
+                this.energy[0] -= damage
+            }
+            this.isHurt = true
+            game.cancelWait('countToReload')
+            if (this.energy[0] <= 0) {
+                this.force.x = 0
+                this.visible = false
+                overlay.fadeOut()
+                game.wait('playerRespawn', this.respawn, 3000)
+            } else {
+                game.wait('playerHurt', () => (this.isHurt = false), 500)
+            }
+            createParticles(scene, new Vec2(this.pos.x + this.width / 2, this.pos.y + 18), PARTICLES.BLOOD)
+        }
     }
 }

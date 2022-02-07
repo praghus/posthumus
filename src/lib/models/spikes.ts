@@ -1,46 +1,60 @@
-import { Entity, Scene } from 'tiled-platformer-lib'
-import { StringTMap } from '../types'
-import { randomInt } from '../helpers'
-import { ENTITIES_FAMILY, IMAGES, LAYERS } from '../constants'
+import { Entity, Game } from 'platfuse'
+import { ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
+import { randomInt } from '../utils'
 import ANIMATIONS from '../animations/shine'
+import Player from './player'
 
-export class Spikes extends Entity {
-    public image = IMAGES.SHINE
-    public animation = ANIMATIONS.SHINE
-    public family = ENTITIES_FAMILY.TRAPS
-    public collisionLayers = [LAYERS.MAIN]
-    public damage = 1000
-    
-    private canAnimate = true
-    private shineX = 0
+export default class Spikes extends Entity {
+    image = 'shine.png'
+    animation = ANIMATIONS.DEFAULT
+    family = ENTITY_FAMILY.TRAPS
+    collisionLayers = [LAYERS.MAIN, LAYERS.OBJECTS]
+    collisions = true
+    canAnimate = true
+    damage = 1000
+    shineX = 0
 
-    constructor (obj: StringTMap<any>) {
-        super(obj)
-        this.setBoundingBox(0, 8, this.width, this.height)
+    draw(game: Game): void {
+        const { ctx } = game
+        const { camera } = game.getCurrentScene()
+        const {
+            width,
+            height,
+            strip: { x, y }
+        } = this.animation
+        ctx.drawImage(
+            game.getImage(this.image),
+            x + this.getAnimationFrame() * width,
+            y,
+            width,
+            height,
+            this.pos.x + this.shineX + camera.pos.x,
+            this.pos.y + camera.pos.y - 10,
+            width,
+            height
+        )
     }
-
-    public draw (ctx: CanvasRenderingContext2D, scene: Scene): void {
-        if (scene.onScreen(this)) {
-            const { width, height, strip: { x, y } } = this.animation
-            const { camera, images } = scene
-            ctx.drawImage(images[this.image],
-                x + this.sprite.animFrame * width, y, width, height,
-                this.x + this.shineX + camera.x, this.y + camera.y - 2, width, height
+    update(game: Game): void {
+        if (this.canAnimate && this.getAnimationFrame() === this.animation.strip.frames - 1) {
+            this.canAnimate = false
+            game.wait(
+                `spikes-${this.id}-shine`,
+                () => {
+                    this.canAnimate = true
+                    this.setAnimationFrame(0)
+                    this.shineX = randomInt(0, (this.width - 8) / 8) * 8
+                },
+                1000
             )
         }
+        this.animate(this.animation)
     }
-
-    public update (scene: Scene): void {
-        if (scene.onScreen(this)) {
-            if (this.canAnimate && this.sprite.animFrame === this.animation.strip.frames - 1) {
-                this.canAnimate = false
-                scene.startTimeout(`spikes-${this.id}-awake`, 2000, () => {
-                    this.canAnimate = true
-                    this.sprite.animFrame = 0
-                    this.shineX = randomInt(0, (this.width - 8) / 8) * 8 
-                })
-            }
-            this.sprite.animate(this.animation)
+    collide(obj: Entity, game: Game) {
+        switch (obj.type) {
+            case ENTITY_TYPES.PLAYER:
+                const player = obj as Player
+                player.hit(this.damage, game)
+                break
         }
     }
 }

@@ -1,112 +1,96 @@
-import { Entity, Scene } from 'tiled-platformer-lib'
+import { Entity, Game, Vec2 } from 'platfuse'
 import { StringTMap } from '../types'
-import { approach } from '../helpers'
-import { IMAGES, DIRECTIONS, ENTITIES_TYPE, LAYERS, ENTITIES_FAMILY } from '../constants'
+import { DIRECTIONS, ENTITY_TYPES, LAYERS, ENTITY_FAMILY } from '../constants'
 import ANIMATIONS from '../animations/bat'
+import MainScene from '../scenes/main'
+import { dropItem } from './item'
+import Player from './player'
+import Bullet from './bullet'
 
 const { LEFT, RIGHT } = DIRECTIONS
 
-export class Bat extends Entity {
-    public image = IMAGES.BAT
-    public family = ENTITIES_FAMILY.ENEMIES
-    public animations = ANIMATIONS
-    public collisionLayers = [LAYERS.MAIN]
-    public direction = LEFT
-    public activated = false
-    public solid = true
-    public damage = 0
-    public energy = [20, 20]
-    public speed = { a: 0.1, d: 0.15, m: 1 }
-    
-    private states = { IDLE: 0, FLYING: 1, HURT: 2, FALL: 3 }
-    private state: number
+enum STATES {
+    IDLE = 0,
+    FLYING = 1,
+    HURT = 2,
+    FALL = 3
+}
 
-    constructor (obj: StringTMap<any>) {
-        super(obj)
-        this.state = this.states.IDLE
-        this.setBoundingBox(5, 0, this.width - 10, this.height - 14)
-    }
+export default class Bat extends Entity {
+    image = 'bat.png'
+    family = ENTITY_FAMILY.ENEMIES
+    layerId = LAYERS.OBJECTS
+    collisionLayers = [LAYERS.MAIN, LAYERS.OBJECTS]
+    direction = LEFT
+    activated = false
+    collisions = true
+    damage = 0
+    energy = [10, 10]
+    state = STATES.IDLE
 
-    public hit (damage: number): void {
-        super.hit(damage)
-        this.state = this.energy[0] > 0
-            ? this.states.HURT
-            : this.states.FALL
-    }
-
-
-    public collide (obj: Entity, scene: Scene) {
-        if (!scene.checkTimeout(`bat-${this.id}-bounce`)) {
-            const { a, m } = this.speed
-            const bounce = -approach(this.force.x, this.direction === LEFT ? -m : m, a)
-            this.force.y *= bounce
-            this.force.x *= bounce
-            scene.startTimeout(`bat-${this.id}-bounce`, 1000)
+    update(game: Game): void {
+        super.update(game)
+        const scene = game.getCurrentScene() as MainScene
+        const player = scene.getObjectByType(ENTITY_TYPES.PLAYER)
+        if (player) {
+            switch (this.state) {
+                case STATES.IDLE:
+                    if (this.onScreen(game)) {
+                        this.activated = true
+                        this.animate(ANIMATIONS.IDLE)
+                        game.wait(`bat-${this.id}-awake`, () => (this.state = STATES.FLYING), 1000)
+                    }
+                    break
+                case STATES.FLYING:
+                    this.damage = 10
+                    this.force.y += this.pos.y > player.pos.y + 24 ? -0.1 : 0.05
+                    this.force.x = this.approach(this.force.x, this.direction === LEFT ? -1 : 1, 0.1)
+                    if (this.expectedPos.x !== this.pos.x) {
+                        this.force.x *= -0.6
+                        this.force.y -= 0.05
+                        this.direction = this.direction === RIGHT ? LEFT : RIGHT
+                    }
+                    this.animate(this.direction === RIGHT ? ANIMATIONS.RIGHT : ANIMATIONS.LEFT)
+                    break
+                case STATES.HURT:
+                    this.animate(this.direction === RIGHT ? ANIMATIONS.RIGHT : ANIMATIONS.LEFT)
+                    break
+                case STATES.FALL:
+                    this.damage = 0
+                    this.force.x = 0
+                    this.force.y += 0.2
+                    this.animate(ANIMATIONS.FALL)
+                    if (this.onGround()) {
+                        dropItem(scene, new Vec2(this.pos.x + this.width / 2, this.pos.y - 16))
+                        this.kill()
+                    }
+                    break
+            }
         }
     }
-
-    public update (scene: Scene): void {
-        super.update(scene)
-        const { a, d, m } = this.speed
-        const { camera } = scene
-        const player = scene.getObjectByType(ENTITIES_TYPE.PLAYER, LAYERS.OBJECTS)
-
-        switch (this.state) {
-        case this.states.IDLE:
-            if (scene.onScreen(this)) {
-                this.activated = true
-                this.sprite.animate(this.animations.IDLE)
-                scene.startTimeout(`bat-${this.id}-awake`, 1000, () => {
-                    this.state = this.states.FLYING
-                })
-            }
-            break
-
-        case this.states.FLYING:
-            this.damage = 10
-            this.force.y += this.y > player.y + 24 ? -a : a / 2
-            this.force.x = approach(this.force.x, this.direction === LEFT ? -m : m, a)
-
-            if (!scene.checkTimeout(`bat-${this.id}-bounce`)) {
-                this.direction = player.x > this.x ? RIGHT : LEFT
-                if (-(this.y + this.force.y) > camera.y) {
-                    this.force.y += this.speed.a
-                }
-            }
-
-            if (this.expectedPos.x !== this.x) {
-                this.force.x *= -0.6
-                this.force.y -= 0.05
-                this.direction = this.direction === RIGHT ? LEFT : RIGHT
-            }
-            else if (this.expectedPos.y !== this.y) {
-                this.force.y += this.direction === DIRECTIONS.RIGHT ? d : -d
-            }
-
-            this.sprite.animate(this.direction === DIRECTIONS.RIGHT
-                ? this.animations.RIGHT
-                : this.animations.LEFT
-            )
-            break
-
-        case this.states.HURT:
-            if (!scene.checkTimeout(`bat-${this.id}-hurt`)) {
-                this.direction = this.direction === RIGHT ? LEFT : RIGHT
-                scene.startTimeout(`bat-${this.id}-hurt`, 500, () => this.state = this.states.FLYING)
-            }
-            this.sprite.animate(this.direction === DIRECTIONS.RIGHT
-                ? this.animations.RIGHT
-                : this.animations.LEFT
-            )
-            break
-
-        case this.states.FALL:
-            this.damage = 0
-            this.force.x = 0
-            this.force.y += 0.2
-            this.sprite.animate(this.animations.FALL)
-            if (this.onGround) this.kill()
-            break
+    hit(damage: number): void {
+        this.energy[0] -= damage
+        this.force.x *= -1
+        if (this.energy[0] <= 0) {
+            this.state = STATES.FALL
         }
+    }
+    collide(obj: Entity, game: Game) {
+        if (this.activated && obj.visible) {
+            switch (obj.type) {
+                case ENTITY_TYPES.BULLET:
+                    const bullet = obj as Bullet
+                    this.hit(bullet.damage)
+                    break
+                case ENTITY_TYPES.PLAYER:
+                    const player = obj as Player
+                    player.hit(this.damage, game)
+                    break
+            }
+        }
+    }
+    turnAround() {
+        this.direction = this.direction === RIGHT ? LEFT : RIGHT
+        this.force.x *= -0.6
     }
 }

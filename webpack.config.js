@@ -44,16 +44,17 @@ const config = {
             },
             !isProd
                 ? {
-                    test: /\.(js|ts)$/,
-                    loader: 'istanbul-instrumenter-loader',
-                    exclude: [/\/node_modules\//],
-                    query: {
-                        esModules: true
-                    }
-                }
+                      test: /\.(js|ts)$/,
+                      loader: 'istanbul-instrumenter-loader',
+                      exclude: [/\/node_modules\//],
+                      query: {
+                          esModules: true
+                      }
+                  }
                 : null,
             { test: /\.html$/, loader: 'html-loader' },
-            { test: /\.(png|gif|jpg|svg)$/,
+            {
+                test: /\.(png|gif|jpg|svg)$/,
                 include: path.join(process.cwd(), 'src/assets/images'),
                 use: 'url-loader?limit=100&name=[name]-[hash].[ext]'
             },

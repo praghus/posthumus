@@ -1,80 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="256" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="16" nextobjectid="215">
+<map version="1.5" tiledversion="1.7.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="189" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="230">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="192" columns="16">
   <image source="../images/tileset.png" width="256" height="192"/>
-  <tile id="73" type="one_way"/>
-  <tile id="94" type="one_way"/>
-  <tile id="95" type="one_way"/>
-  <tile id="116" type="slope">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="16">
-     <polygon points="0,0 16,-7 16,0"/>
-    </object>
-   </objectgroup>
-  </tile>
-  <tile id="117" type="slope">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="9">
-     <polygon points="0,0 16,-6 16,7 0,7"/>
-    </object>
-   </objectgroup>
-  </tile>
-  <tile id="118" type="slope">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="3">
-     <polygon points="0,0 16,-3 16,13 0,13"/>
-    </object>
-   </objectgroup>
-  </tile>
-  <tile id="119" type="slope">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="0">
-     <polygon points="0,0 16,3 16,16 0,16"/>
-    </object>
-   </objectgroup>
-  </tile>
-  <tile id="120" type="slope">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="3">
-     <polygon points="0,0 16,6 16,13 0,13"/>
-    </object>
-   </objectgroup>
-  </tile>
-  <tile id="121" type="slope">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="9">
-     <polygon points="0,0 16,7 0,7"/>
-    </object>
-   </objectgroup>
-  </tile>
-  <tile id="133" type="slope">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="16">
-     <polygon points="0,0 16,-10 16,0"/>
-    </object>
-   </objectgroup>
-  </tile>
-  <tile id="134" type="slope">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="6">
-     <polygon points="0,0 16,-6 16,10 0,10"/>
-    </object>
-   </objectgroup>
-  </tile>
-  <tile id="135" type="slope">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="0">
-     <polygon points="0,0 16,6 16,16 0,16"/>
-    </object>
-   </objectgroup>
-  </tile>
-  <tile id="136" type="slope">
-   <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="7">
-     <polygon points="0,0 16,9 0,9"/>
-    </object>
-   </objectgroup>
-  </tile>
+  <tile id="0" type="www" probability="6"/>
+  <tile id="9" type="oneWay"/>
+  <tile id="10" type="oneWay"/>
+  <tile id="73" type="oneWay"/>
+  <tile id="74" type="oneWay"/>
+  <tile id="94" type="oneWay"/>
+  <tile id="95" type="oneWay"/>
+  <tile id="96" type="noCollide"/>
+  <tile id="114" type="noCollide"/>
+  <tile id="115" type="noCollide"/>
+  <tile id="123" type="noCollide"/>
+  <tile id="128" type="noCollide"/>
+  <tile id="129" type="noCollide"/>
+  <tile id="147" type="noCollide"/>
+  <tile id="148" type="noCollide"/>
+  <tile id="149" type="noCollide"/>
+  <tile id="150" type="noCollide"/>
+  <tile id="151" type="noCollide"/>
   <tile id="163">
    <animation>
     <frame tileid="163" duration="200"/>
@@ -130,14 +75,14 @@
    </animation>
   </tile>
  </tileset>
- <layer id="1" name="background" width="256" height="32">
+ <layer id="1" name="background" width="189" height="32">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
- <layer id="2" name="main" width="256" height="32">
+ <layer id="2" name="main" width="189" height="32">
   <data encoding="base64" compression="zlib">
-   eAHt1EsKwjAABNAuPJ2X0Bu48nsAP0tv7Agugog0hWBbX2BoKW2aPIZ0nUGAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIEBgmMAyn31LOWvf98pv3BOYgsAqi1xPYaHWSODPBLbZ7y7ZJ4vkkByTUzLXcc7GLslzvy1yzby3xCBQCrTq3b38yet+k2uLbveZs9UZ8n5W9VnLGN6pOQ9qO1Iz94eazP5RrecY+mINvzu72LPXAR3QAR3QAR3QAR3QAR3QgWEdeAAYSSSH
+   eAHt2EEKgkAUANCIVnWBztQl6gYtCtq06ArduC9kqKgZaIPjE4bSHP/8N5/RXK1sBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQyEtgG+ns8kpJNgQIECBAgACBj0A85zyK5x0bAQIECMxXoFzLh67n/ufOd66NnACB/AWKNbpsY72TLO8T+evJkAABAgQIEFiqwH6picubAAECBAgQyF7A+/zsp1iCBEYXOMQV+1o14NDzqn18J0AgncAxQp/ShReZAIG3wCY+p2iA6wL32D03rK/1U77uXRr9ny09mjGmmNuua/6aT8vwew818+8aR6rjvYP/w4/riHGLlip/cdmrATWgBtSAGlADakANzLkGXpfGGF0=
   </data>
  </layer>
  <objectgroup id="3" name="objects">
@@ -146,23 +91,22 @@
   </properties>
   <object id="159" name="Player" type="player" x="16" y="400" width="53" height="53"/>
   <object id="20" name="bat" type="bat" x="2404" y="347" width="28" height="28"/>
-  <object id="30" name="Bat" type="bat" x="3415" y="353" width="28" height="28"/>
-  <object id="69" name="Spikes" type="spikes" x="1440" y="432" width="64" height="16"/>
-  <object id="101" name="Spider trap" type="spider_trap" x="1568" y="336" width="16" height="23">
+  <object id="69" name="Spikes" type="spikes" x="1440" y="440" width="64" height="16"/>
+  <object id="101" name="Spider trap" type="spider" x="1568" y="340" width="16" height="23">
    <properties>
     <property name="delay" value="800"/>
    </properties>
   </object>
-  <object id="102" name="Spider trap" type="spider_trap" x="2928" y="329" width="16" height="23">
+  <object id="102" name="Spider trap" type="spider" x="2928" y="329" width="16" height="23">
    <properties>
     <property name="delay" value="800"/>
    </properties>
   </object>
   <object id="150" name="bat" type="bat" x="1888" y="352" width="28" height="28"/>
-  <object id="165" name="bat" type="bat" x="914" y="351" width="28" height="28"/>
-  <object id="177" name="Zombie emitter" type="emitter" x="576" y="456" width="96" height="16">
+  <object id="165" name="bat" type="bat" x="944" y="368" width="28" height="28"/>
+  <object id="177" name="Zombie emitter" type="emitter" x="608" y="456" width="96" height="16">
    <properties>
-    <property name="max" type="int" value="4"/>
+    <property name="max" type="int" value="3"/>
     <property name="volume" type="int" value="1"/>
    </properties>
   </object>
@@ -178,21 +122,9 @@
     <property name="volume" type="int" value="2"/>
    </properties>
   </object>
-  <object id="180" name="Zombie emitter" type="emitter" x="3152" y="456" width="96" height="16">
-   <properties>
-    <property name="max" type="int" value="3"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
   <object id="181" name="Zombie emitter" type="emitter" x="2432" y="440" width="176" height="16">
    <properties>
     <property name="max" type="int" value="4"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
-  <object id="182" name="Zombie emitter" type="emitter" x="3504" y="456" width="128" height="16">
-   <properties>
-    <property name="max" type="int" value="3"/>
     <property name="volume" type="int" value="1"/>
    </properties>
   </object>
@@ -202,21 +134,9 @@
     <property name="volume" type="int" value="1"/>
    </properties>
   </object>
-  <object id="184" name="Zombie emitter" type="emitter" x="1152" y="440" width="80" height="16">
+  <object id="185" name="Zombie emitter" type="emitter" x="1232" y="456" width="80" height="16">
    <properties>
     <property name="max" type="int" value="2"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
-  <object id="185" name="Zombie emitter" type="emitter" x="1328" y="440" width="80" height="16">
-   <properties>
-    <property name="max" type="int" value="2"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
-  <object id="186" name="Zombie emitter" type="emitter" x="128" y="472" width="64" height="16">
-   <properties>
-    <property name="max" type="int" value="6"/>
     <property name="volume" type="int" value="1"/>
    </properties>
   </object>
@@ -232,17 +152,25 @@
     <property name="volume" type="int" value="1"/>
    </properties>
   </object>
-  <object id="191" name="Zombie emitter" type="emitter" x="432" y="472" width="64" height="16">
+  <object id="220" name="Zombie emitter" type="emitter" x="352" y="472" width="64" height="16">
    <properties>
-    <property name="max" type="int" value="6"/>
+    <property name="max" type="int" value="4"/>
     <property name="volume" type="int" value="1"/>
    </properties>
   </object>
-  <object id="213" name="Box" type="box" gid="163" x="1296" y="432" width="16" height="16"/>
+  <object id="222" name="Zombie emitter" type="emitter" x="112" y="472" width="64" height="16">
+   <properties>
+    <property name="max" type="int" value="2"/>
+    <property name="volume" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="227" type="item" gid="177" x="2512" y="144" width="16" height="16"/>
+  <object id="228" type="item" gid="187" x="2384" y="256" width="16" height="16"/>
+  <object id="229" type="item" gid="187" x="2400" y="256" width="16" height="16"/>
  </objectgroup>
- <layer id="4" name="foreground" width="256" height="32">
+ <layer id="4" name="foreground" width="189" height="32">
   <data encoding="base64" compression="zlib">
-   eAHt1ltKw0AUxvE+dE/eFqAuQfAGVtEHEdyAF3QB9f7mhYK4S78vzZEhTJqKKQbyHzjN5Mwkmfw4QzMY0BBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQ+LvAkm6xnLnNSibn1GqZX6sZJ41AVwTWtZANxWZXFtTxdRx3fH0sr98Cv/3P2RbXjmK3gW1P4/sNc/5j+EAPHSkOFf6PdkTOx1w+5vk6R8x33vOPFHWN/V8n06+8vwmjbs7Vd91Uz6POoibrxmftWX9jVq+Lcz8z6lfdbEvX4H61XShxWYaf5W/X3HqulL9WtNnC0H5+j3if1NNrju/sG/VvFen6hjpfROi2RUuf5cTpNN34G+/mifE+TRdtNU3o+bhr4UvxqYg94JxrJ4ydnyg8z/Xko8fd95jnx7VRbz7P5Vx3np+GTovWds2Nddc7xX1yPFO/7efMez89+qf5/R8Uj4rnSjxVzj2ey70oX91L866lC/O0/KK5Jl7Lvl18/qZ4V3wo0jbvuuOaE3VGCteyW/SjTqPGZ32fTK9s9zfdb+n+m+gxsc9y+8fr99rt5Lmxz+K6uG+M++g5PvraeF91izbUL4EBNUANUAPUADVADVAD1AA1sNgaKD+/OSCAQA8FvgELC2A8
+   eAHtlltKA0EURPORPflagLoHX2AUf0RwAz524NsFBMRdWiVT4ToZDSEOCeQ0VLrv7erp6dM3IYMBDQIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAgWURuFjWxgvsu6u1e9L+As9g6foSWIWa35kT/4H8h9LRjHXHmj+Z4VnG9Kk2HUln0mYj58aS+3be3vg8/pQ+pOTtP5do0wQ2lKq87bictv2ZCXvfz1aH03vYk318P76TxB77rhz/1rJH+rbvRonbRn6Hbanre3On/L30ny0MfX6fI+ep5/R7t9nU9xtqvg/psSvRfP58L3PvzpnXtZR6GDc+x/Z7PnP2Z20YO+7KmbX9VQonrbJ2Ms9xX9fUfMb21/UPih+lp9JftTzV3/dYW0+az/IsvUhvLb22Ys935d6Vr7Wq8Mf5+z7PvM/3b7/vaiTVmhs3cerJ87WOEpuZvbnvrMtzM+/eHvdemzrW8LsN9YlgQA1QA9QANUANUAOL1kDz14IOAmtD4Avc7VJ+
   </data>
  </layer>
 </map>
