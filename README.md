@@ -10,12 +10,11 @@ This is not a finished game, but just a proof of concept for using my 2 librarie
 
 ## Installation
 
-Clone/download repo
-
-`yarn install`
-
-and then
-
-`yarn start`
+```bash
+git clone https://github.com/praghus/posthumus.git
+cd posthumus
+yarn install
+yarn start
+```
 
 App served @ `http://localhost:3000`
