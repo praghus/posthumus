@@ -53,5 +53,5 @@ export function dropItem(scene: Scene, pos: Vec2) {
     const probability = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2]
     const idx = Math.floor(Math.random() * probability.length)
     const gid = [GIDS.COIN, GIDS.AMMO, GIDS.HEALTH][probability[idx]]
-    scene.addObject(new Item({ x: pos.x, y: pos.y, gid: GIDS.AMMO }))
+    scene.addObject(new Item({ x: pos.x, y: pos.y, gid }))
 }
