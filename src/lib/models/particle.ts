@@ -20,9 +20,7 @@ export default class Particle extends Entity {
             x: Math.cos(dir) * maxSpeed,
             y: Math.sin(dir) * maxSpeed
         }
-        // this.setCollisionArea()
     }
-
     public update(game: Game): void {
         if (!this.dead) {
             super.update(game)
