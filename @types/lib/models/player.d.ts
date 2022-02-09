@@ -13,15 +13,15 @@ export default class Player extends Entity {
     isShooting: boolean;
     isReloading: boolean;
     isHurt: boolean;
-    update(game: Game): void;
-    move(game: Game, direction: DIRECTIONS): void;
-    shoot(game: Game): void;
-    reloading: (game: Game) => void;
-    countToReload: (game: Game) => void;
-    cancelReloading(game: Game): void;
+    update(): void;
+    move(direction: DIRECTIONS): void;
+    shoot(): void;
+    reloading: () => void;
+    countToReload: () => void;
+    cancelReloading: () => void;
     bullet(scene: Scene): void;
-    dust(game: Game, direction: string): void;
-    cameraFollow(game: Game): void;
+    dust(direction: string): void;
+    cameraFollow(): void;
     respawn: (game: Game) => void;
-    hit(damage: number, game: Game): void;
+    hit(damage: number): void;
 }

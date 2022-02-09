@@ -11,9 +11,9 @@ export default class Spider extends Entity {
     startPos: Vec2;
     energy: number[];
     damage: number;
-    constructor(obj: StringTMap<any>);
-    draw(game: Game): void;
-    update(game: Game): void;
+    constructor(obj: StringTMap<any>, game: Game);
+    draw(): void;
+    update(): void;
     hit(damage: number): void;
-    collide(obj: Entity, game: Game): void;
+    collide(obj: Entity): void;
 }

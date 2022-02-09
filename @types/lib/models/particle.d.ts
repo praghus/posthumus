@@ -1,4 +1,4 @@
-import { Entity, Game, Scene, Vec2 } from 'platfuse';
+import { Entity, Game, Vec2 } from 'platfuse';
 import { StringTMap } from '../types';
 import { ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants';
 export default class Particle extends Entity {
@@ -7,10 +7,10 @@ export default class Particle extends Entity {
     collisions: boolean;
     mass: number;
     life: number;
-    constructor(obj: StringTMap<any>);
-    update(game: Game): void;
+    constructor(obj: StringTMap<any>, game: Game);
+    update(): void;
 }
-export declare function createParticles(scene: Scene, pos: Vec2, config: any): void;
+export declare function createParticles(game: Game, pos: Vec2, config: any): void;
 export declare const PARTICLES: {
     BLOOD: {
         type: ENTITY_TYPES;

@@ -1,4 +1,4 @@
-import { Entity } from 'platfuse';
+import { Entity, Game } from 'platfuse';
 import { DIRECTIONS, ENTITY_TYPES, LAYERS } from '../constants';
 import { StringTMap } from '../types';
 export default class Dust extends Entity {
@@ -8,6 +8,6 @@ export default class Dust extends Entity {
     direction: DIRECTIONS;
     width: number;
     height: number;
-    constructor(obj: StringTMap<any>);
+    constructor(obj: StringTMap<any>, game: Game);
     update(): void;
 }

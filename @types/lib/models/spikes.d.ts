@@ -1,4 +1,4 @@
-import { Entity, Game } from 'platfuse';
+import { Entity } from 'platfuse';
 import { ENTITY_FAMILY, LAYERS } from '../constants';
 export default class Spikes extends Entity {
     image: string;
@@ -19,7 +19,7 @@ export default class Spikes extends Entity {
     canAnimate: boolean;
     damage: number;
     shineX: number;
-    draw(game: Game): void;
-    update(game: Game): void;
-    collide(obj: Entity, game: Game): void;
+    draw(): void;
+    update(): void;
+    collide(obj: Entity): void;
 }

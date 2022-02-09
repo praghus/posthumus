@@ -39,8 +39,8 @@ export default class Bullet extends Entity {
     width: number;
     height: number;
     damage: number;
-    constructor(obj: StringTMap<any>);
-    collide(obj: Entity, game: Game): void;
-    explode(game: Game): void;
-    update(game: Game): void;
+    constructor(obj: StringTMap<any>, game: Game);
+    collide(obj: Entity): void;
+    explode(): void;
+    update(): void;
 }

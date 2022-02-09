@@ -1,10 +1,9 @@
-import { Entity, Game } from 'platfuse';
+import { Entity } from 'platfuse';
 import { DIRECTIONS, LAYERS, ENTITY_FAMILY } from '../constants';
 declare enum STATES {
     IDLE = 0,
     FLYING = 1,
-    HURT = 2,
-    FALL = 3
+    FALL = 2
 }
 export default class Bat extends Entity {
     image: string;
@@ -14,12 +13,13 @@ export default class Bat extends Entity {
     direction: DIRECTIONS;
     activated: boolean;
     collisions: boolean;
+    turning: boolean;
     damage: number;
     energy: number[];
     state: STATES;
-    update(game: Game): void;
+    update(): void;
     hit(damage: number): void;
-    collide(obj: Entity, game: Game): void;
+    collide(obj: Entity): void;
     turnAround(): void;
 }
 export {};

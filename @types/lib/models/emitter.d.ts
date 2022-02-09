@@ -5,5 +5,5 @@ export default class Emitter extends Entity {
     count: number;
     emitted: number;
     emit: (game: Game) => void;
-    update(game: Game): void;
+    update(): void;
 }

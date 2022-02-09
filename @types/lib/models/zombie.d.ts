@@ -28,10 +28,11 @@ export default class Zombie extends Entity {
         m: number;
     };
     activated: boolean;
-    constructor(obj: StringTMap<any>);
-    update(game: Game): void;
+    turning: boolean;
+    constructor(obj: StringTMap<any>, game: Game);
+    update(): void;
     hit(damage: number): void;
-    collide(obj: Entity, game: Game): void;
+    collide(obj: Entity): void;
     isFacingPlayer(player: Entity): boolean;
     turnAround(): void;
 }

@@ -22,12 +22,13 @@ export declare const ASSETS: {
 };
 export declare enum LAYERS {
     CUSTOM_BACKGROUND = 0,
-    CUSTOM_OVERLAY = 6,
     BACKGROUND = 1,
-    FLASH = 5,
     MAIN = 2,
     OBJECTS = 3,
-    FOREGROUND = 4
+    FOREGROUND = 4,
+    FLASH = 5,
+    DARKNESS = 6,
+    CUSTOM_OVERLAY = 7
 }
 export declare enum DIRECTIONS {
     UP = "up",
