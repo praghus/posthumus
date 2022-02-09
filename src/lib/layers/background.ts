@@ -5,7 +5,8 @@ export default class Background extends Layer {
     id = LAYERS.CUSTOM_BACKGROUND
     scroll = 0
 
-    draw(game: Game): void {
+    draw(): void {
+        const { game } = this
         const { ctx, resolution } = game
         const { camera } = game.getCurrentScene()
         const bg1 = game.getImage('bg1.png')
@@ -14,7 +15,7 @@ export default class Background extends Layer {
         const clouds = game.getImage('clouds.png')
         const s = camera.pos.x / 1.5
         const w1 = bg2.width - 1
-        const x1 = s + Math.round((-s + camera.focusPoint.x) / w1) * w1
+        const x1 = s + Math.round((-s + camera.focus.x) / w1) * w1
         const y1 = 365 + camera.pos.y
         const w2 = clouds.width - 1
         const x2 = camera.pos.x / 8 + this.scroll

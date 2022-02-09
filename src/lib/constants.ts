@@ -41,30 +41,27 @@ export const ASSETS = {
     'reload.mp3': reloadSound,
     'loop.mp3': loopSound
 }
-
 export enum LAYERS {
     CUSTOM_BACKGROUND = 0,
-    CUSTOM_OVERLAY = 6,
     BACKGROUND = 1,
-    FLASH = 5,
     MAIN = 2,
     OBJECTS = 3,
-    FOREGROUND = 4
+    FOREGROUND = 4,
+    FLASH = 5,
+    DARKNESS = 6,
+    CUSTOM_OVERLAY = 7
 }
-
 export enum DIRECTIONS {
     UP = 'up',
     RIGHT = 'right',
     DOWN = 'down',
     LEFT = 'left'
 }
-
 export enum ENTITY_FAMILY {
     ENEMIES = 'enemies',
     PARTICLES = 'particles',
     TRAPS = 'traps'
 }
-
 export enum ENTITY_TYPES {
     AMMO = 'ammo',
     BAT = 'bat',
@@ -80,7 +77,6 @@ export enum ENTITY_TYPES {
     SPIKES = 'spikes',
     ZOMBIE = 'zombie'
 }
-
 export enum COLORS {
     BLACK = '#000',
     BLUE_SKY = '#7CF',

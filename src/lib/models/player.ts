@@ -1,10 +1,8 @@
 import { Game, Entity, Scene, Vec2 } from 'platfuse'
 import { createParticles, PARTICLES } from './particle'
-import { DIRECTIONS, LAYERS } from '../constants'
+import { DIRECTIONS, ENTITY_TYPES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/player'
 import MainScene from '../scenes/main'
-import Dust from './dust'
-import Bullet from './bullet'
 import Overlay from '../layers/overlay'
 
 const { UP, LEFT, RIGHT } = DIRECTIONS
@@ -23,22 +21,21 @@ export default class Player extends Entity {
     isReloading = false
     isHurt = false
 
-    update(game: Game) {
-        super.update(game)
+    update() {
+        super.update()
+        const game = this.game
         if (this.isJumping && this.onGround()) {
             this.isJumping = false
-            this.dust(game, LEFT)
-            this.dust(game, RIGHT)
+            this.dust(LEFT)
+            this.dust(RIGHT)
         }
         if (!this.onGround()) this.force.y += this.force.y > 0 ? 0.5 : 0.5 / 2
-
         if (this.energy[0] > 0 && !this.isShooting) {
             if (this.force.x !== 0) this.force.x = this.approach(this.force.x, 0, 0.2)
             this.force.x === 0 && !this.isJumping && this.ammo[0] < this.ammo[1]
                 ? game.wait('countToReload', this.countToReload, 1000)
-                : this.cancelReloading(game)
+                : this.cancelReloading()
         }
-
         let animation = ANIMATIONS.IDLE
         if (this.isHurt) animation = ANIMATIONS.HURT
         else if (this.isJumping) animation = this.force.y <= 0 ? ANIMATIONS.JUMP : ANIMATIONS.FALL
@@ -47,8 +44,8 @@ export default class Player extends Entity {
         else if (this.isReloading) animation = ANIMATIONS.RELOAD
         this.animate(animation, { H: this.facing === LEFT })
     }
-    move(game: Game, direction: DIRECTIONS) {
-        if (!this.isShooting) {
+    move(direction: DIRECTIONS) {
+        if (!this.isShooting && this.energy[0] > 0) {
             switch (direction) {
                 case UP:
                     if (!this.isJumping && this.onGround()) {
@@ -58,67 +55,66 @@ export default class Player extends Entity {
                     break
                 case LEFT:
                 case RIGHT:
-                    direction !== this.facing && this.onGround && this.dust(game, direction)
+                    direction !== this.facing && this.onGround && this.dust(direction)
                     this.force.x = this.approach(this.force.x, direction === RIGHT ? 2 : -2, 0.3)
                     this.facing = direction
-                    this.cameraFollow(game)
+                    this.cameraFollow()
                     break
             }
         }
     }
-    shoot(game: Game): void {
+    shoot(): void {
         if (!this.isShooting && !this.isHurt && this.ammo[0] > 0 && this.onGround()) {
-            const scene = game.getCurrentScene() as MainScene
+            const scene = this.game.getCurrentScene() as MainScene
             this.ammo[0] -= 1
             this.force.x = 0
             this.isShooting = true
             this.bullet(scene)
-            this.cancelReloading(game)
-            game.wait('shoot', () => (this.isShooting = false), 500)
-            game.wait(
+            this.cancelReloading()
+            this.game.wait('shoot', () => (this.isShooting = false), 500)
+            this.game.wait(
                 'shootDelay',
                 () => {
                     scene.flash = true
-                    game.wait('shootFlash', () => (scene.flash = false), 60)
+                    this.game.wait('shootFlash', () => (scene.flash = false), 60)
                 },
                 30
             )
             this.setAnimationFrame(0)
-            game.playSound('shoot.mp3')
+            this.game.playSound('shoot.mp3')
         }
     }
-    reloading = (game: Game) => {
+    reloading = () => {
         this.isReloading = true
         this.ammo[0] += 1
-        game.playSound('reload.mp3')
+        this.game.playSound('reload.mp3')
     }
-    countToReload = (game: Game) => {
+    countToReload = () => {
         this.isReloading = true
-        game.wait('reloading', this.reloading, 600)
+        this.game.wait('reloading', this.reloading, 600)
     }
-    cancelReloading(game: Game) {
-        game.cancelWait('countToReload')
-        game.cancelWait('reloading')
+    cancelReloading = () => {
+        this.game.cancelWait('countToReload')
+        this.game.cancelWait('reloading')
         this.isReloading = false
     }
     bullet(scene: Scene): void {
         const x = this.facing === RIGHT ? this.pos.x + this.width - 4 : this.pos.x + 8
         const y = this.pos.y + 31
-        scene.addObject(new Bullet({ x, y, direction: this.facing }))
+        scene.addObject(ENTITY_TYPES.BULLET, { x, y, direction: this.facing })
     }
-    dust(game: Game, direction: string): void {
+    dust(direction: string): void {
         if (this.onGround()) {
-            const scene = game.getCurrentScene()
+            const scene = this.game.getCurrentScene()
             const x = direction === RIGHT ? this.pos.x + 8 : this.pos.x + this.width - 24
             const y = this.pos.y + this.height - 16
-            scene.addObject(new Dust({ x, y, direction }))
+            scene.addObject(ENTITY_TYPES.DUST, { x, y, direction })
         }
     }
-    cameraFollow(game: Game): void {
-        const scene = game.getCurrentScene()
-        this.facing === LEFT
-            ? scene.camera.setFocusPoint(game.resolution.x - game.resolution.x / 3, game.resolution.y / 2)
-            : scene.camera.setFocusPoint(game.resolution.x / 3, game.resolution.y / 2)
+    cameraFollow(): void {
+        const scene = this.game.getCurrentScene()
+        const { x, y } = this.game.resolution
+        this.facing === LEFT ? scene.camera.setFocus(x - x / 3, y / 2) : scene.camera.setFocus(x / 3, y / 2)
     }
     respawn = (game: Game) => {
         const scene = game.getCurrentScene() as MainScene
@@ -126,26 +122,27 @@ export default class Player extends Entity {
         this.isHurt = false
         this.visible = true
         this.energy[0] = this.energy[1]
+        this.pos = this.initialPos.clone()
         overlay.fadeIn()
     }
-    hit(damage: number, game: Game) {
-        const scene = game.getCurrentScene() as MainScene
+    hit(damage: number) {
+        const scene = this.game.getCurrentScene() as MainScene
         const overlay = scene.getLayer(LAYERS.CUSTOM_OVERLAY) as Overlay
         if (this.energy[0] > 0 && !this.isHurt) {
             if (!this.invincible) {
                 this.energy[0] -= damage
             }
             this.isHurt = true
-            game.cancelWait('countToReload')
+            this.game.cancelWait('countToReload')
+            this.force.x = 0
             if (this.energy[0] <= 0) {
-                this.force.x = 0
                 this.visible = false
                 overlay.fadeOut()
-                game.wait('playerRespawn', this.respawn, 3000)
+                this.game.wait('playerRespawn', this.respawn, 3000)
             } else {
-                game.wait('playerHurt', () => (this.isHurt = false), 500)
+                this.game.wait('playerHurt', () => (this.isHurt = false), 500)
             }
-            createParticles(scene, new Vec2(this.pos.x + this.width / 2, this.pos.y + 18), PARTICLES.BLOOD)
+            createParticles(this.game, new Vec2(this.pos.x + this.width / 2, this.pos.y + 18), PARTICLES.BLOOD)
         }
     }
 }

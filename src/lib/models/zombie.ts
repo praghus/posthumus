@@ -33,15 +33,15 @@ export default class Zombie extends Entity {
     energy = [20, 20]
     speed = { a: 0.1, d: 0.1, m: 0.4 }
     activated = false
+    turning = false
 
-    constructor(obj: StringTMap<any>) {
-        super({ ...obj, width: 58, height: 46 })
+    constructor(obj: StringTMap<any>, game: Game) {
+        super({ ...obj, width: 58, height: 46 }, game)
         this.pid = obj.pid
     }
-
-    update(game: Game): void {
-        super.update(game)
-        const scene = game.getCurrentScene() as MainScene
+    update(): void {
+        super.update()
+        const scene = this.game.getCurrentScene() as MainScene
         const { a, d, m } = this.speed
         const { RISE, IDLE, WALK, RUN, ATTACK, HURT, DEFEAT } = STATES
         const player = scene.getObjectByType(ENTITY_TYPES.PLAYER) as Player
@@ -50,24 +50,24 @@ export default class Zombie extends Entity {
             case RISE:
                 animation = ANIMATIONS.RISE
                 this.direction = this.pos.x > player.pos.x ? LEFT : RIGHT
-                if (this.onScreen(game) && this.getAnimationFrame() === animation.strip.frames - 1) {
+                if (this.onScreen() && this.getAnimationFrame() === animation.strip.frames - 1) {
                     this.activated = true
                     this.state = IDLE
                 }
                 break
             case IDLE:
                 animation = ANIMATIONS.IDLE
-                if (this.onScreen(game)) {
-                    game.wait(`zombie-${this.id}-awake`, () => (this.state = WALK), 1500)
+                if (this.onScreen()) {
+                    this.game.wait(`zombie-${this.id}-awake`, () => (this.state = WALK), 1500)
                 }
                 break
             case WALK:
                 animation = ANIMATIONS.WALK
                 this.speed.m = 0.4
-                game.wait(
+                this.game.wait(
                     `zombie-${this.id}-run`,
                     () => {
-                        if (this.onScreen(game) && this.isFacingPlayer(player)) {
+                        if (this.onScreen() && this.isFacingPlayer(player)) {
                             this.state = RUN
                         }
                     },
@@ -82,15 +82,15 @@ export default class Zombie extends Entity {
             case ATTACK:
                 animation = ANIMATIONS.ATTACK
                 this.direction = this.pos.x > player.pos.x ? LEFT : RIGHT
-                game.wait(`zombie-${this.id}-run`, () => (this.state = WALK), 1000)
+                this.game.wait(`zombie-${this.id}-run`, () => (this.state = WALK), 1000)
                 break
             case HURT:
                 const dead = this.energy[0] <= 0
-                game.cancelWait(`zombie-${this.id}-awake`)
-                game.cancelWait(`zombie-${this.id}-run`)
+                this.game.cancelWait(`zombie-${this.id}-awake`)
+                this.game.cancelWait(`zombie-${this.id}-run`)
                 animation = !this.isFacingPlayer(player) || dead ? ANIMATIONS.HURT1 : ANIMATIONS.HURT2
                 if (dead && this.getAnimationFrame() === 5) {
-                    dropItem(scene, new Vec2(this.pos.x + this.width / 2, this.pos.y))
+                    dropItem(this.game, new Vec2(this.pos.x + this.width / 2, this.pos.y))
                     this.state = DEFEAT
                 } else if (this.getAnimationFrame() === animation.strip.frames - 1) {
                     !this.isFacingPlayer(player) && this.turnAround()
@@ -98,7 +98,7 @@ export default class Zombie extends Entity {
                 }
                 break
             case DEFEAT:
-                game.wait(`zombie-${this.id}-defeat`, () => this.kill(), 500)
+                this.game.wait(`zombie-${this.id}-defeat`, () => this.kill(), 500)
                 this.activated = false
                 break
         }
@@ -125,7 +125,7 @@ export default class Zombie extends Entity {
         }
         this.energy[0] -= damage
     }
-    collide(obj: Entity, game: Game) {
+    collide(obj: Entity) {
         if (this.activated && obj.visible) {
             switch (obj.type) {
                 case ENTITY_TYPES.BULLET:
@@ -136,7 +136,7 @@ export default class Zombie extends Entity {
                     const player = obj as Player
                     this.state = STATES.ATTACK
                     this.damage = this.getAnimationFrame() === 3 ? 20 : 10
-                    player.hit(this.damage, game)
+                    player.hit(this.damage)
                     break
             }
         }
@@ -148,7 +148,11 @@ export default class Zombie extends Entity {
         )
     }
     turnAround() {
-        this.direction = this.direction === RIGHT ? LEFT : RIGHT
-        this.force.x *= -0.6
+        if (!this.turning) {
+            this.direction = this.direction === RIGHT ? LEFT : RIGHT
+            this.force.x *= -0.6
+            this.turning = true
+        }
+        this.game.wait(`zombie-${this.id}-turn`, () => (this.turning = false), 500)
     }
 }

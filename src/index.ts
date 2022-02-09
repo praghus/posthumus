@@ -1,5 +1,6 @@
 import { Game } from 'platfuse'
-import { ASSETS } from './lib/constants'
+import { ASSETS, ENTITY_TYPES } from './lib/constants'
+import * as Models from './lib/models'
 import MainScene from './lib/scenes/main'
 
 const container: any = document.querySelector('#container')
@@ -9,6 +10,18 @@ const game = new Game({
     canvas,
     backgroundColor: '#000',
     scenes: [MainScene],
+    entities: {
+        [ENTITY_TYPES.BAT]: Models.Bat,
+        [ENTITY_TYPES.BULLET]: Models.Bullet,
+        [ENTITY_TYPES.DUST]: Models.Dust,
+        [ENTITY_TYPES.EMITTER]: Models.Emitter,
+        [ENTITY_TYPES.ITEM]: Models.Item,
+        [ENTITY_TYPES.PARTICLE]: Models.Particle,
+        [ENTITY_TYPES.PLAYER]: Models.Player,
+        [ENTITY_TYPES.SPIDER]: Models.Spider,
+        [ENTITY_TYPES.SPIKES]: Models.Spikes,
+        [ENTITY_TYPES.ZOMBIE]: Models.Zombie
+    },
     debug: true
 })
 

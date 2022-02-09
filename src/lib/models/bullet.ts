@@ -2,7 +2,6 @@ import { Entity, Game, Scene } from 'platfuse'
 import { createParticles, PARTICLES } from './particle'
 import { DIRECTIONS, ENTITY_TYPES, ENTITY_FAMILY, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/dust'
-import MainScene from '../scenes/main'
 import { StringTMap } from '../types'
 
 export default class Bullet extends Entity {
@@ -18,31 +17,26 @@ export default class Bullet extends Entity {
     height = 8
     damage = 10
 
-    constructor(obj: StringTMap<any>) {
-        super(obj)
+    constructor(obj: StringTMap<any>, game: Game) {
+        super(obj, game)
         this.direction = obj.direction
+        this.setCollisionArea(4, 2, 4, 2)
     }
-
-    collide(obj: Entity, game: Game) {
+    collide(obj: Entity) {
         if (obj.collisions) {
             if (obj.family === ENTITY_FAMILY.ENEMIES) {
                 this.particle = PARTICLES.BLOOD
-                this.explode(game)
+                this.explode()
             }
         }
     }
-
-    explode(game: Game): void {
-        const scene = game.getCurrentScene() as MainScene
-        createParticles(scene, this.pos, this.particle)
+    explode(): void {
+        createParticles(this.game, this.pos, this.particle)
         this.kill()
     }
-
-    update(game: Game) {
-        super.update(game)
-        if (!this.onScreen(game) || this.pos.x !== this.expectedPos.x) {
-            this.explode(game)
-        }
+    update() {
+        super.update()
+        if (!this.onScreen() || this.pos.x !== this.expectedPos.x) this.explode()
         this.force.x = this.approach(this.force.x, this.direction === DIRECTIONS.LEFT ? -10 : 10, 5)
         this.flips = { H: this.direction === DIRECTIONS.LEFT }
     }

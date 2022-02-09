@@ -7,15 +7,15 @@ export default class Overlay extends Layer {
     fadeSpeed = 1
     fadeTo = 0
 
-    update(game: Game) {
-        super.update(game)
+    update() {
         const d = this.darkOverlay
-        const delta = game.delta
+        const delta = this.game.delta
         if (d !== 0 && ((d < 0 && d + delta < 0) || (d > 0 && d - delta > 0))) {
             this.darkOverlay += delta * this.fadeSpeed * (d < 0 ? 1 : -1)
         }
     }
-    draw(game: Game): void {
+    draw(): void {
+        const game = this.game
         const { ctx, resolution } = game
         const scene = game.getCurrentScene()
         const write = game.draw.createPixelFontRenderer(game.getImage('font.png'), 5, 16)
@@ -44,7 +44,7 @@ export default class Overlay extends Layer {
             ctx.save()
             ctx.fillStyle = COLORS.BLACK
             ctx.globalAlpha = (this.darkOverlay < 0 ? 1 : 0) + this.darkOverlay
-            ctx.fillRect(0, 0, resolution.x, resolution.y)
+            ctx.fillRect(0, 0, resolution.x + 1, resolution.y + 1)
             ctx.restore()
         }
     }

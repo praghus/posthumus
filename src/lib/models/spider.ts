@@ -16,52 +16,53 @@ export default class Spider extends Entity {
     energy = [20, 20]
     damage = 10
 
-    constructor(obj: StringTMap<any>) {
-        super(obj)
+    constructor(obj: StringTMap<any>, game: Game) {
+        super(obj, game)
         this.startPos = new Vec2(obj.x + obj.width / 2, obj.y)
     }
-    draw(game: Game) {
-        const { camera } = game.getCurrentScene()
-        const { ctx } = game
+    draw() {
+        const { camera } = this.game.getCurrentScene()
+        const { ctx } = this.game
         ctx.beginPath()
         ctx.strokeStyle = COLORS.SPIDER_WEB
         ctx.moveTo(this.startPos.x + camera.pos.x, this.startPos.y + camera.pos.y)
         ctx.lineTo(this.startPos.x + camera.pos.x, this.pos.y + camera.pos.y)
         ctx.stroke()
-        this.collisions && super.draw(game)
+        this.collisions && super.draw()
     }
-    update(game: Game) {
-        super.update(game)
-        const { gravity } = game.getCurrentScene()
+    update() {
+        if (this.onScreen()) {
+            super.update()
+            const { gravity } = this.game.getCurrentScene()
 
-        if (this.rise) this.force.y = -1
-        else if (this.fall) this.force.y += gravity
-        else this.force.y = 0
+            if (this.rise) this.force.y = -1
+            else if (this.fall) this.force.y += gravity
+            else this.force.y = 0
 
-        if (this.energy[0] <= 0) {
-            this.damage = 0
-            this.rise = false
-            this.fall = false
-            this.collisions = false
-            game.cancelWait(`spider-${this.id}-fall`)
-        } else {
-            if (this.onGround() && this.fall) {
-                this.fall = false
-                this.rise = true
-            }
-            if (this.pos.y <= this.startPos.y) {
+            if (this.energy[0] <= 0) {
+                this.damage = 0
                 this.rise = false
                 this.fall = false
-                game.wait(`spider-${this.id}-fall`, () => (this.fall = true), 500)
+                this.collisions = false
+                this.game.cancelWait(`spider-${this.id}-fall`)
+            } else {
+                if (this.onGround() && this.fall) {
+                    this.fall = false
+                    this.rise = true
+                }
+                if (this.pos.y <= this.startPos.y) {
+                    this.rise = false
+                    this.fall = false
+                    this.game.wait(`spider-${this.id}-fall`, () => (this.fall = true), 500)
+                }
             }
+            this.animate(ANIMATIONS.DEFAULT)
         }
-
-        this.animate(ANIMATIONS.DEFAULT)
     }
     hit(damage: number) {
         this.energy[0] -= damage
     }
-    collide(obj: Entity, game: Game) {
+    collide(obj: Entity) {
         switch (obj.type) {
             case ENTITY_TYPES.BULLET:
                 const bullet = obj as Bullet
@@ -69,7 +70,7 @@ export default class Spider extends Entity {
                 break
             case ENTITY_TYPES.PLAYER:
                 const player = obj as Player
-                player.hit(this.damage, game)
+                player.hit(this.damage)
                 break
         }
     }
