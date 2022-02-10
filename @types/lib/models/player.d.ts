@@ -1,4 +1,4 @@
-import { Game, Entity, Scene } from 'platfuse';
+import { Entity, Scene } from 'platfuse';
 import { DIRECTIONS, LAYERS } from '../constants';
 export default class Player extends Entity {
     image: string;
@@ -16,12 +16,12 @@ export default class Player extends Entity {
     update(): void;
     move(direction: DIRECTIONS): void;
     shoot(): void;
-    reloading: () => void;
-    countToReload: () => void;
-    cancelReloading: () => void;
+    reloading(): void;
+    countToReload(): void;
+    cancelReloading(): void;
     bullet(scene: Scene): void;
     dust(direction: string): void;
     cameraFollow(): void;
-    respawn: (game: Game) => void;
+    respawn(): void;
     hit(damage: number): void;
 }
