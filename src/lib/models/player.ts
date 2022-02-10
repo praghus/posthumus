@@ -24,12 +24,13 @@ export default class Player extends Entity {
     update() {
         super.update()
         const game = this.game
+        const { gravity } = game.getCurrentScene() as MainScene
         if (this.isJumping && this.onGround()) {
             this.isJumping = false
             this.dust(LEFT)
             this.dust(RIGHT)
         }
-        if (!this.onGround()) this.force.y += this.force.y > 0 ? 0.5 : 0.5 / 2
+        if (!this.onGround()) this.force.y += this.force.y > 0 ? gravity : gravity / 2
         if (this.energy[0] > 0 && !this.isShooting) {
             if (this.force.x !== 0) this.force.x = this.approach(this.force.x, 0, 0.2)
             this.force.x === 0 && !this.isJumping && this.ammo[0] < this.ammo[1]
@@ -68,6 +69,7 @@ export default class Player extends Entity {
     shoot(): void {
         if (!this.isShooting && !this.isHurt && this.ammo[0] > 0 && this.onGround()) {
             const scene = this.game.getCurrentScene() as MainScene
+            if (this.ammo[0] > this.ammo[1]) this.ammo[0] = this.ammo[1]
             this.ammo[0] -= 1
             this.force.x = 0
             this.isShooting = true
@@ -141,18 +143,18 @@ export default class Player extends Entity {
         if (this.energy[0] > 0 && !this.isHurt) {
             if (!this.invincible) {
                 this.energy[0] -= damage
+                this.isHurt = true
+                this.force.x = 0
+                this.game.cancelWait('countToReload')
+                if (this.energy[0] <= 0) {
+                    this.visible = false
+                    overlay.fadeOut()
+                    this.game.wait('playerRespawn', () => this.respawn(), 3000)
+                } else {
+                    this.game.wait('playerHurt', () => (this.isHurt = false), 500)
+                }
+                createParticles(this.game, new Vec2(this.pos.x + this.width / 2, this.pos.y + 18), PARTICLES.BLOOD)
             }
-            this.isHurt = true
-            this.game.cancelWait('countToReload')
-            this.force.x = 0
-            if (this.energy[0] <= 0) {
-                this.visible = false
-                overlay.fadeOut()
-                this.game.wait('playerRespawn', () => this.respawn(), 3000)
-            } else {
-                this.game.wait('playerHurt', () => (this.isHurt = false), 500)
-            }
-            createParticles(this.game, new Vec2(this.pos.x + this.width / 2, this.pos.y + 18), PARTICLES.BLOOD)
         }
     }
 }

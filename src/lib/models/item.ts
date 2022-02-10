@@ -1,6 +1,7 @@
 import { Entity, Game, Vec2 } from 'platfuse'
 import { StringTMap } from '../types'
 import { ENTITY_TYPES, LAYERS } from '../constants'
+import MainScene from '../scenes/main'
 import Player from './player'
 
 export const GIDS = {
@@ -40,7 +41,7 @@ export default class Item extends Entity {
     public update(): void {
         super.update()
         if (!this.onGround()) {
-            const { gravity } = this.game.getCurrentScene()
+            const { gravity } = this.game.getCurrentScene() as MainScene
             this.force.y += this.force.y > 0 ? gravity : gravity / 2
         } else if (Math.abs(this.force.y) > 0.1) {
             this.force.y *= -0.6

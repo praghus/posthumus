@@ -2,6 +2,7 @@ import { Entity, Game, Vec2 } from 'platfuse'
 import { StringTMap } from '../types'
 import { COLORS, ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/spider'
+import MainScene from '../scenes/main'
 import Bullet from './bullet'
 import Player from './player'
 
@@ -35,7 +36,7 @@ export default class Spider extends Entity {
     update() {
         if (this.onScreen()) {
             super.update()
-            const { gravity } = this.game.getCurrentScene()
+            const { gravity } = this.game.getCurrentScene() as MainScene
 
             if (this.rise) this.force.y = -1
             else if (this.fall) this.force.y += gravity

@@ -8,7 +8,7 @@ import Background from '../layers/background'
 import Player from '../models/player'
 
 export default class MainScene extends Scene {
-    gravity = 0.5
+    gravity = 0.7
     flash = false
     player?: Player
 
@@ -30,5 +30,15 @@ export default class MainScene extends Scene {
         game.onKeyDown('ArrowLeft', () => this.player?.move(DIRECTIONS.LEFT))
         game.onKeyDown('ArrowRight', () => this.player?.move(DIRECTIONS.RIGHT))
         game.setAudioVolume(0.1)
+
+        if (game.debug && game.gui) {
+            game.gui.add(this, 'gravity').listen()
+            const f1 = game.gui.addFolder('Player')
+            f1.add(this.player.pos, 'x').listen()
+            f1.add(this.player.pos, 'y').listen()
+            f1.add(this.player.energy, '0').name('Energy').step(1).min(1).max(100).listen()
+            f1.add(this.player.ammo, '1').name('Max ammo').step(1).min(2).max(20).listen()
+            f1.add(this.player, 'invincible').name('God mode').listen()
+        }
     }
 }
