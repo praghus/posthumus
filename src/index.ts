@@ -28,7 +28,7 @@ const game = new Game({
 const onResize = () => {
     const width = window.innerWidth - 100
     const height = window.innerHeight - 100
-    const scale = Math.round(height / 140)
+    const scale = Math.round(height / 160)
 
     Object.assign(canvas, { width, height })
     Object.assign(container.style, {
