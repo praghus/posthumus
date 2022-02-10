@@ -20,6 +20,7 @@ export default class Spider extends Entity {
         super(obj, game)
         this.startPos = new Vec2(obj.x + obj.width / 2, obj.y)
     }
+
     draw() {
         const { camera } = this.game.getCurrentScene()
         const { ctx } = this.game
@@ -30,6 +31,7 @@ export default class Spider extends Entity {
         ctx.stroke()
         this.collisions && super.draw()
     }
+
     update() {
         if (this.onScreen()) {
             super.update()
@@ -59,9 +61,11 @@ export default class Spider extends Entity {
             this.animate(ANIMATIONS.DEFAULT)
         }
     }
+
     hit(damage: number) {
         this.energy[0] -= damage
     }
+
     collide(obj: Entity) {
         switch (obj.type) {
             case ENTITY_TYPES.BULLET:

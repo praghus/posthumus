@@ -15,6 +15,7 @@ export default class Dust extends Entity {
         super(obj, game)
         this.direction = obj.direction
     }
+
     update() {
         this.animate(ANIMATIONS.DUST, { H: this.direction === DIRECTIONS.LEFT }, (frame: number) => {
             if (frame === 8) this.kill()

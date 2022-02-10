@@ -1,4 +1,4 @@
-import { Game, Layer } from 'platfuse'
+import { Layer } from 'platfuse'
 import { COLORS, ENTITY_TYPES, LAYERS } from '../constants'
 
 export default class Overlay extends Layer {
@@ -14,6 +14,7 @@ export default class Overlay extends Layer {
             this.darkOverlay += delta * this.fadeSpeed * (d < 0 ? 1 : -1)
         }
     }
+
     draw(): void {
         const game = this.game
         const { ctx, resolution } = game
@@ -48,10 +49,12 @@ export default class Overlay extends Layer {
             ctx.restore()
         }
     }
+
     fadeIn() {
         this.darkOverlay = 1
         this.fadeTo = 0
     }
+
     fadeOut() {
         this.darkOverlay = -1
         this.fadeTo = 1

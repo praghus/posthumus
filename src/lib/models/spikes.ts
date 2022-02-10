@@ -1,4 +1,4 @@
-import { Entity, Game } from 'platfuse'
+import { Entity } from 'platfuse'
 import { ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
 import { randomInt } from '../utils'
 import ANIMATIONS from '../animations/shine'
@@ -34,6 +34,7 @@ export default class Spikes extends Entity {
             height
         )
     }
+
     update(): void {
         if (this.onScreen()) {
             if (this.canAnimate && this.getAnimationFrame() === this.animation.strip.frames - 1) {
@@ -51,6 +52,7 @@ export default class Spikes extends Entity {
             this.animate(this.animation)
         }
     }
+
     collide(obj: Entity) {
         switch (obj.type) {
             case ENTITY_TYPES.PLAYER:

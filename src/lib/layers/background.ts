@@ -1,4 +1,4 @@
-import { Game, Layer, Scene } from 'platfuse'
+import { Layer } from 'platfuse'
 import { LAYERS } from '../constants'
 
 export default class Background extends Layer {

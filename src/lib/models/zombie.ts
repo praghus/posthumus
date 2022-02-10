@@ -1,4 +1,4 @@
-import { Entity, Game, Scene, Vec2 } from 'platfuse'
+import { Entity, Game, Vec2 } from 'platfuse'
 import { StringTMap } from '../types'
 import { DIRECTIONS, ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/zombie'
@@ -39,6 +39,7 @@ export default class Zombie extends Entity {
         super({ ...obj, width: 58, height: 46 }, game)
         this.pid = obj.pid
     }
+
     update(): void {
         super.update()
         const scene = this.game.getCurrentScene() as MainScene
@@ -118,6 +119,7 @@ export default class Zombie extends Entity {
             this.animate(animation, { H: this.direction === LEFT })
         }
     }
+
     hit(damage: number): void {
         if (this.state !== STATES.HURT && this.state !== STATES.DEFEAT) {
             this.setAnimationFrame(0)
@@ -125,6 +127,7 @@ export default class Zombie extends Entity {
         }
         this.energy[0] -= damage
     }
+
     collide(obj: Entity) {
         if (this.activated && obj.visible) {
             switch (obj.type) {
@@ -141,12 +144,14 @@ export default class Zombie extends Entity {
             }
         }
     }
+
     isFacingPlayer(player: Entity): boolean {
         return (
             (this.direction === LEFT && this.pos.x > player.pos.x) ||
             (this.direction === RIGHT && this.pos.x < player.pos.x)
         )
     }
+
     turnAround() {
         if (!this.turning) {
             this.direction = this.direction === RIGHT ? LEFT : RIGHT

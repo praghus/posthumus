@@ -1,4 +1,4 @@
-import { Entity, Game, Scene } from 'platfuse'
+import { Entity, Game } from 'platfuse'
 import { createParticles, PARTICLES } from './particle'
 import { DIRECTIONS, ENTITY_TYPES, ENTITY_FAMILY, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/dust'
@@ -22,6 +22,7 @@ export default class Bullet extends Entity {
         this.direction = obj.direction
         this.setCollisionArea(4, 2, 4, 2)
     }
+
     collide(obj: Entity) {
         if (obj.collisions) {
             if (obj.family === ENTITY_FAMILY.ENEMIES) {
@@ -30,10 +31,12 @@ export default class Bullet extends Entity {
             }
         }
     }
+
     explode(): void {
         createParticles(this.game, this.pos, this.particle)
         this.kill()
     }
+
     update() {
         super.update()
         if (!this.onScreen() || this.pos.x !== this.expectedPos.x) this.explode()

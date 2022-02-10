@@ -1,4 +1,4 @@
-import { Game, Layer } from 'platfuse'
+import { Layer } from 'platfuse'
 import { COLORS, LAYERS } from '../constants'
 import MainScene from '../scenes/main'
 

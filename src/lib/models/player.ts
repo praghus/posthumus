@@ -1,4 +1,4 @@
-import { Game, Entity, Scene, Vec2 } from 'platfuse'
+import { Entity, Scene, Vec2 } from 'platfuse'
 import { createParticles, PARTICLES } from './particle'
 import { DIRECTIONS, ENTITY_TYPES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/player'
@@ -33,7 +33,7 @@ export default class Player extends Entity {
         if (this.energy[0] > 0 && !this.isShooting) {
             if (this.force.x !== 0) this.force.x = this.approach(this.force.x, 0, 0.2)
             this.force.x === 0 && !this.isJumping && this.ammo[0] < this.ammo[1]
-                ? game.wait('countToReload', this.countToReload, 1000)
+                ? game.wait('countToReload', () => this.countToReload(), 1000)
                 : this.cancelReloading()
         }
         let animation = ANIMATIONS.IDLE
@@ -44,6 +44,7 @@ export default class Player extends Entity {
         else if (this.isReloading) animation = ANIMATIONS.RELOAD
         this.animate(animation, { H: this.facing === LEFT })
     }
+
     move(direction: DIRECTIONS) {
         if (!this.isShooting && this.energy[0] > 0) {
             switch (direction) {
@@ -63,6 +64,7 @@ export default class Player extends Entity {
             }
         }
     }
+
     shoot(): void {
         if (!this.isShooting && !this.isHurt && this.ammo[0] > 0 && this.onGround()) {
             const scene = this.game.getCurrentScene() as MainScene
@@ -84,25 +86,30 @@ export default class Player extends Entity {
             this.game.playSound('shoot.mp3')
         }
     }
-    reloading = () => {
+
+    reloading(): void {
         this.isReloading = true
         this.ammo[0] += 1
         this.game.playSound('reload.mp3')
     }
-    countToReload = () => {
+
+    countToReload(): void {
         this.isReloading = true
-        this.game.wait('reloading', this.reloading, 600)
+        this.game.wait('reloading', () => this.reloading(), 600)
     }
-    cancelReloading = () => {
+
+    cancelReloading(): void {
         this.game.cancelWait('countToReload')
         this.game.cancelWait('reloading')
         this.isReloading = false
     }
+
     bullet(scene: Scene): void {
         const x = this.facing === RIGHT ? this.pos.x + this.width - 4 : this.pos.x + 8
         const y = this.pos.y + 31
         scene.addObject(ENTITY_TYPES.BULLET, { x, y, direction: this.facing })
     }
+
     dust(direction: string): void {
         if (this.onGround()) {
             const scene = this.game.getCurrentScene()
@@ -111,13 +118,15 @@ export default class Player extends Entity {
             scene.addObject(ENTITY_TYPES.DUST, { x, y, direction })
         }
     }
+
     cameraFollow(): void {
         const scene = this.game.getCurrentScene()
         const { x, y } = this.game.resolution
         this.facing === LEFT ? scene.camera.setFocus(x - x / 3, y / 2) : scene.camera.setFocus(x / 3, y / 2)
     }
-    respawn = (game: Game) => {
-        const scene = game.getCurrentScene() as MainScene
+
+    respawn() {
+        const scene = this.game.getCurrentScene() as MainScene
         const overlay = scene.getLayer(LAYERS.CUSTOM_OVERLAY) as Overlay
         this.isHurt = false
         this.visible = true
@@ -125,6 +134,7 @@ export default class Player extends Entity {
         this.pos = this.initialPos.clone()
         overlay.fadeIn()
     }
+
     hit(damage: number) {
         const scene = this.game.getCurrentScene() as MainScene
         const overlay = scene.getLayer(LAYERS.CUSTOM_OVERLAY) as Overlay
@@ -138,7 +148,7 @@ export default class Player extends Entity {
             if (this.energy[0] <= 0) {
                 this.visible = false
                 overlay.fadeOut()
-                this.game.wait('playerRespawn', this.respawn, 3000)
+                this.game.wait('playerRespawn', () => this.respawn(), 3000)
             } else {
                 this.game.wait('playerHurt', () => (this.isHurt = false), 500)
             }

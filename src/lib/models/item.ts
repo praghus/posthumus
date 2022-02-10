@@ -1,4 +1,4 @@
-import { Entity, Game, Scene, Vec2 } from 'platfuse'
+import { Entity, Game, Vec2 } from 'platfuse'
 import { StringTMap } from '../types'
 import { ENTITY_TYPES, LAYERS } from '../constants'
 import Player from './player'
@@ -17,6 +17,7 @@ export default class Item extends Entity {
     constructor(obj: StringTMap<any>, game: Game) {
         super({ ...obj, width: 16, height: 16 }, game)
     }
+
     public collide(obj: Entity) {
         if (obj.type === ENTITY_TYPES.PLAYER && !this.dead) {
             const player = obj as Player
@@ -35,6 +36,7 @@ export default class Item extends Entity {
             this.kill()
         }
     }
+
     public update(): void {
         super.update()
         if (!this.onGround()) {

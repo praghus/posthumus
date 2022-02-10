@@ -1,4 +1,4 @@
-import { Entity, Game, Scene, Vec2 } from 'platfuse'
+import { Entity, Game, Vec2 } from 'platfuse'
 import { StringTMap } from '../types'
 import { random, randomInt } from '../utils'
 import { ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
@@ -21,6 +21,7 @@ export default class Particle extends Entity {
             y: Math.sin(dir) * maxSpeed
         }
     }
+
     public update(): void {
         if (!this.dead) {
             super.update()

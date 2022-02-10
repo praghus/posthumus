@@ -1,5 +1,4 @@
-import { Entity, Game, Vec2 } from 'platfuse'
-import { StringTMap } from '../types'
+import { Entity, Vec2 } from 'platfuse'
 import { DIRECTIONS, ENTITY_TYPES, LAYERS, ENTITY_FAMILY } from '../constants'
 import ANIMATIONS from '../animations/bat'
 import MainScene from '../scenes/main'
@@ -65,6 +64,7 @@ export default class Bat extends Entity {
                 break
         }
     }
+
     hit(damage: number): void {
         this.energy[0] -= damage
         this.force.x *= -1
@@ -72,6 +72,7 @@ export default class Bat extends Entity {
             this.state = STATES.FALL
         }
     }
+
     collide(obj: Entity) {
         if (obj.collisions) {
             switch (obj.type) {
@@ -86,6 +87,7 @@ export default class Bat extends Entity {
             }
         }
     }
+
     turnAround() {
         if (!this.turning) {
             this.turning = true
