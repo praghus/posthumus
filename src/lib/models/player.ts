@@ -123,8 +123,8 @@ export default class Player extends Entity {
 
     cameraFollow(): void {
         const scene = this.game.getCurrentScene()
-        const { x, y } = this.game.resolution
-        this.facing === LEFT ? scene.camera.setFocus(x - x / 3, y / 2) : scene.camera.setFocus(x / 3, y / 2)
+        const { x } = this.game.resolution
+        scene.camera.setOffset(this.facing === RIGHT ? x / 3 : -x / 3, 0)
     }
 
     respawn() {

@@ -21,8 +21,8 @@ export default class MainScene extends Scene {
         this.createLayers([Background, layers[0], Flash, layers[1], layers[2], layers[3], Overlay])
 
         this.player = this.getObjectByType(ENTITY_TYPES.PLAYER) as Player
-        this.camera.setOffset(0, 5)
         this.camera.moveTo(0, 0)
+        this.camera.setSpeed(0.3, 0.5)
         this.camera.setFollow(this.player, false)
 
         game.onKeyDown('Space', () => this.player?.shoot())

@@ -3872,10 +3872,10 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-platfuse@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/platfuse/-/platfuse-1.0.4.tgz#313663bc28c3ad0ab15dda3d162fa5c0c3dc9377"
-  integrity sha512-wgQ2VBxeVpO2Tt5cHRXRyPhNSPlNocc328ZPj6mOXa0EvTFi6TnTNdBw+m37AwJ4PUDwEyvUpCfL+Ovyz70d8w==
+platfuse@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/platfuse/-/platfuse-1.0.5.tgz#6f594932613a268f75ce808a05f2cef542e44a1a"
+  integrity sha512-lFbYcTPxSnqeYVDFLXctLpeMG/56xPKCVZNhAGwquzU57SpZx+wYDauLsXk1F2/YHcUWy+I9Hhl6OGugaIEHUQ==
   dependencies:
     dat.gui "^0.7.7"
     howler "^2.2.3"

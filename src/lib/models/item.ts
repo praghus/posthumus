@@ -11,6 +11,7 @@ export const GIDS = {
 }
 
 export default class Item extends Entity {
+    type = ENTITY_TYPES.ITEM
     layerId = LAYERS.OBJECTS
     collisionLayers = [LAYERS.MAIN, LAYERS.OBJECTS]
     collisions = true

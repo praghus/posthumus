@@ -14,7 +14,7 @@ export default class Background extends Layer {
         const clouds = game.getImage('clouds.png')
         const s = camera.pos.x / 1.5
         const w1 = bg.width - 1
-        const x1 = s + Math.round((-s + camera.focus.x) / w1) * w1
+        const x1 = s + Math.round(-s / w1) * w1
         const y1 = 365 + camera.pos.y
         const w2 = clouds.width - 1
         const x2 = camera.pos.x / 8 + this.scroll
