@@ -22,7 +22,6 @@ export default class Player extends Entity {
     isHurt = false
 
     update() {
-        super.update()
         const game = this.game
         const { gravity } = game.getCurrentScene() as MainScene
         if (this.isJumping && this.onGround()) {
@@ -37,6 +36,9 @@ export default class Player extends Entity {
                 ? game.wait('countToReload', () => this.countToReload(), 1000)
                 : this.cancelReloading()
         }
+
+        super.update()
+
         let animation = ANIMATIONS.IDLE
         if (this.isHurt) animation = ANIMATIONS.HURT
         else if (this.isJumping) animation = this.force.y <= 0 ? ANIMATIONS.JUMP : ANIMATIONS.FALL
@@ -46,7 +48,7 @@ export default class Player extends Entity {
         this.animate(animation, { H: this.facing === LEFT })
     }
 
-    move(direction: DIRECTIONS) {
+    moveTo(direction: DIRECTIONS) {
         if (!this.isShooting && this.energy[0] > 0) {
             switch (direction) {
                 case UP:
@@ -57,16 +59,16 @@ export default class Player extends Entity {
                     break
                 case LEFT:
                 case RIGHT:
-                    direction !== this.facing && this.onGround && this.dust(direction)
+                    direction !== this.facing && this.onGround() && this.dust(direction)
                     this.force.x = this.approach(this.force.x, direction === RIGHT ? 2 : -2, 0.3)
                     this.facing = direction
-                    this.cameraFollow()
+                    // this.cameraFollow()
                     break
             }
         }
     }
 
-    shoot(): void {
+    shoot() {
         if (!this.isShooting && !this.isHurt && this.ammo[0] > 0 && this.onGround()) {
             const scene = this.game.getCurrentScene() as MainScene
             if (this.ammo[0] > this.ammo[1]) this.ammo[0] = this.ammo[1]
@@ -89,30 +91,30 @@ export default class Player extends Entity {
         }
     }
 
-    reloading(): void {
+    reloading() {
         this.isReloading = true
         this.ammo[0] += 1
         this.game.playSound('reload.mp3')
     }
 
-    countToReload(): void {
+    countToReload() {
         this.isReloading = true
         this.game.wait('reloading', () => this.reloading(), 600)
     }
 
-    cancelReloading(): void {
+    cancelReloading() {
         this.game.cancelWait('countToReload')
         this.game.cancelWait('reloading')
         this.isReloading = false
     }
 
-    bullet(scene: Scene): void {
+    bullet(scene: Scene) {
         const x = this.facing === RIGHT ? this.pos.x + this.width - 4 : this.pos.x + 8
         const y = this.pos.y + 31
         scene.addObject(ENTITY_TYPES.BULLET, { x, y, direction: this.facing })
     }
 
-    dust(direction: string): void {
+    dust(direction: string) {
         if (this.onGround()) {
             const scene = this.game.getCurrentScene()
             const x = direction === RIGHT ? this.pos.x + 8 : this.pos.x + this.width - 24
@@ -121,11 +123,11 @@ export default class Player extends Entity {
         }
     }
 
-    cameraFollow(): void {
-        const scene = this.game.getCurrentScene()
-        const { x } = this.game.resolution
-        scene.camera.setOffset(this.facing === RIGHT ? x / 3 : -x / 3, 0)
-    }
+    // cameraFollow() {
+    //     const scene = this.game.getCurrentScene()
+    //     const { x } = this.game.resolution
+    //     scene.camera.setOffset(this.facing === RIGHT ? x / 3 : -x / 3, 0)
+    // }
 
     respawn() {
         const scene = this.game.getCurrentScene() as MainScene
@@ -134,6 +136,7 @@ export default class Player extends Entity {
         this.visible = true
         this.energy[0] = this.energy[1]
         this.pos = this.initialPos.clone()
+        scene.camera.moveTo(0, 0)
         overlay.fadeIn()
     }
 

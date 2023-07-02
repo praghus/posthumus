@@ -1,5 +1,4 @@
 import { Entity, Game, Vec2 } from 'platfuse'
-import { StringTMap } from '../types'
 import { COLORS, ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/spider'
 import MainScene from '../scenes/main'
@@ -17,7 +16,7 @@ export default class Spider extends Entity {
     energy = [20, 20]
     damage = 10
 
-    constructor(obj: StringTMap<any>, game: Game) {
+    constructor(obj: Record<string, any>, game: Game) {
         super(obj, game)
         this.startPos = new Vec2(obj.x + obj.width / 2, obj.y)
     }

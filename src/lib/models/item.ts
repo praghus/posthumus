@@ -1,5 +1,4 @@
 import { Entity, Game, Vec2 } from 'platfuse'
-import { StringTMap } from '../types'
 import { ENTITY_TYPES, LAYERS } from '../constants'
 import MainScene from '../scenes/main'
 import Player from './player'
@@ -16,7 +15,7 @@ export default class Item extends Entity {
     collisionLayers = [LAYERS.MAIN, LAYERS.OBJECTS]
     collisions = true
 
-    constructor(obj: StringTMap<any>, game: Game) {
+    constructor(obj: Record<string, any>, game: Game) {
         super({ ...obj, width: 16, height: 16 }, game)
     }
 
@@ -39,7 +38,7 @@ export default class Item extends Entity {
         }
     }
 
-    public update(): void {
+    public update() {
         super.update()
         if (!this.onGround()) {
             const { gravity } = this.game.getCurrentScene() as MainScene

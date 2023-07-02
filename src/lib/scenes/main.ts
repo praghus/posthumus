@@ -1,11 +1,12 @@
 import { tmx } from 'tmx-map-parser'
 import { Scene } from 'platfuse'
-import { DIRECTIONS, ENTITY_TYPES } from '../constants'
-import tiledMap from '../../assets/map/map.tmx'
+
+import Map from '../../assets/map/map.tmx'
 import Flash from '../layers/flash'
 import Overlay from '../layers/overlay'
 import Background from '../layers/background'
 import Player from '../models/player'
+import { DIRECTIONS, ENTITY_TYPES } from '../constants'
 
 export default class MainScene extends Scene {
     gravity = 0.7
@@ -14,7 +15,7 @@ export default class MainScene extends Scene {
 
     async init() {
         const { game } = this
-        const { layers, tilesets, tilewidth, tileheight, width, height } = await tmx(tiledMap)
+        const { layers, tilesets, tilewidth, tileheight, width, height } = await tmx(Map)
 
         this.setDimensions(width, height, tilewidth, tileheight)
         this.addTileset(tilesets[0], 'tileset.png')
@@ -22,13 +23,13 @@ export default class MainScene extends Scene {
 
         this.player = this.getObjectByType(ENTITY_TYPES.PLAYER) as Player
         this.camera.moveTo(0, 0)
-        this.camera.setSpeed(0.3, 0.5)
+        this.camera.setSpeed(0.5)
         this.camera.setFollow(this.player, false)
 
         game.onKeyDown('Space', () => this.player?.shoot())
-        game.onKeyDown('ArrowUp', () => this.player?.move(DIRECTIONS.UP))
-        game.onKeyDown('ArrowLeft', () => this.player?.move(DIRECTIONS.LEFT))
-        game.onKeyDown('ArrowRight', () => this.player?.move(DIRECTIONS.RIGHT))
+        game.onKeyDown('ArrowUp', () => this.player?.moveTo(DIRECTIONS.UP))
+        game.onKeyDown('ArrowLeft', () => this.player?.moveTo(DIRECTIONS.LEFT))
+        game.onKeyDown('ArrowRight', () => this.player?.moveTo(DIRECTIONS.RIGHT))
         game.setAudioVolume(0.1)
 
         if (game.debug && game.gui) {

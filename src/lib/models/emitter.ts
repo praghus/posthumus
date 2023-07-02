@@ -15,7 +15,7 @@ export default class Emitter extends Entity {
         this.emitted++
     }
 
-    update(): void {
+    update() {
         super.update()
         const scene = this.game.getCurrentScene()
         const zombies = scene.getObjectsByType(ENTITY_TYPES.ZOMBIE) as Zombie[]

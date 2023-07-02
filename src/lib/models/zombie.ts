@@ -1,5 +1,4 @@
 import { Entity, Game, Vec2 } from 'platfuse'
-import { StringTMap } from '../types'
 import { DIRECTIONS, ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/zombie'
 import Player from './player'
@@ -35,12 +34,12 @@ export default class Zombie extends Entity {
     activated = false
     turning = false
 
-    constructor(obj: StringTMap<any>, game: Game) {
+    constructor(obj: Record<string, any>, game: Game) {
         super({ ...obj, width: 58, height: 46 }, game)
         this.pid = obj.pid
     }
 
-    update(): void {
+    update() {
         super.update()
         const scene = this.game.getCurrentScene() as MainScene
         const { a, d, m } = this.speed
@@ -120,7 +119,7 @@ export default class Zombie extends Entity {
         }
     }
 
-    hit(damage: number): void {
+    hit(damage: number) {
         if (this.state !== STATES.HURT && this.state !== STATES.DEFEAT) {
             this.setAnimationFrame(0)
             this.state = STATES.HURT

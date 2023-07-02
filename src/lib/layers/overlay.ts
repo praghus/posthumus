@@ -15,7 +15,7 @@ export default class Overlay extends Layer {
         }
     }
 
-    draw(): void {
+    draw() {
         const game = this.game
         const { ctx, resolution } = game
         const scene = game.getCurrentScene()

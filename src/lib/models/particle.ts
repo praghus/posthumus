@@ -1,5 +1,4 @@
 import { Entity, Game, Vec2 } from 'platfuse'
-import { StringTMap } from '../types'
 import { random, randomInt } from '../utils'
 import { ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
 
@@ -10,7 +9,7 @@ export default class Particle extends Entity {
     mass: number
     life: number
 
-    constructor(obj: StringTMap<any>, game: Game) {
+    constructor(obj: Record<string, any>, game: Game) {
         super(obj, game)
         const dir = randomInt(0, 2) * Math.PI
         const maxSpeed = randomInt(0.5, 1)
@@ -22,7 +21,7 @@ export default class Particle extends Entity {
         }
     }
 
-    public update(): void {
+    public update() {
         if (!this.dead) {
             super.update()
             if (this.pos.y !== this.expectedPos.y || this.pos.x !== this.expectedPos.x) {

@@ -14,7 +14,7 @@ export default class Spikes extends Entity {
     damage = 1000
     shineX = 0
 
-    draw(): void {
+    draw() {
         const { ctx } = this.game
         const { camera } = this.game.getCurrentScene()
         const {
@@ -35,7 +35,7 @@ export default class Spikes extends Entity {
         )
     }
 
-    update(): void {
+    update() {
         if (this.onScreen()) {
             if (this.canAnimate && this.getAnimationFrame() === this.animation.strip.frames - 1) {
                 this.canAnimate = false

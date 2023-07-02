@@ -5,7 +5,7 @@ export default class Background extends Layer {
     id = LAYERS.CUSTOM_BACKGROUND
     scroll = 0
 
-    draw(): void {
+    draw() {
         const { game } = this
         const { ctx, resolution } = game
         const { camera } = game.getCurrentScene()

@@ -5,7 +5,7 @@ import MainScene from '../scenes/main'
 export default class Flash extends Layer {
     id = LAYERS.FLASH
 
-    draw(): void {
+    draw() {
         const { ctx, resolution } = this.game
         const scene = this.game.getCurrentScene() as MainScene
         if (scene.flash) {

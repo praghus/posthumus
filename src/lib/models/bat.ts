@@ -27,7 +27,7 @@ export default class Bat extends Entity {
     energy = [10, 10]
     state = STATES.IDLE
 
-    update(): void {
+    update() {
         super.update()
         const scene = this.game.getCurrentScene() as MainScene
         const player = scene.getObjectByType(ENTITY_TYPES.PLAYER) as Player
@@ -65,7 +65,7 @@ export default class Bat extends Entity {
         }
     }
 
-    hit(damage: number): void {
+    hit(damage: number) {
         this.energy[0] -= damage
         this.force.x *= -1
         if (this.energy[0] <= 0) {
