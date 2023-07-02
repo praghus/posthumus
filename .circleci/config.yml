@@ -7,6 +7,9 @@ jobs:
   build_and_test:
     executor: node/default
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:VFEvWO8fdEuk1RpvPQCTspLZLwlBcvvCmnhjTWmZIew"
       - checkout
       - node/install-packages:
           pkg-manager: yarn
