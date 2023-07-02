@@ -22,6 +22,7 @@ jobs:
             - .
       - gh-pages/deploy:
           setup-git: true 
+          ssh-fingerprints: SHA256:VFEvWO8fdEuk1RpvPQCTspLZLwlBcvvCmnhjTWmZIew 
 
 workflows:
   test_my_app:
