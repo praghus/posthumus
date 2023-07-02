@@ -1,6 +1,6 @@
-import { Entity, Game, Scene, Vec2 } from 'platfuse'
-import { StringTMap } from '../types'
+import { Entity, Game, Vec2 } from 'platfuse'
 import { ENTITY_TYPES, LAYERS } from '../constants'
+import MainScene from '../scenes/main'
 import Player from './player'
 
 export const GIDS = {
@@ -10,16 +10,17 @@ export const GIDS = {
 }
 
 export default class Item extends Entity {
+    type = ENTITY_TYPES.ITEM
     layerId = LAYERS.OBJECTS
     collisionLayers = [LAYERS.MAIN, LAYERS.OBJECTS]
     collisions = true
 
-    constructor(obj: StringTMap<any>) {
-        super({ ...obj, width: 16, height: 16 })
+    constructor(obj: Record<string, any>, game: Game) {
+        super({ ...obj, width: 16, height: 16 }, game)
     }
 
-    public collide(obj: Entity, game: Game) {
-        if (obj.type === ENTITY_TYPES.PLAYER) {
+    public collide(obj: Entity) {
+        if (obj.type === ENTITY_TYPES.PLAYER && !this.dead) {
             const player = obj as Player
             switch (this.gid) {
                 case GIDS.AMMO:
@@ -32,15 +33,15 @@ export default class Item extends Entity {
                     player.energy[0] = player.energy[1]
                     break
             }
-            game.playSound('powerup.mp3')
+            this.game.playSound('powerup.mp3')
             this.kill()
         }
     }
 
-    public update(game: Game): void {
-        super.update(game)
+    public update() {
+        super.update()
         if (!this.onGround()) {
-            const { gravity } = game.getCurrentScene()
+            const { gravity } = this.game.getCurrentScene() as MainScene
             this.force.y += this.force.y > 0 ? gravity : gravity / 2
         } else if (Math.abs(this.force.y) > 0.1) {
             this.force.y *= -0.6
@@ -49,9 +50,10 @@ export default class Item extends Entity {
     }
 }
 
-export function dropItem(scene: Scene, pos: Vec2) {
+export function dropItem(game: Game, pos: Vec2) {
+    const scene = game.getCurrentScene()
     const probability = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2]
     const idx = Math.floor(Math.random() * probability.length)
     const gid = [GIDS.COIN, GIDS.AMMO, GIDS.HEALTH][probability[idx]]
-    scene.addObject(new Item({ x: pos.x, y: pos.y, gid }))
+    scene.addObject(ENTITY_TYPES.ITEM, { x: pos.x, y: pos.y, gid })
 }
