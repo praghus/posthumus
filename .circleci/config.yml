@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
-  node: circleci/node@5.0.2
-  heroku: circleci/heroku@1.2.6
+  node: circleci/node@5.1.0
+  gh-pages: sugarshin/gh-pages@1.0.1
 
 jobs:
   build_and_test:
@@ -17,6 +17,9 @@ jobs:
           root: ~/project
           paths:
             - .
+      - gh-pages/deploy:
+          setup-git: true 
+          ssh-fingerprints: SHA256:VFEvWO8fdEuk1RpvPQCTspLZLwlBcvvCmnhjTWmZIew 
 
 workflows:
   test_my_app:
