@@ -1,46 +1,26 @@
 {
-    "version": "0.0.1",
-    "author": "Piotr Praga",
-    "description": "TypeScript zombie shooter",
-    "main": "src/index.ts",
-    "name": "posthumus",
-    "scripts": {
-        "build": "npm run build:prod",
-        "build:dev": "webpack --mode development --config ./webpack.config.js --progress --color --display-error-details",
-        "build:prod": "cross-env NODE_ENV=production webpack --mode production --config ./webpack.config.js --progress --color --display-error-details --bail",
-        "clean": "rimraf dist",
-        "prettier:write": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
-        "prettier:check": "prettier -c \"src/**/*.{js,jsx,ts,tsx}\"",
-        "server": "npm run server:dev",
-        "server:dev": "webpack-dev-server --mode development --config ./webpack.config.js --hot --inline --progress --watch",
-        "server:prod": "cross-env NODE_ENV=production webpack-dev-server --mode production --config ./webpack.config.js --port 3000 --host 0.0.0.0 --hot --inline --progress  --watch --open --content-base dist/",
-        "start": "npm run server:dev"
-    },
-    "devDependencies": {
-        "@types/dat-gui": "^0.6.3",
-        "@types/webpack-env": "^1.14.0",
-        "@typescript-eslint/eslint-plugin": "^2.3.2",
-        "@typescript-eslint/parser": "^2.3.2",
-        "awesome-typescript-loader": "^5.2.0",
-        "cross-env": "^5.0.1",
-        "css-loader": "^1.0.0",
-        "ejs-loader": "^0.3.0",
-        "file-loader": "^6.2.0",
-        "html-loader": "^0.5.5",
-        "html-webpack-plugin": "^3.2.0",
-        "istanbul-instrumenter-loader": "^3.0.0",
-        "prettier": "^2.4.1",
-        "rimraf": "^2.6.1",
-        "source-map-loader": "^0.2.1",
-        "style-loader": "^0.22.1",
-        "typescript": "^4.2.3",
-        "url-loader": "^3.0.0",
-        "webpack": "^4.41.0",
-        "webpack-cli": "^3.3.9",
-        "webpack-dev-server": "^3.9.0"
-    },
-    "dependencies": {
-        "platfuse": "^1.0.2",
-        "tmx-map-parser": "^1.3.1"
-    }
+  "name": "posthumus",
+  "author": "Piotr Praga",
+  "description": "TypeScript zombie shooter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "rollup-plugin-node-polyfills": "^0.2.1",
+    "stream-browserify": "^3.0.0",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.9",
+    "vite-plugin-plain-text": "^1.4.2"
+  },
+  "dependencies": {
+    "platfuse": "^1.0.5",
+    "tmx-map-parser": "^1.3.1"
+  }
 }

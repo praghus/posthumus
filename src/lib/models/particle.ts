@@ -1,5 +1,4 @@
-import { Entity, Game, Scene, Vec2 } from 'platfuse'
-import { StringTMap } from '../types'
+import { Entity, Game, Vec2 } from 'platfuse'
 import { random, randomInt } from '../utils'
 import { ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
 
@@ -10,8 +9,8 @@ export default class Particle extends Entity {
     mass: number
     life: number
 
-    constructor(obj: StringTMap<any>) {
-        super(obj)
+    constructor(obj: Record<string, any>, game: Game) {
+        super(obj, game)
         const dir = randomInt(0, 2) * Math.PI
         const maxSpeed = randomInt(0.5, 1)
         this.mass = obj.mass || randomInt(0.3, 1)
@@ -20,12 +19,11 @@ export default class Particle extends Entity {
             x: Math.cos(dir) * maxSpeed,
             y: Math.sin(dir) * maxSpeed
         }
-        // this.setCollisionArea()
     }
 
-    public update(game: Game): void {
+    public update() {
         if (!this.dead) {
-            super.update(game)
+            super.update()
             if (this.pos.y !== this.expectedPos.y || this.pos.x !== this.expectedPos.x) {
                 this.force.y *= -0.8
                 this.force.x *= 0.9
@@ -37,18 +35,17 @@ export default class Particle extends Entity {
     }
 }
 
-export function createParticles(scene: Scene, pos: Vec2, config: any) {
+export function createParticles(game: Game, pos: Vec2, config: any) {
+    const scene = game.getCurrentScene()
     const { count, radius } = config
     for (let i = 0; i < count; i++) {
-        scene.addObject(
-            new Particle({
-                x: pos.x - radius / 2 + randomInt(0, radius),
-                y: pos.y - radius / 2 + randomInt(0, radius),
-                force: config.forceVector(),
-                life: config.ttl(),
-                ...config
-            })
-        )
+        scene.addObject(ENTITY_TYPES.PARTICLE, {
+            x: pos.x - radius / 2 + randomInt(0, radius),
+            y: pos.y - radius / 2 + randomInt(0, radius),
+            force: config.forceVector(),
+            life: config.ttl(),
+            ...config
+        })
     }
 }
 

@@ -1,7 +1,6 @@
-import { Entity } from 'platfuse'
+import { Entity, Game } from 'platfuse'
 import { DIRECTIONS, ENTITY_TYPES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/dust'
-import { StringTMap } from '../types'
 
 export default class Dust extends Entity {
     image = 'dust.png'
@@ -11,8 +10,8 @@ export default class Dust extends Entity {
     width = 16
     height = 16
 
-    constructor(obj: StringTMap<any>) {
-        super(obj)
+    constructor(obj: Record<string, any>, game: Game) {
+        super(obj, game)
         this.direction = obj.direction
     }
 
