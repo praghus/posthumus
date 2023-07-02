@@ -20,6 +20,8 @@ jobs:
       - gh-pages/deploy:
           setup-git: true 
           ssh-fingerprints: SHA256:VFEvWO8fdEuk1RpvPQCTspLZLwlBcvvCmnhjTWmZIew 
+          git-email: praghus@gmail.com 
+          git-user: praghus 
 
 workflows:
   test_my_app:
