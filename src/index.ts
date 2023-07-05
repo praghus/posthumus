@@ -32,14 +32,16 @@ const onResize = () => {
     const width = window.innerWidth
     const height = window.innerHeight
     const scale = Math.round(height / 120)
-
     Object.assign(canvas, { width, height })
     game.setSize(width, height, scale)
 }
 
-game.preload(Assets).then(() => {
+async function start() {
+    await game.preload(Assets)
     game.playScene(0)
     onResize()
-})
+}
+
+start()
 
 window.addEventListener('resize', onResize)

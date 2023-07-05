@@ -1,4 +1,3 @@
-import loopSound from '../assets/sounds/loop.mp3'
 import shootSound from '../assets/sounds/shoot.mp3'
 import powerUpSound from '../assets/sounds/powerup.mp3'
 import reloadSound from '../assets/sounds/reload.mp3'
@@ -38,6 +37,5 @@ export default {
     'zombie.png': zombie,
     'shoot.mp3': shootSound,
     'powerup.mp3': powerUpSound,
-    'reload.mp3': reloadSound,
-    'loop.mp3': loopSound
+    'reload.mp3': reloadSound
 }
