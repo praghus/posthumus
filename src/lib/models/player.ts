@@ -1,4 +1,4 @@
-import { Entity, Scene, Vec2 } from 'platfuse'
+import { Entity, Scene, Vector } from 'platfuse'
 import { createParticles, PARTICLES } from './particle'
 import { DIRECTIONS, ENTITY_TYPES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/player'
@@ -22,6 +22,7 @@ export default class Player extends Entity {
     isHurt = false
 
     update() {
+        super.update()
         const game = this.game
         const { gravity } = game.getCurrentScene() as MainScene
         if (this.isJumping && this.onGround()) {
@@ -29,15 +30,15 @@ export default class Player extends Entity {
             this.dust(LEFT)
             this.dust(RIGHT)
         }
-        if (!this.onGround()) this.force.y += this.force.y > 0 ? gravity : gravity / 2
+
+        this.force.y += this.force.y > 0 ? gravity : gravity / 2
+        this.force.x = this.approach(this.force.x, 0, 0.1)
+
         if (this.energy[0] > 0 && !this.isShooting) {
-            if (this.force.x !== 0) this.force.x = this.approach(this.force.x, 0, 0.2)
             this.force.x === 0 && !this.isJumping && this.ammo[0] < this.ammo[1]
                 ? game.wait('countToReload', () => this.countToReload(), 1000)
                 : this.cancelReloading()
         }
-
-        super.update()
 
         let animation = ANIMATIONS.IDLE
         if (this.isHurt) animation = ANIMATIONS.HURT
@@ -60,7 +61,7 @@ export default class Player extends Entity {
                 case LEFT:
                 case RIGHT:
                     direction !== this.facing && this.onGround() && this.dust(direction)
-                    this.force.x = this.approach(this.force.x, direction === RIGHT ? 2 : -2, 0.3)
+                    this.force.x = this.approach(this.force.x, direction === RIGHT ? 1 : -1, 0.3)
                     this.facing = direction
                     // this.cameraFollow()
                     break
@@ -156,7 +157,8 @@ export default class Player extends Entity {
                 } else {
                     this.game.wait('playerHurt', () => (this.isHurt = false), 500)
                 }
-                createParticles(this.game, new Vec2(this.pos.x + this.width / 2, this.pos.y + 18), PARTICLES.BLOOD)
+                createParticles(this.game, new Vector(this.pos.x + this.width / 2, this.pos.y + 18), PARTICLES.BLOOD)
+                scene.camera.shake(500, new Vector(0.1, 0.1))
             }
         }
     }

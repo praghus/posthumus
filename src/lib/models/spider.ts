@@ -1,4 +1,4 @@
-import { Entity, Game, Vec2 } from 'platfuse'
+import { Entity, Game, Vector } from 'platfuse'
 import { COLORS, ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/spider'
 import MainScene from '../scenes/main'
@@ -12,13 +12,13 @@ export default class Spider extends Entity {
     collisions = true
     fall = false
     rise = false
-    startPos: Vec2
+    startPos: Vector
     energy = [20, 20]
     damage = 10
 
     constructor(obj: Record<string, any>, game: Game) {
         super(obj, game)
-        this.startPos = new Vec2(obj.x + obj.width / 2, obj.y)
+        this.startPos = new Vector(obj.x + obj.width / 2, obj.y)
     }
 
     draw() {

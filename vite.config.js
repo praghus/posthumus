@@ -27,8 +27,7 @@ export default defineConfig({
                 }
             },
             plugins: [rollupNodePolyFill()]
-        },
-        assetsInlineLimit: 0
+        }
     },
     resolve: {
         alias: {

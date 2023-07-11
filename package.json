@@ -6,11 +6,19 @@
     "scripts": {
         "start": "vite",
         "build": "tsc && vite build",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "lint": "eslint --cache \"src/**/*.{js,jsx,ts,tsx}\"",
+        "lint:fix": "eslint --cache --fix \"src/**/*.{js,jsx,ts,tsx}\""
     },
     "devDependencies": {
         "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
         "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+        "@typescript-eslint/eslint-plugin": "^5.61.0",
+        "@typescript-eslint/parser": "^5.61.0",
+        "eslint": "^8.44.0",
+        "eslint-config-prettier": "^8.8.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "prettier": "^3.0.0",
         "rollup-plugin-node-polyfills": "^0.2.1",
         "stream-browserify": "^3.0.0",
         "typescript": "^5.0.2",
@@ -18,7 +26,7 @@
         "vite-plugin-plain-text": "^1.4.2"
     },
     "dependencies": {
-        "platfuse": "^1.0.5",
+        "platfuse": "^1.0.6",
         "tmx-map-parser": "^1.3.1"
     }
 }

@@ -1,4 +1,4 @@
-import { Entity, Game, Vec2 } from 'platfuse'
+import { Entity, Game, Vector } from 'platfuse'
 import { ENTITY_TYPES, LAYERS } from '../constants'
 import MainScene from '../scenes/main'
 import Player from './player'
@@ -50,7 +50,7 @@ export default class Item extends Entity {
     }
 }
 
-export function dropItem(game: Game, pos: Vec2) {
+export function dropItem(game: Game, pos: Vector) {
     const scene = game.getCurrentScene()
     const probability = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2]
     const idx = Math.floor(Math.random() * probability.length)

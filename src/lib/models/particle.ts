@@ -1,4 +1,4 @@
-import { Entity, Game, Vec2 } from 'platfuse'
+import { Entity, Game, Vector } from 'platfuse'
 import { random, randomInt } from '../utils'
 import { ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
 
@@ -35,7 +35,7 @@ export default class Particle extends Entity {
     }
 }
 
-export function createParticles(game: Game, pos: Vec2, config: any) {
+export function createParticles(game: Game, pos: Vector, config: any) {
     const scene = game.getCurrentScene()
     const { count, radius } = config
     for (let i = 0; i < count; i++) {

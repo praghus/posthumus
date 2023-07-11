@@ -1,4 +1,4 @@
-import { Entity, Vec2 } from 'platfuse'
+import { Entity, Vector } from 'platfuse'
 import { DIRECTIONS, ENTITY_TYPES, LAYERS, ENTITY_FAMILY } from '../constants'
 import ANIMATIONS from '../animations/bat'
 import MainScene from '../scenes/main'
@@ -58,7 +58,7 @@ export default class Bat extends Entity {
                 this.force.y += 0.2
                 this.animate(ANIMATIONS.FALL)
                 if (this.onGround()) {
-                    dropItem(this.game, new Vec2(this.pos.x + this.width / 2, this.pos.y - 16))
+                    dropItem(this.game, new Vector(this.pos.x + this.width / 2, this.pos.y - 16))
                     this.kill()
                 }
                 break

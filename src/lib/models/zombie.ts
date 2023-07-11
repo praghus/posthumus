@@ -1,4 +1,4 @@
-import { Entity, Game, Vec2 } from 'platfuse'
+import { Entity, Game, Vector } from 'platfuse'
 import { DIRECTIONS, ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
 import ANIMATIONS from '../animations/zombie'
 import Player from './player'
@@ -90,7 +90,7 @@ export default class Zombie extends Entity {
                 this.game.cancelWait(`zombie-${this.id}-run`)
                 animation = !this.isFacingPlayer(player) || dead ? ANIMATIONS.HURT1 : ANIMATIONS.HURT2
                 if (dead && this.getAnimationFrame() === 5) {
-                    dropItem(this.game, new Vec2(this.pos.x + this.width / 2, this.pos.y))
+                    dropItem(this.game, new Vector(this.pos.x + this.width / 2, this.pos.y))
                     this.state = DEFEAT
                 } else if (this.getAnimationFrame() === animation.strip.frames - 1) {
                     !this.isFacingPlayer(player) && this.turnAround()
