@@ -1,4 +1,4 @@
-# Posthumus [![Build Status](https://app.travis-ci.com/praghus/posthumus.svg?branch=main)](https://app.travis-ci.com/praghus/posthumus)
+# Posthumus [![CircleCI](https://circleci.com/gh/praghus/posthumus/tree/main.svg?style=svg)](https://circleci.com/gh/praghus/posthumus/?branch=main)
 
 #### Zombie survival shooter in TypeScript
 
