@@ -1,55 +1,64 @@
-export enum LAYERS {
-    CUSTOM_BACKGROUND = 0,
-    BACKGROUND = 1,
-    MAIN = 2,
-    OBJECTS = 3,
-    FOREGROUND = 4,
-    FLASH = 5,
-    DARKNESS = 6,
-    CUSTOM_OVERLAY = 7
+import { Color } from 'platfuse'
+
+export enum Directions {
+    Up = 'up',
+    Right = 'right',
+    Down = 'down',
+    Left = 'left'
 }
 
-export enum DIRECTIONS {
-    UP = 'up',
-    RIGHT = 'right',
-    DOWN = 'down',
-    LEFT = 'left'
+export enum ObjectTypes {
+    Bat = 'bat',
+    Box = 'box',
+    Bullet = 'bullet',
+    Player = 'player',
+    Zombie = 'zombie'
 }
 
-export enum ENTITY_FAMILY {
-    ENEMIES = 'enemies',
-    PARTICLES = 'particles',
-    TRAPS = 'traps'
+export const BloodParticle = {
+    angle: Math.PI,
+    emitSize: 0.2,
+    emitTime: 0.2,
+    emitRate: 50,
+    colorStart: new Color(255, 0, 0, 1),
+    colorEnd: new Color(255, 0, 0, 0.1),
+    ttl: 1,
+    sizeStart: 0.05,
+    sizeEnd: 0.1,
+    speed: 0.1,
+    angleSpeed: 0.1,
+    damping: 1,
+    angleDamping: 0.95,
+    gravityScale: 0.5,
+    fadeRate: 0.1,
+    randomness: 0.5,
+    collideTiles: true,
+    collideObjects: false,
+    renderOrder: 1,
+    elasticity: 0,
+    stretchScale: 0.3
 }
 
-export enum ENTITY_TYPES {
-    AMMO = 'ammo',
-    BAT = 'bat',
-    BULLET = 'bullet',
-    COIN = 'coin',
-    DUST = 'dust',
-    PARTICLE = 'particle',
-    EMITTER = 'emitter',
-    HEALTH = 'health',
-    PLAYER = 'player',
-    ITEM = 'item',
-    SPIDER = 'spider',
-    SPIKES = 'spikes',
-    ZOMBIE = 'zombie'
-}
-
-export enum COLORS {
-    BLACK = '#000',
-    BLUE_SKY = '#7CF',
-    BONUS = 'rgba(255,32,32,0.2)',
-    DARK_GREY = '#222',
-    DARK_RED = '#D00',
-    GREEN = '#0F0',
-    LIGHT_RED = '#F00',
-    PURPLE = '#F0F',
-    FLASH = 'rgba(255,255,255,0.6)',
-    SPIDER_WEB = 'rgba(255,255,255,0.5)',
-    TORCH = 'rgba(255,243,115,0.1)',
-    TRANS_WHITE = 'rgba(255,255,255,0.15)',
-    WATER = 'rgba(66,100,245,0.1)'
+export const BoxParticle = {
+    angle: Math.PI,
+    emitSize: 0.2,
+    emitTime: 0.2,
+    emitRate: 32,
+    colorStart: new Color('#685f58'),
+    colorEnd: new Color('#43403b'),
+    ttl: 3,
+    sizeStart: 0.08,
+    sizeEnd: 0.1,
+    speed: 0.2,
+    angleSpeed: 0.2,
+    damping: 1,
+    angleDamping: 0.95,
+    gravityScale: 0.3,
+    fadeRate: 0.1,
+    randomness: 0.5,
+    collideTiles: true,
+    collideObjects: false,
+    renderOrder: 1,
+    elasticity: 0,
+    stretchScale: 0.3
 }

@@ -1,47 +1,32 @@
 import { Game } from 'platfuse'
 
-import { ENTITY_TYPES } from './lib/constants'
-import * as Models from './lib/models'
-import Assets from './lib/assets'
-import MainScene from './lib/scenes/main'
+import MainScene from './lib/scenes/main-scene'
+import assetsToPreload from './lib/assets'
+import Player from './lib/models/player'
+import { ObjectTypes } from './lib/constants'
+import Zombie from './lib/models/zombie'
+import Box from './lib/models/box'
 
 import './style.css'
+import Bat from './lib/models/bat'
 
-const canvas: any = document.querySelector<HTMLCanvasElement>('#canvas')
-
-const game = new Game({
-    canvas,
-    backgroundColor: '#000',
-    scenes: [MainScene],
+const config = {
+    // fixedSize: vec2(1280, 720),
+    debug: false,
+    global: true,
     entities: {
-        [ENTITY_TYPES.BAT]: Models.Bat,
-        [ENTITY_TYPES.BULLET]: Models.Bullet,
-        [ENTITY_TYPES.DUST]: Models.Dust,
-        [ENTITY_TYPES.EMITTER]: Models.Emitter,
-        [ENTITY_TYPES.ITEM]: Models.Item,
-        [ENTITY_TYPES.PARTICLE]: Models.Particle,
-        [ENTITY_TYPES.PLAYER]: Models.Player,
-        [ENTITY_TYPES.SPIDER]: Models.Spider,
-        [ENTITY_TYPES.SPIKES]: Models.Spikes,
-        [ENTITY_TYPES.ZOMBIE]: Models.Zombie
-    },
-    debug: true
-})
-
-const onResize = () => {
-    const width = window.innerWidth
-    const height = window.innerHeight
-    const scale = Math.round(height / 160)
-    Object.assign(canvas, { width, height })
-    game.setSize(width, height, scale)
+        [ObjectTypes.Bat]: Bat,
+        [ObjectTypes.Box]: Box,
+        [ObjectTypes.Player]: Player,
+        [ObjectTypes.Zombie]: Zombie
+    }
 }
 
+const game = new Game(config, assetsToPreload)
+
 async function start() {
-    await game.preload(Assets)
-    game.playScene(0)
-    onResize()
+    await game.init(MainScene)
+    game.setAudioVolume(0.1)
 }
 
 start()
-
-window.addEventListener('resize', onResize)

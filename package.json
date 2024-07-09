@@ -1,18 +1,20 @@
 {
-    "name": "posthumus",
+    "name": "platfuse-showcase",
     "author": "Piotr Praga",
-    "description": "TypeScript zombie shooter",
+    "description": "Platfuse platformer lib showcase",
     "version": "0.0.0",
+    "license": "MIT",
     "scripts": {
         "start": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
-        "lint": "eslint --cache \"src/**/*.{js,jsx,ts,tsx}\"",
-        "lint:fix": "eslint --cache --fix \"src/**/*.{js,jsx,ts,tsx}\""
+        "v": "node -v"
     },
+    "type": "module",
     "devDependencies": {
         "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
         "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+        "@types/dat.gui": "^0.7.13",
         "@typescript-eslint/eslint-plugin": "^5.61.0",
         "@typescript-eslint/parser": "^5.61.0",
         "eslint": "^8.44.0",
@@ -21,12 +23,16 @@
         "prettier": "^3.0.0",
         "rollup-plugin-node-polyfills": "^0.2.1",
         "stream-browserify": "^3.0.0",
-        "typescript": "^5.0.2",
-        "vite": "^4.3.9",
+        "typescript": "^5.5.2",
+        "vite": "^5.3.1",
         "vite-plugin-plain-text": "^1.4.2"
     },
     "dependencies": {
-        "platfuse": "^1.0.6",
-        "tmx-map-parser": "^1.3.1"
+        "dat-gui": "^0.5.0",
+        "platfuse": "^1.3.4"
+    },
+    "engines": {
+        "npm": ">=10.0.0",
+        "node": ">=18.0.0"
     }
 }

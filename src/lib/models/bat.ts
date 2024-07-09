@@ -1,100 +1,53 @@
-import { Entity, Vector } from 'platfuse'
-import { DIRECTIONS, ENTITY_TYPES, LAYERS, ENTITY_FAMILY } from '../constants'
-import ANIMATIONS from '../animations/bat'
-import MainScene from '../scenes/main'
-import { dropItem } from './item'
+import { Emitter, Entity, lerp, randVector, Vector } from 'platfuse'
+import Animations from '../animations/bat'
+import { BloodParticle, ObjectTypes } from '../constants'
 import Player from './player'
-import Bullet from './bullet'
-
-const { LEFT, RIGHT } = DIRECTIONS
-
-enum STATES {
-    IDLE = 0,
-    FLYING = 1,
-    FALL = 2
-}
 
 export default class Bat extends Entity {
     image = 'bat.png'
-    family = ENTITY_FAMILY.ENEMIES
-    layerId = LAYERS.OBJECTS
-    collisionLayers = [LAYERS.MAIN, LAYERS.OBJECTS]
-    direction = LEFT
-    activated = false
-    collisions = true
-    turning = false
-    damage = 0
-    energy = [10, 10]
-    state = STATES.IDLE
+    animation = Animations.Idle
+    mass = 0.5
+    health = 2
+    idle = true
+    damping = 0.88
+    damage = 1
+    gravityScale = 0
+    hurtTimer = this.scene.game.timer()
+    isKilled = false
 
-    update() {
-        super.update()
-        const scene = this.game.getCurrentScene() as MainScene
-        const player = scene.getObjectByType(ENTITY_TYPES.PLAYER) as Player
-        switch (this.state) {
-            case STATES.IDLE:
-                if (this.onScreen()) {
-                    this.activated = true
-                    this.animate(ANIMATIONS.IDLE)
-                    this.game.wait(`bat-${this.id}-awake`, () => (this.state = STATES.FLYING), 1000)
-                }
-                break
-            case STATES.FLYING:
-                this.damage = 10
-                this.force.y += this.pos.y > player.pos.y + 24 ? -0.1 : 0.02
-                this.force.x = this.approach(this.force.x, this.direction === LEFT ? -1 : 1, 0.1)
-                if (
-                    this.expectedPos.x !== this.pos.x ||
-                    (this.pos.x <= Math.abs(scene.camera.pos.x) && this.direction === LEFT) ||
-                    (this.pos.x >= Math.abs(scene.camera.pos.x - this.game.resolution.x) && this.direction === RIGHT)
-                ) {
-                    this.turnAround()
-                }
-                this.animate(this.direction === RIGHT ? ANIMATIONS.RIGHT : ANIMATIONS.LEFT)
-                break
-            case STATES.FALL:
-                this.damage = 0
-                this.force.x = 0
-                this.force.y += 0.2
-                this.animate(ANIMATIONS.FALL)
-                if (this.onGround()) {
-                    dropItem(this.game, new Vector(this.pos.x + this.width / 2, this.pos.y - 16))
-                    this.kill()
-                }
-                break
-        }
-    }
-
-    hit(damage: number) {
-        this.energy[0] -= damage
-        this.force.x *= -1
-        if (this.energy[0] <= 0) {
-            this.state = STATES.FALL
-        }
-    }
-
-    collide(obj: Entity) {
-        if (obj.collisions) {
-            switch (obj.type) {
-                case ENTITY_TYPES.BULLET:
-                    const bullet = obj as Bullet
-                    this.hit(bullet.damage)
-                    break
-                case ENTITY_TYPES.PLAYER:
-                    const player = obj as Player
-                    player.hit(this.damage)
-                    break
+    update(): void {
+        const player = this.scene.getObjectByType(ObjectTypes.Player) as Player
+        if (this.isKilled) {
+            this.gravityScale = 0.3
+            this.collideObjects = false
+            this.setAnimation(Animations.Fall)
+        } else if (!this.idle) {
+            if (this.hurtTimer.elapsed()) this.hurtTimer.unset()
+            if (!this.hurtTimer.isActive()) {
+                this.force.x = lerp(this.force.x, player.pos.x - this.pos.x, 0.002) / 200
+                this.force.y = lerp(this.force.y, player.pos.y - this.pos.y + 0.5, 0.001) / 200
             }
+            // this.pos = this.pos.lerp(player.pos, 0.002)
+            this.setAnimation(Animations.Fly, this.pos.x > player.pos.x)
+        } else if (this.onScreen() && this.pos.x < player.pos.x) this.idle = false
+
+        super.update()
+    }
+    collideWithObject(entity: Entity): boolean {
+        if (this.hurtTimer.isActive() || this.idle) return false
+        if (entity.type === ObjectTypes.Bullet) {
+            this.health--
+            this.hurtTimer.set(0.4)
+            this.blood(entity.pos.add(randVector(0.2)))
+            if (this.health <= 0) this.isKilled = true
         }
+        if (entity.type === ObjectTypes.Player) {
+            this.blood(entity.pos.add(randVector(0.2)))
+        }
+        return true
     }
 
-    turnAround() {
-        if (!this.turning) {
-            this.turning = true
-            this.force.x *= -0.6
-            this.force.y -= 0.05
-            this.direction = this.direction === RIGHT ? LEFT : RIGHT
-            this.game.wait(`bat-${this.id}-turn`, () => (this.turning = false), 500)
-        }
+    blood(pos: Vector) {
+        this.scene.addObject(new Emitter(this.scene, { ...BloodParticle, pos }))
     }
 }

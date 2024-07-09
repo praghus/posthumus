@@ -1,30 +1,23 @@
 export default {
-    IDLE: {
+    Idle: {
         strip: { x: 168, y: 0, frames: 1, duration: 0 },
         width: 28,
         height: 20,
-        bounds: [5, 0, 18, 14],
+        offset: [-6, -2],
         loop: false
     },
-    RIGHT: {
-        strip: { x: 0, y: 0, frames: 6, duration: 60 },
+    Fly: {
+        strip: { x: 0, y: 0, frames: 6, duration: 80 },
         width: 28,
         height: 20,
-        bounds: [5, 0, 18, 14],
+        offset: [-8, -2],
         loop: true
     },
-    LEFT: {
-        strip: { x: 0, y: 20, frames: 6, duration: 60 },
+    Fall: {
+        strip: { x: 196, y: 0, frames: 1, duration: 0 },
         width: 28,
         height: 20,
-        bounds: [5, 0, 18, 14],
-        loop: true
-    },
-    FALL: {
-        strip: { x: 168, y: 20, frames: 1, duration: 0 },
-        width: 28,
-        height: 20,
-        bounds: [5, 0, 18, 14],
+        offset: [-8, -2],
         loop: false
     }
 }

@@ -1,12 +1,7 @@
 {
     "parser": "@typescript-eslint/parser",
-    "plugins": [
-        "@typescript-eslint"
-    ],
-    "extends": [
-        "plugin:@typescript-eslint/recommended",
-        "prettier"
-    ],
+    "plugins": ["@typescript-eslint"],
+    "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
     "parserOptions": {
         "ecmaVersion": 2018,
         "sourceType": "module",
@@ -14,10 +9,6 @@
         "tsconfigRootDir": "./"
     },
     "rules": {
-        "@typescript-eslint/lines-between-class-members": [2, "always", { 
-            "exceptAfterOverload": true, 
-            "exceptAfterSingleLine": true 
-        }],
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
@@ -34,6 +25,7 @@
         "lines-between-class-members": "off",
         "max-nested-callbacks": [1, 5],
         "max-params": [1, 5],
+        "no-var": [2],
         "padded-blocks": [2, "never"],
         "prefer-const": [2],
         "quotes": [1, "single"],

@@ -1,162 +1,119 @@
-import { Entity, Game, Vector } from 'platfuse'
-import { DIRECTIONS, ENTITY_FAMILY, ENTITY_TYPES, LAYERS } from '../constants'
-import ANIMATIONS from '../animations/zombie'
+import { clamp, Emitter, Entity, randVector, Timer, vec2, Vector } from 'platfuse'
+import { BloodParticle, Directions, ObjectTypes } from '../constants'
+import Animations from '../animations/zombie'
 import Player from './player'
-import MainScene from '../scenes/main'
-import Bullet from './bullet'
-import { dropItem } from './item'
 
-const { LEFT, RIGHT } = DIRECTIONS
-
-enum STATES {
-    RISE = 0,
-    IDLE = 1,
-    WALK = 2,
-    RUN = 3,
-    ATTACK = 4,
-    HURT = 5,
-    DEFEAT = 6
-}
+const { Left, Right } = Directions
 
 export default class Zombie extends Entity {
     image = 'zombie.png'
-    state = STATES.RISE
-    family = ENTITY_FAMILY.ENEMIES
-    type = ENTITY_TYPES.ZOMBIE
-    layerId = LAYERS.OBJECTS
-    collisionLayers = [LAYERS.MAIN, LAYERS.OBJECTS]
-    collisions = true
-    direction = LEFT
-    pid: string
-    damage = 0
-    energy = [20, 20]
-    speed = { a: 0.1, d: 0.1, m: 0.4 }
-    activated = false
-    turning = false
+    animation = Animations.Rise
+    facing = Left
+    damping = 0.88
+    renderOrder = 10
+    health = 2
+    isSpawned = false
+    riseTimer = this.scene.game.timer()
+    idleTimer = this.scene.game.timer()
+    hurtTimer = this.scene.game.timer()
+    attackTimer = this.scene.game.timer()
+    spawnTimer = this.scene.game.timer()
+    walkTimer = this.scene.game.timer()
 
-    constructor(obj: Record<string, any>, game: Game) {
-        super({ ...obj, width: 58, height: 46 }, game)
-        this.pid = obj.pid
+    draw() {
+        if (this.isSpawned) super.draw()
     }
 
     update() {
-        super.update()
-        const scene = this.game.getCurrentScene() as MainScene
-        const { a, d, m } = this.speed
-        const { RISE, IDLE, WALK, RUN, ATTACK, HURT, DEFEAT } = STATES
-        const player = scene.getObjectByType(ENTITY_TYPES.PLAYER) as Player
-        let animation = ANIMATIONS.IDLE
-        switch (this.state) {
-            case RISE:
-                animation = ANIMATIONS.RISE
-                this.direction = this.pos.x > player.pos.x ? LEFT : RIGHT
-                if (this.onScreen() && this.getAnimationFrame() === animation.strip.frames - 1) {
-                    this.activated = true
-                    this.state = IDLE
-                }
-                break
-            case IDLE:
-                animation = ANIMATIONS.IDLE
-                if (this.onScreen()) {
-                    this.game.wait(`zombie-${this.id}-awake`, () => (this.state = WALK), 1500)
-                }
-                break
-            case WALK:
-                animation = ANIMATIONS.WALK
-                this.speed.m = 0.4
-                this.game.wait(
-                    `zombie-${this.id}-run`,
-                    () => {
-                        if (this.onScreen() && this.isFacingPlayer(player)) {
-                            this.state = RUN
-                        }
-                    },
-                    2000
-                )
-                break
-            case RUN:
-                animation = ANIMATIONS.RUN
-                this.speed.m = 1
-                if (!this.isFacingPlayer(player)) this.state = WALK
-                break
-            case ATTACK:
-                animation = ANIMATIONS.ATTACK
-                this.direction = this.pos.x > player.pos.x ? LEFT : RIGHT
-                this.game.wait(`zombie-${this.id}-run`, () => (this.state = WALK), 1000)
-                break
-            case HURT:
-                const dead = this.energy[0] <= 0
-                this.game.cancelWait(`zombie-${this.id}-awake`)
-                this.game.cancelWait(`zombie-${this.id}-run`)
-                animation = !this.isFacingPlayer(player) || dead ? ANIMATIONS.HURT1 : ANIMATIONS.HURT2
-                if (dead && this.getAnimationFrame() === 5) {
-                    dropItem(this.game, new Vector(this.pos.x + this.width / 2, this.pos.y))
-                    this.state = DEFEAT
-                } else if (this.getAnimationFrame() === animation.strip.frames - 1) {
-                    !this.isFacingPlayer(player) && this.turnAround()
-                    this.state = RUN
-                }
-                break
-            case DEFEAT:
-                this.game.wait(`zombie-${this.id}-defeat`, () => this.kill(), 500)
-                this.activated = false
-                break
+        if (this.hurtTimer.elapsed()) {
+            this.hurtTimer.unset()
         }
-        if (!this.onGround()) this.force.y += this.force.y > 0 ? scene.gravity : scene.gravity / 2
-        else if (Math.abs(this.force.y) <= 0.2) this.force.y = 0
-        this.force.x =
-            this.state === WALK || this.state === RUN
-                ? this.approach(this.force.x, this.direction === LEFT ? -m : m, a)
-                : this.approach(this.force.x, 0, d)
-        if (
-            this.expectedPos.x !== this.pos.x ||
-            (Math.abs(this.pos.x - this.initialPos.x) > 100 && !this.isFacingPlayer(player))
-        ) {
-            this.turnAround()
-        }
-        if (this.state !== DEFEAT) {
-            this.animate(animation, { H: this.direction === LEFT })
-        }
-    }
-
-    hit(damage: number) {
-        if (this.state !== STATES.HURT && this.state !== STATES.DEFEAT) {
+        if (this.spawnTimer.elapsed()) {
+            this.spawnTimer.unset()
+            this.riseTimer.set(0.7)
+            this.isSpawned = true
             this.setAnimationFrame(0)
-            this.state = STATES.HURT
         }
-        this.energy[0] -= damage
+        if (!this.isSpawned && this.onScreen() && !this.spawnTimer.isActive()) {
+            this.spawnTimer.set(3)
+        }
+        if (this.riseTimer.elapsed()) {
+            this.idleTimer.set(2)
+            this.riseTimer.unset()
+        }
+        if (this.idleTimer.elapsed()) {
+            this.idleTimer.unset()
+            this.walkTimer.set(5)
+        }
+        if (this.walkTimer.elapsed()) {
+            this.walkTimer.unset()
+            this.idleTimer.set(1)
+            this.turn()
+        }
+
+        const player = this.scene.getObjectByType(ObjectTypes.Player) as Player
+
+        if (this.walkTimer.isActive() && !this.hurtTimer.isActive() && !this.attackTimer.isActive()) {
+            const speed =
+                (this.facing === Left && this.pos.x > player.pos.x) ||
+                (this.facing === Right && this.pos.x < player.pos.x)
+                    ? 0.025
+                    : 0.005
+            this.force.x = clamp(this.force.x + (this.facing === Left ? -1 : 1) * speed, -this.maxSpeed, this.maxSpeed)
+        }
+
+        this.collideObjects = this.isSpawned && !this.riseTimer.isActive()
+
+        super.update()
+
+        let animation = Animations.Idle
+
+        if (this.hurtTimer.isActive()) {
+            animation = this.force.x > 0 && this.facing === Left ? Animations.Hurt2 : Animations.Hurt1
+            if (this.health <= 0 && this.getAnimationFrame() === 5) this.destroy()
+        } else if (this.riseTimer.isActive() || !this.isSpawned) animation = Animations.Rise
+        else if (this.attackTimer.isActive()) animation = Animations.Attack
+        else if (Math.abs(this.force.x) > 0.02) animation = Animations.Run
+        else if (Math.abs(this.force.x) > 0.01) animation = Animations.Walk
+        else if (this.force.x === 0) animation = Animations.Idle
+
+        this.setAnimation(animation, this.facing === Left)
     }
 
-    collide(obj: Entity) {
-        if (this.activated && obj.visible) {
-            switch (obj.type) {
-                case ENTITY_TYPES.BULLET:
-                    const bullet = obj as Bullet
-                    this.hit(bullet.damage)
-                    break
-                case ENTITY_TYPES.PLAYER:
-                    const player = obj as Player
-                    this.state = STATES.ATTACK
-                    this.damage = this.getAnimationFrame() === 3 ? 20 : 10
-                    player.hit(this.damage)
-                    break
-            }
+    collideWithObject(entity: Entity): boolean {
+        if (this.hurtTimer.isActive()) return false
+        if (entity.type === ObjectTypes.Bullet) {
+            this.health--
+            this.hurtTimer.set(1.4)
+            this.idleTimer.set(1)
+            this.setAnimationFrame(0) // reset hurt animation
+            this.walkTimer.unset()
+            this.blood(entity.pos)
         }
+        if (entity.type === ObjectTypes.Player) {
+            this.attackTimer.set(1)
+            this.facing = this.pos.x < entity.pos.x ? Directions.Right : Directions.Left
+            this.blood(entity.pos.add(randVector(0.2)))
+        }
+        return true
     }
 
-    isFacingPlayer(player: Entity): boolean {
-        return (
-            (this.direction === LEFT && this.pos.x > player.pos.x) ||
-            (this.direction === RIGHT && this.pos.x < player.pos.x)
-        )
+    collideWithTile(): boolean {
+        this.turn()
+        return true
     }
 
-    turnAround() {
-        if (!this.turning) {
-            this.direction = this.direction === RIGHT ? LEFT : RIGHT
-            this.force.x *= -0.6
-            this.turning = true
-        }
-        this.game.wait(`zombie-${this.id}-turn`, () => (this.turning = false), 500)
+    blood(pos: Vector) {
+        this.scene.addObject(new Emitter(this.scene, { ...BloodParticle, pos }))
     }
+
+    turn() {
+        this.facing = this.facing === Left ? Directions.Right : Directions.Left
+    }
+
+    // destroy() {
+    //     this.dead = true
+    //     // Reborn zombie at the same position on layer 3
+    //     this.scene.addObject(new Zombie(this.scene, this.obj), 3)
+    // }
 }

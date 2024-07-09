@@ -28,10 +28,15 @@ export default defineConfig({
             },
             plugins: [rollupNodePolyFill()]
         }
+        // assetsInlineLimit: 0
     },
     resolve: {
+        preserveSymlinks: true,
         alias: {
+            // uncomment the following line to use platfuse as loaclly linked package
+            'platfuse': fileURLToPath(new URL('../platfuse/dist/platfuse.esm.js', import.meta.url)),
             '@': fileURLToPath(new URL('./src', import.meta.url)),
+            'dat.gui': fileURLToPath(new URL('./node_modules/dat-gui', import.meta.url)),
             buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
             process: 'rollup-plugin-node-polyfills/polyfills/process-es6',
             util: 'rollup-plugin-node-polyfills/polyfills/util',
@@ -62,6 +67,7 @@ export default defineConfig({
         }
     },
     optimizeDeps: {
+        link: ['platfuse'],
         esbuildOptions: {
             define: {
                 global: 'globalThis'
