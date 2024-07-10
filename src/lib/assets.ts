@@ -5,6 +5,7 @@ import ammo from '../assets/images/ammo.png'
 import bat from '../assets/images/bat.png'
 import background from '../assets/images/background.png'
 import clouds from '../assets/images/clouds.png'
+import dust from '../assets/images/dust.png'
 import energy from '../assets/images/energy.png'
 import estrip from '../assets/images/energy_strip.png'
 import moon from '../assets/images/moon.png'
@@ -18,6 +19,7 @@ export default {
     'bat.png': bat,
     'background.png': background,
     'clouds.png': clouds,
+    'dust.png': dust,
     'energy.png': energy,
     'estrip.png': estrip,
     'moon.png': moon,

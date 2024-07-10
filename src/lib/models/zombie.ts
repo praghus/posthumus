@@ -1,4 +1,4 @@
-import { clamp, Emitter, Entity, randVector, Timer, vec2, Vector } from 'platfuse'
+import { clamp, Emitter, Entity, randVector, Vector } from 'platfuse'
 import { BloodParticle, Directions, ObjectTypes } from '../constants'
 import Animations from '../animations/zombie'
 import Player from './player'
@@ -25,10 +25,10 @@ export default class Zombie extends Entity {
     }
 
     update() {
-        if (this.hurtTimer.elapsed()) {
+        if (this.hurtTimer.isDone()) {
             this.hurtTimer.unset()
         }
-        if (this.spawnTimer.elapsed()) {
+        if (this.spawnTimer.isDone()) {
             this.spawnTimer.unset()
             this.riseTimer.set(0.7)
             this.isSpawned = true
@@ -37,15 +37,15 @@ export default class Zombie extends Entity {
         if (!this.isSpawned && this.onScreen() && !this.spawnTimer.isActive()) {
             this.spawnTimer.set(3)
         }
-        if (this.riseTimer.elapsed()) {
+        if (this.riseTimer.isDone()) {
             this.idleTimer.set(2)
             this.riseTimer.unset()
         }
-        if (this.idleTimer.elapsed()) {
+        if (this.idleTimer.isDone()) {
             this.idleTimer.unset()
             this.walkTimer.set(5)
         }
-        if (this.walkTimer.elapsed()) {
+        if (this.walkTimer.isDone()) {
             this.walkTimer.unset()
             this.idleTimer.set(1)
             this.turn()
@@ -81,10 +81,10 @@ export default class Zombie extends Entity {
     }
 
     collideWithObject(entity: Entity): boolean {
-        if (this.hurtTimer.isActive()) return false
-        if (entity.type === ObjectTypes.Bullet) {
+        if (entity.type === ObjectTypes.Box) return true
+        if (entity.type === ObjectTypes.Bullet && !this.hurtTimer.isActive()) {
             this.health--
-            this.hurtTimer.set(1.4)
+            this.hurtTimer.set(1.5)
             this.idleTimer.set(1)
             this.setAnimationFrame(0) // reset hurt animation
             this.walkTimer.unset()

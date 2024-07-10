@@ -20,9 +20,10 @@ export default class Bat extends Entity {
         if (this.isKilled) {
             this.gravityScale = 0.3
             this.collideObjects = false
+            // this.collideTiles = false
             this.setAnimation(Animations.Fall)
         } else if (!this.idle) {
-            if (this.hurtTimer.elapsed()) this.hurtTimer.unset()
+            if (this.hurtTimer.isDone()) this.hurtTimer.unset()
             if (!this.hurtTimer.isActive()) {
                 this.force.x = lerp(this.force.x, player.pos.x - this.pos.x, 0.002) / 200
                 this.force.y = lerp(this.force.y, player.pos.y - this.pos.y + 0.5, 0.001) / 200

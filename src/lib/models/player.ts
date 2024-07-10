@@ -1,7 +1,8 @@
-import { clamp, Entity, Scene, Timer, vec2, Vector } from 'platfuse'
+import { clamp, Entity, Scene, vec2, Vector } from 'platfuse'
 import Animations from '../animations/player'
 import { Directions, ObjectTypes } from '../constants'
 import Bullet from './bullet'
+import Dust from './dust'
 const { Left, Right } = Directions
 
 export default class Player extends Entity {
@@ -58,12 +59,12 @@ export default class Player extends Entity {
     }
 
     update() {
-        // if (this.deadTimer.elapsed()) {
+        // if (this.deadTimer.isDone()) {
         //     this.deadTimer.unset()
         //     this.pos = this.startPos.clone()
         //     this.isDying = false
         // }
-        if (this.hurtTimer.elapsed()) {
+        if (this.hurtTimer.isDone()) {
             this.hurtTimer.unset()
             this.isHurt = false
         }
@@ -104,7 +105,7 @@ export default class Player extends Entity {
         if (this.reloadTimer.isActive() && this.reloadTimer.getPercent() > 0.6) {
             this.isReloading = this.ammo[0] < this.ammo[1]
         }
-        if (this.reloadTimer.elapsed()) {
+        if (this.reloadTimer.isDone()) {
             if (this.ammo[0] < this.ammo[1]) {
                 this.ammo[0] += 1
                 this.reloadTimer.set(1)
@@ -148,6 +149,9 @@ export default class Player extends Entity {
             }
         }
         // Ground control -----------------------------------------------------
+        if (this.onGround && Math.sign(this.moveInput.x) !== Math.sign(this.force.x) && Math.abs(this.force.x) > 0.05) {
+            this.dust()
+        }
         this.force.x = clamp(this.force.x + moveInput.x * 0.018, -this.maxSpeed, this.maxSpeed)
         this.lastPos = this.pos.clone()
 
@@ -179,5 +183,11 @@ export default class Player extends Entity {
             this.applyForce(entity.force.scale(-1))
         }
         return true
+    }
+
+    dust(side: (typeof Directions)[keyof typeof Directions] = this.facing) {
+        const pos = side === Left ? vec2(-1.2, 0.5) : vec2(0.85, 0.5)
+        const dust = new Dust(this.scene, { pos: this.pos.add(pos), flipH: side === Right })
+        this.scene.addObject(dust, 5)
     }
 }
