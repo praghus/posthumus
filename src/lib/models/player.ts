@@ -14,7 +14,7 @@ export default class Player extends Entity {
     renderOrder = 10
     damping = 0.88
     friction = 0.9
-    maxSpeed = 0.5
+    maxSpeed = 0.8
     moveInput = vec2()
     startPos = this.pos.clone()
     // flags
@@ -35,30 +35,37 @@ export default class Player extends Entity {
     shootTimer = this.scene.game.timer()
     reloadTimer = this.scene.game.timer()
 
-    constructor(scene: Scene, obj: Record<string, any>) {
-        super(scene, obj)
-        scene.camera.setSpeed(0.015)
-        scene.camera.follow(this)
-        setTimeout(() => {
-            scene.camera.setSpeed(0.06)
-        }, 5000)
-    }
-
     handleInput() {
         const { game } = this.scene
         const { input } = game
 
-        this.holdingJump = !!input.keyIsDown('ArrowUp')
+        this.holdingJump = !!(input.keyIsDown('ArrowUp') || input.keyIsDown('KeyW'))
         this.isShooting = !!input.keyIsDown('Space')
+
         this.moveInput = vec2(
-            input.keyIsDown('ArrowRight') - input.keyIsDown('ArrowLeft'),
-            input.keyIsDown('ArrowUp') - input.keyIsDown('ArrowDown')
+            (input.keyIsDown('ArrowRight') || input.keyIsDown('KeyD')) -
+                (input.keyIsDown('ArrowLeft') || input.keyIsDown('KeyA')),
+            (input.keyIsDown('ArrowUp') || input.keyIsDown('KeyW')) -
+                (input.keyIsDown('ArrowDown') | input.keyIsDown('KeyS'))
         )
 
         this.facing = this.moveInput.x === 1 ? Right : this.moveInput.x === -1 ? Left : this.facing
+
+        if (input.mouseWasPressed(0) && this.moveInput.y === 0) {
+            const pointer = this.scene.getPointerRelativeGridPos()
+            if (
+                this.moveInput.x === 0 ||
+                (this.facing === Right && pointer.x > this.pos.x) ||
+                (this.facing === Left && pointer.x < this.pos.x)
+            ) {
+                this.isShooting = true
+                this.facing = pointer.x > this.pos.x ? Right : Left
+            }
+        }
     }
 
     update() {
+        if (!this.onScreen()) return super.update()
         // if (this.deadTimer.isDone()) {
         //     this.deadTimer.unset()
         //     this.pos = this.startPos.clone()
@@ -86,7 +93,7 @@ export default class Player extends Entity {
             this.scene.game.playSound('shoot.mp3')
             this.scene.addObject(
                 new Bullet(this.scene, {
-                    pos: this.pos.add(vec2(this.facing === Left ? -1.2 : 1.2, 0.15)),
+                    pos: this.pos.add(vec2(this.facing === Left ? -1.2 : 1.2, -0.15)),
                     force: vec2(this.facing === Left ? -0.6 : 0.6, 0)
                 })
             )

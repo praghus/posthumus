@@ -89,7 +89,7 @@
   <properties>
    <property name="collide" type="bool" value="true"/>
   </properties>
-  <object id="159" name="Player" type="player" x="80" y="416" width="16" height="40"/>
+  <object id="159" name="Player" type="player" x="80" y="432" width="16" height="32"/>
   <object id="69" name="Spikes" type="spikes" x="1440" y="440" width="64" height="16"/>
   <object id="165" name="bat" type="bat" x="912" y="352" width="8" height="16"/>
   <object id="227" type="item" gid="177" x="2512" y="144" width="16" height="16"/>

@@ -21,20 +21,13 @@ export default class Background extends Layer {
         const x2 = camera.pos.x / 2 + this.scroll
         const y2 = camera.pos.y / 3.5
 
-        const gradient = ctx.createRadialGradient(
-            game.width - moon.width * camera.scale,
-            game.height / 2,
-            moon.width * camera.scale,
-            game.width / 2,
-            game.height / 2,
-            game.height
-        )
+        const gradient = ctx.createRadialGradient(game.width - 240, 180, 15, game.width - 240, 180, width)
 
-        gradient.addColorStop(0, game.backgroundColor.brightness(15).toString())
+        gradient.addColorStop(0, game.backgroundColor.brightness(30).toString())
         gradient.addColorStop(0.7, game.backgroundColor.toString())
         ctx.fillStyle = gradient
         ctx.fillRect(0, 0, width, height)
-        ctx.drawImage(moon, width - 270, 10, moon.width * camera.scale, moon.height * camera.scale)
+        ctx.drawImage(moon, width - 420, 20, moon.width * camera.scale, moon.height * camera.scale)
         ctx.drawImage(clouds, x2 - w2, y2, clouds.width * camera.scale, clouds.height * camera.scale)
         ctx.drawImage(clouds, x2, y2, clouds.width * camera.scale, clouds.height * camera.scale)
         ctx.drawImage(bg, x1 - w1, y1, bg.width * camera.scale, bg.height * camera.scale)

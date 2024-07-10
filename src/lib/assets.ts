@@ -8,6 +8,7 @@ import clouds from '../assets/images/clouds.png'
 import dust from '../assets/images/dust.png'
 import energy from '../assets/images/energy.png'
 import estrip from '../assets/images/energy_strip.png'
+import logo from '../assets/images/logo.png'
 import moon from '../assets/images/moon.png'
 import player from '../assets/images/player.png'
 import shine from '../assets/images/shine.png'
@@ -22,6 +23,7 @@ export default {
     'dust.png': dust,
     'energy.png': energy,
     'estrip.png': estrip,
+    'logo.png': logo,
     'moon.png': moon,
     'player.png': player,
     'shine.png': shine,
