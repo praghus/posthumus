@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.1" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="189" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="231">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="189" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="264">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="192" columns="16">
   <image source="../images/tileset.png" width="256" height="192"/>
   <tile id="0" type="www" probability="6"/>
@@ -82,95 +82,52 @@
  </layer>
  <layer id="2" name="main" width="189" height="32">
   <data encoding="base64" compression="zlib">
-   eAHt2MEJwjAUANAinnQBZ3IJ3cCDghcPruDGpodKCTFQSlqavEKgJG1+/sunhHadiwABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAnUJHEI6x7pSkg0BAgQIECBA4CcQzjnv/rzTNxcBAgQIbFPAt3yb+2bVywn4t7OctUjzBYazubqdb2mGdgWGs1G7AjInQIAAAQIEahc41Z6g/AgQIECAAIFmBfwXnb/15zBFro0j5J4bj/17Z9zvngCB8gKXEOJaPowIBAhkBO5hbF+oZcI2OfQKWd8i68dEiXi/Pon34xil9jc179R8EsvPdsX5p9awZl928QsM7kKMZ2hrGojNXw2oATWgBtSAGlADamCrNfAFm0Ualg==
+   eAHt2NEKgjAUBuARXdUL9Ey9TBdddNsr9MbNC2OISQeb4PYJA9Ft+n87yDAlBwECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBNoSOOU457YiSUOAAAECBAgQ+Ajkfc5z2O8MzUGAAAEC+xTwLd/nunnr7QT829nO2pPWC4x7c3W73tIM/QqMe6N+BSQnQIAAAQIEWhe4tB5QPgIECBAgQKBbAf9F1y/9NU+x1MonLPUr730bU153ToAAAQIEehC455DHSq0Hv2jG28T6FZzgl/HTPrXWd27eYJxw95r1Opcnei0c6M8DDnm+R27R99afmRpQA2pADagBNaAG1IAaSOkNk+YZAA==
   </data>
  </layer>
  <objectgroup id="3" name="objects">
   <properties>
    <property name="collide" type="bool" value="true"/>
   </properties>
-  <object id="159" name="Player" type="player" x="16" y="400" width="53" height="53"/>
-  <object id="20" name="bat" type="bat" x="2404" y="347" width="28" height="28"/>
+  <object id="159" name="Player" type="player" x="80" y="432" width="16" height="32"/>
   <object id="69" name="Spikes" type="spikes" x="1440" y="440" width="64" height="16"/>
-  <object id="101" name="Spider trap" type="spider" x="1568" y="340" width="16" height="23">
-   <properties>
-    <property name="delay" value="800"/>
-   </properties>
-  </object>
-  <object id="102" name="Spider trap" type="spider" x="2928" y="329" width="16" height="23">
-   <properties>
-    <property name="delay" value="800"/>
-   </properties>
-  </object>
-  <object id="150" name="bat" type="bat" x="1888" y="352" width="28" height="28"/>
-  <object id="165" name="bat" type="bat" x="944" y="368" width="28" height="28"/>
-  <object id="177" name="Zombie emitter" type="emitter" x="608" y="456" width="96" height="16">
-   <properties>
-    <property name="max" type="int" value="3"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
-  <object id="178" name="Zombie emitter" type="emitter" x="2096" y="456" width="224" height="16">
-   <properties>
-    <property name="max" type="int" value="6"/>
-    <property name="volume" type="int" value="2"/>
-   </properties>
-  </object>
-  <object id="179" name="Zombie emitter" type="emitter" x="2736" y="424" width="224" height="16">
-   <properties>
-    <property name="max" type="int" value="6"/>
-    <property name="volume" type="int" value="2"/>
-   </properties>
-  </object>
-  <object id="181" name="Zombie emitter" type="emitter" x="2432" y="440" width="176" height="16">
-   <properties>
-    <property name="max" type="int" value="4"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
-  <object id="183" name="Zombie emitter" type="emitter" x="992" y="456" width="80" height="16">
-   <properties>
-    <property name="max" type="int" value="4"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
-  <object id="185" name="Zombie emitter" type="emitter" x="1232" y="456" width="80" height="16">
-   <properties>
-    <property name="max" type="int" value="2"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
-  <object id="187" name="Zombie emitter" type="emitter" x="1536" y="440" width="112" height="16">
-   <properties>
-    <property name="max" type="int" value="2"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
-  <object id="188" name="Zombie emitter" type="emitter" x="1792" y="440" width="192" height="16">
-   <properties>
-    <property name="max" type="int" value="2"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
-  <object id="220" name="Zombie emitter" type="emitter" x="352" y="472" width="64" height="16">
-   <properties>
-    <property name="max" type="int" value="4"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
-  <object id="222" name="Zombie emitter" type="emitter" x="112" y="472" width="64" height="16">
-   <properties>
-    <property name="max" type="int" value="2"/>
-    <property name="volume" type="int" value="1"/>
-   </properties>
-  </object>
+  <object id="165" name="bat" type="bat" x="912" y="352" width="8" height="16"/>
   <object id="227" type="item" gid="177" x="2512" y="144" width="16" height="16"/>
   <object id="228" type="item" gid="187" x="2384" y="256" width="16" height="16"/>
   <object id="229" type="item" gid="187" x="2400" y="256" width="16" height="16"/>
+  <object id="231" type="box" gid="163" x="272" y="464" width="16" height="16"/>
+  <object id="232" type="box" gid="163" x="288" y="464" width="16" height="16"/>
+  <object id="233" type="box" gid="163" x="288" y="447" width="16" height="16"/>
+  <object id="234" type="box" gid="163" x="288" y="430" width="16" height="16"/>
+  <object id="236" type="box" gid="163" x="304" y="464" width="16" height="16"/>
+  <object id="237" type="box" gid="163" x="304" y="447" width="16" height="16"/>
+  <object id="238" type="box" gid="163" x="304" y="430" width="16" height="16"/>
+  <object id="239" type="box" gid="163" x="304" y="413" width="16" height="16"/>
+  <object id="240" type="zombie" x="416" y="432" width="10" height="32"/>
+  <object id="241" type="zombie" x="144" y="432" width="10" height="32"/>
+  <object id="242" name="bat" type="bat" x="215" y="384" width="8" height="16"/>
+  <object id="243" type="zombie" x="592" y="416" width="10" height="32"/>
+  <object id="244" type="zombie" x="800" y="416" width="10" height="32"/>
+  <object id="245" type="zombie" x="1040" y="416" width="10" height="32"/>
+  <object id="247" type="zombie" x="1584" y="400" width="10" height="32"/>
+  <object id="248" type="zombie" x="1808" y="400" width="10" height="32"/>
+  <object id="249" type="zombie" x="2032" y="416" width="10" height="32"/>
+  <object id="250" type="zombie" x="2128" y="416" width="10" height="32"/>
+  <object id="251" type="zombie" x="2208" y="416" width="10" height="32"/>
+  <object id="252" type="zombie" x="2288" y="416" width="10" height="32"/>
+  <object id="253" type="zombie" x="2480" y="400" width="10" height="32"/>
+  <object id="254" type="zombie" x="2640" y="400" width="10" height="32"/>
+  <object id="255" type="zombie" x="2832" y="384" width="10" height="32"/>
+  <object id="256" type="zombie" x="1328" y="416" width="10" height="32"/>
+  <object id="258" type="zombie" x="1216" y="416" width="10" height="32"/>
+  <object id="260" name="bat" type="bat" x="1571" y="337" width="8" height="16"/>
+  <object id="261" name="bat" type="bat" x="1652" y="360" width="8" height="16"/>
+  <object id="262" type="item" gid="187" x="256" y="384" width="16" height="16"/>
+  <object id="263" type="item" gid="177" x="1360" y="384" width="16" height="16"/>
  </objectgroup>
  <layer id="4" name="foreground" width="189" height="32">
   <data encoding="base64" compression="zlib">
-   eAHtlmtKQzEUhPuje/K1AHUPvsAq/hHBDfjYgW8XUBB36YzcKce0WuRSqvQLjMk5mSQ3X47iYECDAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEBgWQTOlnVwj3O3tXZH2u2xB0tXl8B/rPk9Pde+dDDn2Q41fzTHs4zpYx06kk6k9U7OjSX3bd7e+Dx+l96k5O0/lWjTBNaUqrztOJ+2/ZgJe7/Pxgynz7An5/h9/CaJPfZbOf6u5Yz0re9KietO/oZNaUtq240St22yZxyGvr/vkfvUe/q7Wzb1+4aaX4S07Z9ovn9+L/PuzpnXpZR6GHc+x/Z7PnP2Z20YO56VM2v7qxROWmXtZPZxX9fUfMb21/V3iu+lh9JfNJ7qX/RYR0+a7/IoPUkvjZ6b2POzcq/K11pV+OX+i77Pb/f3336/1UiqNTfu4tST52sdJTYze/PeWZd9M+/eHvdemzrW8LMN9RPBgBqgBqgBaoAaoAb61kD3rwUdBFaGwAd7sVJD
+   eAHtlltKQzEURfvROfkagDoHX2AVf0QQ/33MwLcDKIizdG+5W45ptcilVOkKbJNzspPcrBzFwYAGAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIAABCAAAQhAAAIQgAAEIAABCEAAAhCAAAQgAAEIQAACEIDAogicLOrgHuduau2WtN1jD5YuL4H/WPM7eq5daW/Gs+1r/mCGZxHThzp0JB1Jq52cG0vu27y98Xn8Jr1Kydt/LNEmCawoVXnbcTpp+zET9n6ftSlOn2FPzvH7+E0Se+y3cvxdyxnpW9+lEled/A3r0obUtmslbtpkzzgMfX/fI/ep9/R3t2zq9w01Pw9p2z/RfP/8XubdnTOvcyn1MO58ju33fObsz9owdjwtZ9b2Vyn8bJW1k9nHfV1T8xnbX9ffKr6T7kt/1niqf97jC52d5rs8SI/Sc6OnJvb8tNyL8rVWFX65/7zv89v9/bffbzWSas2Nuzj15PlaR4nNzN68d9Zl38y7t8e916aONfxoQ/1EMKAGqAFqgBqgBqiBvjXQ/WtBB4GlIfAOSktStw==
   </data>
  </layer>
 </map>
