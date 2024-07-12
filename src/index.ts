@@ -12,7 +12,6 @@ import Item from './lib/models/item'
 import './style.css'
 
 const config = {
-    debug: true,
     pixelPerfect: true,
     entities: {
         [ObjectTypes.Bat]: Bat,
