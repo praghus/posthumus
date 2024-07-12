@@ -16,8 +16,8 @@ This is not a finished game, but just a proof of concept for using my 2 librarie
 ```bash
 git clone https://github.com/praghus/posthumus.git
 cd posthumus
-yarn install
-yarn start
+npm install
+npm run  start
 ```
 
 App served @ `http://127.0.0.1:5173`

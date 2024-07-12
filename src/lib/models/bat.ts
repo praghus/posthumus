@@ -4,9 +4,10 @@ import { BloodParticle, ObjectTypes } from '../constants'
 import Player from './player'
 
 export default class Bat extends Entity {
+    type = ObjectTypes.Bat
     image = 'bat.png'
     animation = Animations.Idle
-    mass = 0.5
+    mass = 0.1
     health = 2
     idle = true
     damping = 0.88
@@ -18,6 +19,7 @@ export default class Bat extends Entity {
     update(): void {
         const player = this.scene.getObjectByType(ObjectTypes.Player) as Player
         if (this.isKilled) {
+            // this.angle += 0.1
             this.gravityScale = 0.3
             this.collideObjects = false
             // this.collideTiles = false
@@ -34,6 +36,7 @@ export default class Bat extends Entity {
 
         super.update()
     }
+
     collideWithObject(entity: Entity): boolean {
         if (this.hurtTimer.isActive() || this.idle) return false
         if (entity.type === ObjectTypes.Bullet) {

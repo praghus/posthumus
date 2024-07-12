@@ -15,7 +15,7 @@ export default class Overlay extends Layer {
         const player = this.scene.getObjectByType(ObjectTypes.Player) as Player
 
         // const write = game.draw.createPixelFontRenderer(game.getImage('font.png'), 5, 16)
-        const energy = (player.health[0] / 10) * 4
+        const energy = player.health[0] * 4
         const [ammo, maxAmmo] = player.ammo
 
         const healthStrip = game.getImage('estrip.png')

@@ -12,6 +12,7 @@ export enum ObjectTypes {
     Box = 'box',
     Bullet = 'bullet',
     Dust = 'dust',
+    Item = 'item',
     Player = 'player',
     Zombie = 'zombie'
 }

@@ -3,8 +3,8 @@ import { ObjectTypes } from '../constants'
 import Animations from '../animations/dust'
 
 export default class Dust extends Entity {
-    image = 'dust.png'
     type = ObjectTypes.Dust
+    image = 'dust.png'
     animation = Animations.Dust
     size = vec2(0.5, 0.5)
     collideObjects = false

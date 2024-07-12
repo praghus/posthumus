@@ -1,4 +1,4 @@
-import { clamp, Entity, Scene, vec2, Vector } from 'platfuse'
+import { clamp, Entity, vec2, Vector } from 'platfuse'
 import Animations from '../animations/player'
 import { Directions, ObjectTypes } from '../constants'
 import Bullet from './bullet'
@@ -6,23 +6,21 @@ import Dust from './dust'
 const { Left, Right } = Directions
 
 export default class Player extends Entity {
+    type = ObjectTypes.Player
     image = 'player.png'
     animation = Animations.Idle
     facing = Right
-    health = [100, 100]
+    health = [10, 10]
     ammo = [5, 5]
     renderOrder = 10
-    damping = 0.88
+    damping = 0.92
     friction = 0.9
-    maxSpeed = 0.8
     moveInput = vec2()
     startPos = this.pos.clone()
     // flags
     holdingJump = false
     wasHoldingJump = false
-    invincible = false
     isDying = false
-    isHurt = false
     isShooting = false
     isReloading = false
     // timers
@@ -71,10 +69,7 @@ export default class Player extends Entity {
         //     this.pos = this.startPos.clone()
         //     this.isDying = false
         // }
-        if (this.hurtTimer.isDone()) {
-            this.hurtTimer.unset()
-            this.isHurt = false
-        }
+        if (this.hurtTimer.isDone()) this.hurtTimer.unset()
         if (this.isDying) return super.update()
 
         this.handleInput()
@@ -141,7 +136,7 @@ export default class Player extends Entity {
         }
         if (this.jumpTimer.isActive()) {
             this.groundTimer.unset()
-            if (this.holdingJump && this.force.y < 0 && this.jumpTimer.isActive()) this.force.y -= 0.07
+            if (this.holdingJump && this.force.y < 0 && this.jumpTimer.isActive()) this.force.y -= 0.06
         }
         this.wasHoldingJump = this.holdingJump
         // Air control -------------------------------------------------------
@@ -156,21 +151,25 @@ export default class Player extends Entity {
             }
         }
         // Ground control -----------------------------------------------------
-        if (this.onGround && Math.sign(this.moveInput.x) !== Math.sign(this.force.x) && Math.abs(this.force.x) > 0.05) {
+        if (
+            this.onGround &&
+            Math.sign(this.moveInput.x) !== Math.sign(this.force.x) &&
+            Math.abs(this.force.x) > 0.123
+        ) {
             this.dust()
         }
-        this.force.x = clamp(this.force.x + moveInput.x * 0.018, -this.maxSpeed, this.maxSpeed)
+        this.force.x = clamp(this.force.x + moveInput.x * 0.028, -this.maxSpeed, this.maxSpeed)
         this.lastPos = this.pos.clone()
 
         super.update()
 
         let animation = Animations.Idle
-        if (this.isHurt) animation = Animations.Hurt
+        if (this.hurtTimer.isActive()) animation = Animations.Hurt
         else if (this.jumpTimer.isActive() && !this.onGround)
             animation = this.force.y <= 0 ? Animations.Jump : Animations.Fall
         else if (this.shootTimer.isActive()) animation = Animations.Shoot
         else if (this.isReloading) animation = Animations.Reload
-        else if (moveInput.x && Math.abs(this.force.x) > 0.01 && this.onGround) animation = Animations.Walk
+        else if (moveInput.x && Math.abs(this.force.x) !== 0 && this.onGround) animation = Animations.Walk
         this.setAnimation(animation, this.facing === Left)
     }
 
@@ -183,18 +182,32 @@ export default class Player extends Entity {
     }
 
     collideWithObject(entity: Entity): boolean {
-        if (entity.type === ObjectTypes.Bullet) {
-            return false
+        if (entity.type === ObjectTypes.Bullet) return false
+        if (entity.type === ObjectTypes.Item) {
+            this.scene.game.playSound('powerup.mp3')
+            switch (entity.gid) {
+                case 187:
+                    this.ammo[1] += 1
+                    break
+                case 177:
+                    this.health[0] = this.health[1]
+                    break
+            }
+            entity.destroy()
         }
-        if (entity.type === ObjectTypes.Zombie) {
-            this.applyForce(entity.force.scale(-1))
+        if (entity.type === ObjectTypes.Zombie && !this.hurtTimer.isActive()) {
+            // this.applyForce(entity.force.scale(-1))
+            // this.scene.camera.shake(1.5, vec2(0.001))
+            this.health[0]--
+            this.hurtTimer.set(0.5)
+            this.setAnimationFrame(0) // reset hurt animation
         }
         return true
     }
 
     dust(side: (typeof Directions)[keyof typeof Directions] = this.facing) {
-        const pos = side === Left ? vec2(-1.2, 0.5) : vec2(0.85, 0.5)
+        const pos = side === Left ? vec2(-1.2, 0.3) : vec2(0.85, 0.3)
         const dust = new Dust(this.scene, { pos: this.pos.add(pos), flipH: side === Right })
-        this.scene.addObject(dust, 5)
+        this.scene.addObject(dust, 3)
     }
 }

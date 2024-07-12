@@ -1,7 +1,8 @@
-import { clamp, Emitter, Entity, randVector, Vector } from 'platfuse'
+import { clamp, Emitter, Entity, randVector, vec2, Vector } from 'platfuse'
 import { BloodParticle, Directions, ObjectTypes } from '../constants'
 import Animations from '../animations/zombie'
 import Player from './player'
+import Item from './item'
 
 const { Left, Right } = Directions
 
@@ -35,7 +36,7 @@ export default class Zombie extends Entity {
             this.setAnimationFrame(0)
         }
         if (!this.isSpawned && this.onScreen() && !this.spawnTimer.isActive()) {
-            this.spawnTimer.set(3)
+            this.spawnTimer.set(1.5)
         }
         if (this.riseTimer.isDone()) {
             this.idleTimer.set(2)
@@ -82,6 +83,7 @@ export default class Zombie extends Entity {
 
     collideWithObject(entity: Entity): boolean {
         if (entity.type === ObjectTypes.Box) return true
+        if (entity.type === ObjectTypes.Bat || entity.type === ObjectTypes.Zombie) return false
         if (entity.type === ObjectTypes.Bullet && !this.hurtTimer.isActive()) {
             this.health--
             this.hurtTimer.set(1.5)
@@ -92,7 +94,7 @@ export default class Zombie extends Entity {
         }
         if (entity.type === ObjectTypes.Player) {
             this.attackTimer.set(1)
-            this.facing = this.pos.x < entity.pos.x ? Directions.Right : Directions.Left
+            this.facing = this.pos.x < entity.pos.x ? Right : Left
             this.blood(entity.pos.add(randVector(0.2)))
         }
         return true
@@ -108,12 +110,13 @@ export default class Zombie extends Entity {
     }
 
     turn() {
-        this.facing = this.facing === Left ? Directions.Right : Directions.Left
+        this.facing = this.facing === Left ? Right : Left
     }
 
-    // destroy() {
-    //     this.dead = true
-    //     // Reborn zombie at the same position on layer 3
-    //     this.scene.addObject(new Zombie(this.scene, this.obj), 3)
-    // }
+    destroy() {
+        this.dead = true
+        // Reborn zombie at the same position on layer 3
+        // this.scene.addObject(new Zombie(this.scene, this.obj), 3)
+        this.scene.addObject(new Item(this.scene, { pos: this.pos.subtract(vec2(0, 1)), gid: 182 }), 3)
+    }
 }

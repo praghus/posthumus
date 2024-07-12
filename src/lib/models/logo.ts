@@ -5,4 +5,5 @@ export default class Logo extends Entity {
     size = vec2(212 / this.scene.tileSize.x, 72 / this.scene.tileSize.y) // 212 x 72
     solid = false
     mass = 0
+    ttl = 5
 }
