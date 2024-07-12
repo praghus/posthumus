@@ -2,10 +2,10 @@
 
 #### Zombie survival shooter in TypeScript
 
-This is not a finished game, but just a proof of concept for using my 2 libraries:
+This is not a finished game, but just a showcase for:
 
+-   [platfuse](https://github.com/praghus/platfuse) - Platform game engine based on a Tiled Map Editor
 -   [tmx-map-parser](https://github.com/praghus/tmx-map-parser) - Tiled Map Editor parser
--   [platfuse](https://github.com/praghus/platfuse) - Platform game engine concept also based on a Tiled Map Editor
 
 ## :video_game: [Demo](https://praghus.github.io/posthumus/)
 
@@ -17,7 +17,7 @@ This is not a finished game, but just a proof of concept for using my 2 librarie
 git clone https://github.com/praghus/posthumus.git
 cd posthumus
 npm install
-npm run  start
+npm run start
 ```
 
 App served @ `http://127.0.0.1:5173`
