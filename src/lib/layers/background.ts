@@ -19,11 +19,11 @@ export default class Background extends Layer {
         const x1 = s + Math.round(-s / w1) * w1
         const y1 = this.bg.height * 2.8 * camera.scale + camera.pos.y
         const x2 = camera.pos.x / 2 + this.scroll
-        const y2 = camera.pos.y / 3.5
+        const y2 = camera.pos.y / 3
 
         const gradient = ctx.createRadialGradient(game.width - 240, 180, 15, game.width - 240, 180, width)
 
-        gradient.addColorStop(0, game.backgroundColor.brightness(30).toString())
+        gradient.addColorStop(0, game.backgroundColor.brightness(50).toString())
         gradient.addColorStop(0.7, game.backgroundColor.toString())
         ctx.fillStyle = gradient
         ctx.fillRect(0, 0, width, height)
@@ -32,7 +32,7 @@ export default class Background extends Layer {
         ctx.drawImage(this.clouds, x2, y2, this.clouds.width * camera.scale, this.clouds.height * camera.scale)
         ctx.drawImage(this.bg, x1 - w1, y1, this.bg.width * camera.scale, this.bg.height * camera.scale)
         ctx.drawImage(this.bg, x1, y1, this.bg.width * camera.scale, this.bg.height * camera.scale)
-        ctx.fillStyle = flash ? '#ffffff88' : game.primaryColor.toString()
+        ctx.fillStyle = flash ? '#ffffffaa' : game.primaryColor.toString()
         flash && ctx.fillRect(0, 0, width, height)
     }
 

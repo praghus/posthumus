@@ -13,21 +13,22 @@ export default class MainScene extends Scene {
     flash = false
     gui = new GUI()
     tmxMap = tiledMap
+    overlay?: Overlay
 
     init() {
         this.setScale(6)
         this.setTileCollisionLayer(1)
         this.addLayer(CustomLayer, -1)
 
-        const overlay = this.addLayer(Overlay)
+        this.overlay = this.addLayer(Overlay) as Overlay
         const player = this.getObjectByType(ObjectTypes.Player) as Player
 
-        this.addObject(new Logo(this, { pos: vec2(this.game.width / this.camera.scale / this.tileSize.x / 2, 5.2) }))
+        this.addObject(new Logo(this, { pos: vec2(this.game.width / this.camera.scale / this.tileSize.x / 2, 4) }))
         this.camera.setSpeed(0.06)
 
-        overlay.toggleVisibility(false)
+        this.overlay.toggleVisibility(false)
         setTimeout(() => {
-            overlay.toggleVisibility(true)
+            this.overlay?.toggleVisibility(true)
             this.camera.follow(player)
         }, 2000)
 
@@ -49,5 +50,13 @@ export default class MainScene extends Scene {
                     .name(layer.name || `Layer#${layer.id}`)
                     .listen()
             )
+    }
+
+    fadeIn() {
+        this.overlay?.fadeIn()
+    }
+
+    fadeOut() {
+        this.overlay?.fadeOut()
     }
 }

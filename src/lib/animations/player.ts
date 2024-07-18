@@ -7,7 +7,7 @@ export default {
         loop: true
     },
     Walk: {
-        strip: { x: 212, y: 0, frames: 8, duration: 80 },
+        strip: { x: 212, y: 0, frames: 8, duration: 60 },
         width: 53,
         height: 53,
         offset: [-18, -21],
@@ -47,5 +47,12 @@ export default {
         height: 53,
         offset: [-18, -21],
         loop: true
+    },
+    Defeat: {
+        strip: { x: 1643, y: 0, frames: 6, duration: 100 },
+        width: 53,
+        height: 53,
+        offset: [-18, -21],
+        loop: false
     }
 }

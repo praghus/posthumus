@@ -1,17 +1,20 @@
-import { clamp, Entity, vec2, Vector } from 'platfuse'
+import { clamp, randVector, vec2, Vector } from 'platfuse'
+import { Directions, ObjectTypes, OneWayTiles, Items } from '../constants'
 import Animations from '../animations/player'
-import { Directions, ObjectTypes } from '../constants'
+import GameObject from './game-object'
 import Bullet from './bullet'
 import Dust from './dust'
+import MainScene from '../scenes/main-scene'
+
 const { Left, Right } = Directions
 
-export default class Player extends Entity {
+export default class Player extends GameObject {
     type = ObjectTypes.Player
     image = 'player.png'
     animation = Animations.Idle
     facing = Right
     health = [10, 10]
-    ammo = [5, 5]
+    ammo = [4, 4]
     renderOrder = 10
     damping = 0.92
     friction = 0.9
@@ -20,7 +23,6 @@ export default class Player extends Entity {
     // flags
     holdingJump = false
     wasHoldingJump = false
-    isDying = false
     isShooting = false
     isReloading = false
     // timers
@@ -64,18 +66,17 @@ export default class Player extends Entity {
 
     update() {
         if (!this.onScreen()) return super.update()
-        // if (this.deadTimer.isDone()) {
-        //     this.deadTimer.unset()
-        //     this.pos = this.startPos.clone()
-        //     this.isDying = false
-        // }
-        if (this.hurtTimer.isDone()) this.hurtTimer.unset()
-        if (this.isDying) return super.update()
 
         this.handleInput()
+        const moveInput = this.deadTimer.isActive() ? vec2(0) : this.moveInput.clone()
 
-        const moveInput = this.moveInput.clone()
-        const { gravity } = this.scene
+        if (this.deadTimer.isDone()) {
+            this.deadTimer.unset()
+            this.pos = this.startPos.clone()
+            this.health[0] = this.health[1]
+            ;(this.scene as MainScene).fadeIn()
+        }
+        if (this.hurtTimer.isDone()) this.hurtTimer.unset()
 
         // Ground detection ---------------------------------------------------
         if (this.onGround) {
@@ -147,7 +148,7 @@ export default class Player extends Entity {
             else moveInput.x *= 0.8
             // add gravity when falling down
             if (this.force.y > 0) {
-                this.force.y -= gravity * 0.2
+                this.force.y -= this.scene.gravity * 0.2
             }
         }
         // Ground control -----------------------------------------------------
@@ -164,7 +165,8 @@ export default class Player extends Entity {
         super.update()
 
         let animation = Animations.Idle
-        if (this.hurtTimer.isActive()) animation = Animations.Hurt
+        if (this.deadTimer.isActive()) animation = Animations.Defeat
+        else if (this.hurtTimer.isActive()) animation = Animations.Hurt
         else if (this.jumpTimer.isActive() && !this.onGround)
             animation = this.force.y <= 0 ? Animations.Jump : Animations.Fall
         else if (this.shootTimer.isActive()) animation = Animations.Shoot
@@ -174,33 +176,41 @@ export default class Player extends Entity {
     }
 
     collideWithTile(tileId: number, pos: Vector): boolean {
-        // One way platforms
-        if (tileId === 74) {
+        if (OneWayTiles.includes(tileId)) {
             return this.force.y > 0 && this.pos.y < pos.y && this.moveInput.y !== -1
         }
         return true
     }
 
-    collideWithObject(entity: Entity): boolean {
-        if (entity.type === ObjectTypes.Bullet) return false
+    collideWithObject(entity: GameObject): boolean {
+        if (this.deadTimer.isActive() || entity.type === ObjectTypes.Bullet) return false
         if (entity.type === ObjectTypes.Item) {
             this.scene.game.playSound('powerup.mp3')
             switch (entity.gid) {
-                case 187:
+                case Items.Ammo:
                     this.ammo[1] += 1
                     break
-                case 177:
+                case Items.Health:
                     this.health[0] = this.health[1]
                     break
             }
             entity.destroy()
         }
-        if (entity.type === ObjectTypes.Zombie && !this.hurtTimer.isActive()) {
+        if (entity.family === 'enemy' && !this.hurtTimer.isActive()) {
             // this.applyForce(entity.force.scale(-1))
-            // this.scene.camera.shake(1.5, vec2(0.001))
-            this.health[0]--
-            this.hurtTimer.set(0.5)
+            this.health[0] -= entity.damage || 1
+            if (this.health[0] > 0) {
+                this.hurtTimer.set(0.5)
+                this.scene.camera.shake(0.5, vec2(0.001))
+            } else {
+                this.deadTimer.set(2)
+                this.hurtTimer.unset()
+                setTimeout(() => {
+                    ;(this.scene as MainScene).fadeOut()
+                }, 500)
+            }
             this.setAnimationFrame(0) // reset hurt animation
+            this.blood(this.pos.add(randVector(0.2)))
         }
         return true
     }

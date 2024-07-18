@@ -1,18 +1,20 @@
-import { clamp, Emitter, Entity, randVector, vec2, Vector } from 'platfuse'
-import { BloodParticle, Directions, ObjectTypes } from '../constants'
+import { clamp, Entity } from 'platfuse'
+import { Directions, ObjectTypes } from '../constants'
 import Animations from '../animations/zombie'
+import GameObject from './game-object'
 import Player from './player'
-import Item from './item'
 
 const { Left, Right } = Directions
 
-export default class Zombie extends Entity {
+export default class Zombie extends GameObject {
     image = 'zombie.png'
+    family = 'enemy'
     animation = Animations.Rise
     facing = Left
     damping = 0.88
     renderOrder = 10
     health = 2
+    damage = 1
     isSpawned = false
     riseTimer = this.scene.game.timer()
     idleTimer = this.scene.game.timer()
@@ -82,12 +84,11 @@ export default class Zombie extends Entity {
     }
 
     collideWithObject(entity: Entity): boolean {
+        if (entity.family === 'enemy' || this.hurtTimer.isActive()) return false
         if (entity.type === ObjectTypes.Box) return true
-        if (entity.type === ObjectTypes.Bat || entity.type === ObjectTypes.Zombie) return false
-        if (entity.type === ObjectTypes.Bullet && !this.hurtTimer.isActive()) {
+        if (entity.type === ObjectTypes.Bullet) {
             this.health--
             this.hurtTimer.set(1.5)
-            this.idleTimer.set(1)
             this.setAnimationFrame(0) // reset hurt animation
             this.walkTimer.unset()
             this.blood(entity.pos)
@@ -95,7 +96,6 @@ export default class Zombie extends Entity {
         if (entity.type === ObjectTypes.Player) {
             this.attackTimer.set(1)
             this.facing = this.pos.x < entity.pos.x ? Right : Left
-            this.blood(entity.pos.add(randVector(0.2)))
         }
         return true
     }
@@ -105,18 +105,9 @@ export default class Zombie extends Entity {
         return true
     }
 
-    blood(pos: Vector) {
-        this.scene.addObject(new Emitter(this.scene, { ...BloodParticle, pos }))
-    }
-
-    turn() {
-        this.facing = this.facing === Left ? Right : Left
-    }
-
-    destroy() {
-        this.dead = true
-        // Reborn zombie at the same position on layer 3
-        // this.scene.addObject(new Zombie(this.scene, this.obj), 3)
-        this.scene.addObject(new Item(this.scene, { pos: this.pos.subtract(vec2(0, 1)), gid: 182 }), 3)
-    }
+    // destroy() {
+    //     // Reborn zombie at the same position on layer 3
+    //     this.scene.addObject(new Zombie(this.scene, this.obj), 3)
+    //     super.destroy()
+    // }
 }

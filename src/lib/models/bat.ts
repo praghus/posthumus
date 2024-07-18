@@ -1,34 +1,30 @@
-import { Emitter, Entity, lerp, randVector, Vector } from 'platfuse'
+import { Entity, lerp, randVector } from 'platfuse'
 import Animations from '../animations/bat'
-import { BloodParticle, ObjectTypes } from '../constants'
+import { ObjectTypes } from '../constants'
+import GameObject from './game-object'
 import Player from './player'
 
-export default class Bat extends Entity {
+export default class Bat extends GameObject {
     type = ObjectTypes.Bat
+    family = 'enemy'
     image = 'bat.png'
     animation = Animations.Idle
-    mass = 0.1
     health = 2
-    idle = true
-    damping = 0.88
     damage = 1
+    idle = true
+    mass = 0.1
+    damping = 0.88
     gravityScale = 0
     hurtTimer = this.scene.game.timer()
     isKilled = false
 
     update(): void {
         const player = this.scene.getObjectByType(ObjectTypes.Player) as Player
-        if (this.isKilled) {
-            // this.angle += 0.1
-            this.gravityScale = 0.3
-            this.collideObjects = false
-            // this.collideTiles = false
-            this.setAnimation(Animations.Fall)
-        } else if (!this.idle) {
+        if (!this.idle) {
             if (this.hurtTimer.isDone()) this.hurtTimer.unset()
             if (!this.hurtTimer.isActive()) {
                 this.force.x = lerp(this.force.x, player.pos.x - this.pos.x, 0.002) / 200
-                this.force.y = lerp(this.force.y, player.pos.y - this.pos.y + 0.5, 0.001) / 200
+                this.force.y = lerp(this.force.y, player.pos.y - this.pos.y, 0.001) / 200
             }
             // this.pos = this.pos.lerp(player.pos, 0.002)
             this.setAnimation(Animations.Fly, this.pos.x > player.pos.x)
@@ -43,15 +39,8 @@ export default class Bat extends Entity {
             this.health--
             this.hurtTimer.set(0.4)
             this.blood(entity.pos.add(randVector(0.2)))
-            if (this.health <= 0) this.isKilled = true
-        }
-        if (entity.type === ObjectTypes.Player) {
-            this.blood(entity.pos.add(randVector(0.2)))
+            if (this.health <= 0) this.destroy()
         }
         return true
-    }
-
-    blood(pos: Vector) {
-        this.scene.addObject(new Emitter(this.scene, { ...BloodParticle, pos }))
     }
 }

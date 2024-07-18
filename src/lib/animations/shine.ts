@@ -1,7 +1,8 @@
 export default {
-    DEFAULT: {
+    Shine: {
         strip: { x: 0, y: 0, frames: 5, duration: 40 },
-        offset: [-8, -8],
+        width: 8,
+        height: 8,
         loop: false
     }
 }

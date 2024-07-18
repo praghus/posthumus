@@ -1,23 +1,32 @@
 import { Color } from 'platfuse'
 
-export enum Directions {
+enum Directions {
     Up = 'up',
     Right = 'right',
     Down = 'down',
     Left = 'left'
 }
 
-export enum ObjectTypes {
+enum ObjectTypes {
     Bat = 'bat',
     Box = 'box',
     Bullet = 'bullet',
     Dust = 'dust',
     Item = 'item',
     Player = 'player',
+    Spikes = 'spikes',
     Zombie = 'zombie'
 }
 
-export const BloodParticle = {
+enum Items {
+    Ammo = 187,
+    Coin = 182,
+    Health = 177
+}
+
+const OneWayTiles = [10, 11, 74]
+
+const BloodParticle = {
     angle: Math.PI,
     emitSize: 0.2,
     emitTime: 0.2,
@@ -41,7 +50,7 @@ export const BloodParticle = {
     stretchScale: 0.3
 }
 
-export const BoxParticle = {
+const BoxParticle = {
     angle: Math.PI,
     emitSize: 0.2,
     emitTime: 0.2,
@@ -64,3 +73,5 @@ export const BoxParticle = {
     elasticity: 0,
     stretchScale: 0.3
 }
+
+export { Directions, ObjectTypes, Items, OneWayTiles, BloodParticle, BoxParticle }
