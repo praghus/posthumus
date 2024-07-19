@@ -1,4 +1,4 @@
-import { clamp, randVector, vec2, Vector } from 'platfuse'
+import { clamp, randVector, vec2, Vector, wait } from 'platfuse'
 import { Directions, ObjectTypes, OneWayTiles, Items } from '../constants'
 import Animations from '../animations/player'
 import GameObject from './game-object'
@@ -41,7 +41,6 @@ export default class Player extends GameObject {
 
         this.holdingJump = !!(input.keyIsDown('ArrowUp') || input.keyIsDown('KeyW'))
         this.isShooting = !!input.keyIsDown('Space')
-
         this.moveInput = vec2(
             (input.keyIsDown('ArrowRight') || input.keyIsDown('KeyD')) -
                 (input.keyIsDown('ArrowLeft') || input.keyIsDown('KeyA')),
@@ -70,12 +69,6 @@ export default class Player extends GameObject {
         this.handleInput()
         const moveInput = this.deadTimer.isActive() ? vec2(0) : this.moveInput.clone()
 
-        if (this.deadTimer.isDone()) {
-            this.deadTimer.unset()
-            this.pos = this.startPos.clone()
-            this.health[0] = this.health[1]
-            ;(this.scene as MainScene).fadeIn()
-        }
         if (this.hurtTimer.isDone()) this.hurtTimer.unset()
 
         // Ground detection ---------------------------------------------------
@@ -205,9 +198,8 @@ export default class Player extends GameObject {
             } else {
                 this.deadTimer.set(2)
                 this.hurtTimer.unset()
-                setTimeout(() => {
-                    ;(this.scene as MainScene).fadeOut()
-                }, 500)
+                wait(500, () => (this.scene as MainScene).fadeOut())
+                wait(2000, () => this.scene.game.restartScene())
             }
             this.setAnimationFrame(0) // reset hurt animation
             this.blood(this.pos.add(randVector(0.2)))

@@ -2,8 +2,20 @@ import { Entity, vec2 } from 'platfuse'
 
 export default class Logo extends Entity {
     image = 'logo.png'
-    size = vec2(212 / this.scene.tileSize.x, 72 / this.scene.tileSize.y).divide(1.5) // 212 x 72
     solid = false
     mass = 0
-    ttl = 5
+
+    update(): void {
+        const { game, camera, tileSize } = this.scene
+        const s = game.width / camera.scale / 1.3
+        this.pos = vec2(game.width / camera.scale / tileSize.x / 2, 200)
+        this.size = vec2(s, s / 2.9)
+    }
+
+    draw() {
+        super.draw()
+        const { width, height } = this.scene.game
+        const scale = Math.min(width / this.scene.tileSize.x / 225, 3)
+        this.scene.game.draw.pixelText('Press spacebar to start...', vec2(width / 2, height - 80), scale, 'center')
+    }
 }

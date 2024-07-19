@@ -29,7 +29,7 @@
     },
     "dependencies": {
         "dat-gui": "^0.5.0",
-        "platfuse": "^1.4.5"
+        "platfuse": "^1.5.0"
     },
     "engines": {
         "npm": ">=10.0.0",

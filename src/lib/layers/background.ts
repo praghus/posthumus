@@ -3,10 +3,10 @@ import MainScene from '../scenes/main-scene'
 
 export default class Background extends Layer {
     name = 'Custom.Background'
-    scroll = 0
     bg = this.scene.game.getImage('background.png')
     moon = this.scene.game.getImage('moon.png')
     clouds = this.scene.game.getImage('clouds.png')
+    scroll = 0
 
     draw() {
         const { camera, game } = this.scene as MainScene

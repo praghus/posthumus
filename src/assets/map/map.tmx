@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="189" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="275">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="189" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="21" nextobjectid="276">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" tilecount="192" columns="16">
   <image source="../images/tileset.png" width="256" height="192"/>
   <tile id="0" type="www" probability="6"/>
@@ -89,7 +89,7 @@
   <properties>
    <property name="collide" type="bool" value="true"/>
   </properties>
-  <object id="159" name="Player" type="player" x="32" y="432" width="16" height="32"/>
+  <object id="159" name="Player" type="player" x="32" y="416" width="13" height="35"/>
   <object id="69" name="Spikes" type="spikes" x="1440" y="440" width="64" height="16"/>
   <object id="165" name="bat" type="bat" x="912" y="352" width="8" height="16"/>
   <object id="227" type="item" gid="177" x="2512" y="144" width="16" height="16"/>
@@ -120,9 +120,10 @@
   <object id="255" type="zombie" x="2832" y="400" width="10" height="32"/>
   <object id="256" type="zombie" x="1328" y="416" width="10" height="32"/>
   <object id="258" type="zombie" x="1216" y="416" width="10" height="32"/>
-  <object id="260" name="bat" type="bat" x="1574" y="342" width="8" height="16"/>
-  <object id="261" name="bat" type="bat" x="1656" y="362" width="8" height="16"/>
+  <object id="260" name="bat" type="bat" x="1573" y="339" width="8" height="16"/>
+  <object id="261" name="bat" type="bat" x="1656" y="360" width="8" height="16"/>
   <object id="262" type="item" gid="187" x="256" y="384" width="16" height="16"/>
+  <object id="263" type="item" gid="177" x="1968" y="416" width="16" height="16"/>
   <object id="267" type="box" gid="163" x="688" y="448" width="16" height="16"/>
   <object id="268" type="box" gid="163" x="704" y="448" width="16" height="16"/>
   <object id="269" type="box" gid="163" x="704" y="432" width="16" height="16"/>
