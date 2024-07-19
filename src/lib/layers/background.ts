@@ -19,7 +19,7 @@ export default class Background extends Layer {
         const x1 = s + Math.round(-s / w1) * w1
         const y1 = this.bg.height * 2.8 * camera.scale + camera.pos.y
         const x2 = camera.pos.x / 2 + this.scroll
-        const y2 = camera.pos.y / 3
+        const y2 = 1000 + camera.pos.y * 0.8
 
         const gradient = ctx.createRadialGradient(game.width - 240, 180, 15, game.width - 240, 180, width)
 
@@ -37,6 +37,6 @@ export default class Background extends Layer {
     }
 
     update() {
-        this.scroll = this.scroll < (this.clouds.width - 1) * this.scene.camera.scale ? this.scroll + 0.2 : 0
+        this.scroll = this.scroll < (this.clouds.width - 1) * this.scene.camera.scale ? this.scroll + 0.3 : 0
     }
 }

@@ -8,7 +8,7 @@ export default class Logo extends Entity {
     update(): void {
         const { game, camera, tileSize } = this.scene
         const s = game.width / camera.scale / 1.3
-        this.pos = vec2(game.width / camera.scale / tileSize.x / 2, 200)
+        this.pos = vec2(game.width / camera.scale / tileSize.x / 2, 366)
         this.size = vec2(s, s / 2.9)
     }
 

@@ -7,7 +7,7 @@ export default class IntroScene extends Scene {
         this.setScale(6)
         this.addLayer(Background)
         this.addObject(new Logo(this))
-        this.camera.setPos(vec2(0, -900))
+        this.camera.setPos(vec2(0, -1900))
     }
 
     update() {
