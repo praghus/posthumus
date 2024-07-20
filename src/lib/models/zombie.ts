@@ -65,7 +65,7 @@ export default class Zombie extends GameObject {
             this.force.x = clamp(this.force.x + (this.facing === Left ? -1 : 1) * speed, -this.maxSpeed, this.maxSpeed)
         }
 
-        this.collideObjects = this.isSpawned && !this.riseTimer.isActive()
+        this.collideObjects = this.isSpawned && !this.riseTimer.isActive() && !this.hurtTimer.isActive()
 
         super.update()
 
@@ -84,7 +84,7 @@ export default class Zombie extends GameObject {
     }
 
     collideWithObject(entity: Entity): boolean {
-        if (entity.family === 'enemy' || this.hurtTimer.isActive()) return false
+        if (entity.family === 'enemy') return false
         if (entity.type === ObjectTypes.Box) return true
         if (entity.type === ObjectTypes.Bullet) {
             this.health--

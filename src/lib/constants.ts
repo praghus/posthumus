@@ -24,7 +24,7 @@ enum Items {
     Health = 177
 }
 
-const OneWayTiles = [10, 11, 74]
+const OneWayTiles = [10, 11, 74, 96]
 
 const BloodParticle = {
     angle: Math.PI,

@@ -1,4 +1,4 @@
-import { Entity, lerp, randVector } from 'platfuse'
+import { Entity, randVector } from 'platfuse'
 import Animations from '../animations/bat'
 import { ObjectTypes } from '../constants'
 import GameObject from './game-object'
@@ -16,17 +16,14 @@ export default class Bat extends GameObject {
     damping = 0.88
     gravityScale = 0
     hurtTimer = this.scene.game.timer()
-    isKilled = false
 
     update(): void {
         const player = this.scene.getObjectByType(ObjectTypes.Player) as Player
         if (!this.idle) {
             if (this.hurtTimer.isDone()) this.hurtTimer.unset()
             if (!this.hurtTimer.isActive()) {
-                this.force.x = lerp(this.force.x, player.pos.x - this.pos.x, 0.002) / 200
-                this.force.y = lerp(this.force.y, player.pos.y - this.pos.y, 0.001) / 200
+                this.force = this.force.lerp(player.pos.subtract(this.pos).normalize(), 0.003)
             }
-            // this.pos = this.pos.lerp(player.pos, 0.002)
             this.setAnimation(Animations.Fly, this.pos.x > player.pos.x)
         } else if (this.onScreen() && this.pos.x < player.pos.x) this.idle = false
 
