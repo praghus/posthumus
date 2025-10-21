@@ -24,7 +24,7 @@
         "rollup-plugin-node-polyfills": "^0.2.1",
         "stream-browserify": "^3.0.0",
         "typescript": "^5.5.2",
-        "vite": "^5.3.1",
+        "vite": "^5.4.21",
         "vite-plugin-plain-text": "^1.4.2"
     },
     "dependencies": {
